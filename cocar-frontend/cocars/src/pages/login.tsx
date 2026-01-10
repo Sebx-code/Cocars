@@ -24,17 +24,17 @@ export default function LoginPage() {
       
       // Redirection selon le rôle sera gérée par ProtectedRoute
       navigate('/user'); // Par défaut, on redirige vers /user
-    } catch (err: any) {
-      setError(err.message || "Identifiants incorrects");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Identifiants incorrects");
     }
   };
 
   return (
     <div className="min-h-screen flex">
       {/* Left Side - Hero Section */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 bg-linear-to-br from-yellow-900 via-slate-800 to-black-900 relative overflow-hidden animate-gradient transition duration-1000 ease-in-out">
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-amber-400 rounded-full blur-3xl"></div>
+          <div className="absolute top-0 left-0 w-96 h-96 bg-yellow-400 rounded-full blur-3xl"></div>
           <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-500 rounded-full blur-3xl"></div>
         </div>
 
@@ -42,9 +42,9 @@ export default function LoginPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-amber-400 rounded-xl flex items-center justify-center">
-                <span className="text-2xl font-bold text-slate-900">T</span>
+                <span className="text-2xl font-bold text-slate-900">Rs</span>
               </div>
-              <h1 className="text-2xl font-bold">TaxiYa</h1>
+              <h1 className="text-2xl font-bold">Rideshare</h1>
             </div>
             <Link
               to="/"
@@ -58,24 +58,23 @@ export default function LoginPage() {
           <div className="space-y-6">
             <div className="space-y-4">
               <h2 className="text-5xl font-bold leading-tight">
-                Voyagez Malin.
+                Voyagez ensemble.
                 <br />
-                Réservez Rapide.
+                Réservez facilement.
                 <br />
-                Arrivez Serein.
+                Arrivez sereinement.
               </h2>
               <p className="text-slate-300 text-lg max-w-md">
-                Gérez vos courses, suivez vos trajets et profitez d'un service
-                premium depuis votre espace personnel.
+                Trouvez ou proposez un trajet en quelques clics et profitez d’une expérience de covoiturage fiable et confortable depuis votre espace personnel.
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
             <div className="flex -space-x-2">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 border-2 border-slate-900"></div>
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 border-2 border-slate-900"></div>
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 border-2 border-slate-900"></div>
+              <div className="w-10 h-10 rounded-full bg-linear-to-br from-blue-400 to-blue-600 border-2 border-slate-900"></div>
+              <div className="w-10 h-10 rounded-full bg-linear-to-br from-emerald-400 to-emerald-600 border-2 border-slate-900"></div>
+              <div className="w-10 h-10 rounded-full bg-linear-to-br from-amber-400 to-amber-600 border-2 border-slate-900"></div>
             </div>
             <p className="text-sm text-slate-400 ml-2">
               Rejoignez <span className="text-white font-semibold">5000+</span>{" "}
@@ -92,7 +91,7 @@ export default function LoginPage() {
             <div className="w-12 h-12 bg-amber-400 rounded-xl flex items-center justify-center">
               <span className="text-2xl font-bold text-slate-900">T</span>
             </div>
-            <h1 className="text-2xl font-bold text-slate-900">TaxiYa</h1>
+            <h1 className="text-2xl font-bold text-slate-900">Rideshare</h1>
           </div>
 
           <div className="text-center space-y-3">
@@ -101,7 +100,7 @@ export default function LoginPage() {
             </div>
             <h2 className="text-4xl font-bold text-slate-900">Bon retour !</h2>
             <p className="text-slate-600">
-              Connectez-vous pour accéder à votre espace personnel et vos courses
+              Connectez-vous pour accéder à votre espace personnel
             </p>
           </div>
 
@@ -129,7 +128,7 @@ export default function LoginPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, email: e.target.value })
                   }
-                  placeholder="votre@email.com ou +237 6XX XX XX XX"
+                  placeholder="votre@email.com ou 6XX XX XX XX"
                   className="w-full pl-12 pr-4 py-3.5 rounded-xl border border-slate-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 outline-none transition-all text-slate-900"
                   required
                 />
@@ -174,7 +173,7 @@ export default function LoginPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, remember: e.target.checked })
                   }
-                  className="w-4 h-4 rounded border-slate-300 text-amber-500 focus:ring-2 focus:ring-amber-200"
+                  className="w-4 h-4 rounded border-slate-300 text-yellow-500 focus:ring-2 focus:ring-yellow-200"
                 />
                 <span className="text-sm text-slate-600 group-hover:text-slate-900 transition-colors">
                   Se souvenir de moi
@@ -182,7 +181,7 @@ export default function LoginPage() {
               </label>
               <button
                 type="button"
-                className="text-sm text-amber-600 hover:text-amber-700 font-medium transition-colors hover:underline"
+                className="text-sm text-yellow-600 hover:text-yellow-700 font-medium transition-colors hover:underline"
               >
                 Mot de passe oublié ?
               </button>
@@ -191,7 +190,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-900 font-bold py-4 rounded-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100 flex items-center justify-center"
+              className="w-full bg-linear-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-slate-900 font-bold py-4 rounded-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100 flex items-center justify-center hover:animate-gradient-button"
             >
               {isLoading ? (
                 <span className="flex items-center justify-center gap-2">

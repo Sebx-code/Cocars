@@ -15,7 +15,8 @@ import {
   Menu,
   X,
 } from "lucide-react";
-import { LandingProvider, useLanding } from "../contexts/landingContext";
+import { LandingProvider } from "../contexts/landingContext";
+import { useLanding } from "../hooks/useLanding";
 
 // Composant principal qui utilise le contexte
 function LandingContent() {
@@ -50,9 +51,9 @@ function LandingContent() {
             <div className="flex items-center gap-8">
               <div className="flex items-center gap-2">
                 <div className="w-10 h-10 bg-black rounded-full flex items-center justify-center">
-                  <span className="text-yellow-400 font-bold text-lg">C</span>
+                  <span className="text-yellow-400 font-bold text-lg">Rs</span>
                 </div>
-                <span className="text-xl font-bold text-gray-900">CoCars</span>
+                <span className="text-xl font-bold text-gray-900">Rideshare</span>
               </div>
               <div className="hidden md:flex items-center gap-6">
                 <button className="text-gray-700 hover:text-black font-medium transition-colors">
@@ -116,18 +117,18 @@ function LandingContent() {
       </nav>
 
       {/* Hero Section with Search */}
-      <section className="relative bg-gradient-to-b from-gray-50 to-white pt-16 pb-24">
+      <section className="relative bg-linear-to-b from-gray-50 to-white pt-16 pb-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center mb-12">
             <div className="inline-flex items-center gap-2 bg-yellow-100 px-4 py-2 rounded-full mb-6">
               <span className="text-2xl">🚗</span>
               <span className="text-sm font-semibold text-gray-900">
-                15 000+ trajets ce mois
+                1000+ trajets ce mois
               </span>
             </div>
             <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold text-gray-900 mb-6 leading-tight">
-              Votre trajet à partir de{" "}
-              <span className="text-yellow-400">2 500 FCFA</span>
+              Votre trajet à {" "}
+              <span className="text-yellow-400"> prix reduit</span>
             </h1>
             <p className="text-xl text-gray-600">
               Réservez un trajet en covoiturage partout au Cameroun
@@ -255,7 +256,7 @@ function LandingContent() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Pourquoi choisir CoCars ?
+              Pourquoi choisir Rideshare ?
             </h2>
             <p className="text-lg text-gray-600">
               La solution de covoiturage la plus fiable au Cameroun
@@ -361,7 +362,7 @@ function LandingContent() {
               Ils nous font confiance
             </h2>
             <p className="text-xl text-gray-600">
-              Plus de 50 000 utilisateurs satisfaits
+              Plus de 5000 utilisateurs satisfaits
             </p>
           </div>
 
@@ -372,7 +373,7 @@ function LandingContent() {
                 className="bg-gray-50 rounded-3xl p-8 border-2 border-gray-200 hover:border-black transition-all hover:shadow-xl"
               >
                 <div className="flex items-center gap-4 mb-6">
-                  <div className="w-16 h-16 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center shadow-lg">
+                  <div className="w-16 h-16 bg-linear-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center shadow-lg">
                     <span className="text-black font-bold text-lg">
                       {testimonial.avatar}
                     </span>
@@ -405,14 +406,14 @@ function LandingContent() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 bg-gradient-to-br from-yellow-400 via-yellow-500 to-yellow-600 text-black">
+      <section className="py-24 bg-linear-to-br from-yellow-400 via-yellow-500 to-yellow-600 text-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl md:text-6xl font-bold mb-6">
             Prêt à partir ?
           </h2>
           <p className="text-xl text-gray-900 mb-10 max-w-2xl mx-auto font-medium">
             Rejoignez des milliers d'utilisateurs qui économisent chaque jour
-            avec CoCars
+            avec Rideshare
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
@@ -439,9 +440,9 @@ function LandingContent() {
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-10 h-10 bg-yellow-400 rounded-full flex items-center justify-center">
-                  <span className="text-black font-bold text-lg">C</span>
+                  <span className="text-black font-bold text-lg">Rs</span>
                 </div>
-                <span className="text-xl font-bold">CoCars</span>
+                <span className="text-xl font-bold">Rideshare</span>
               </div>
               <p className="text-gray-400 text-sm">
                 La plateforme de covoiturage n°1 au Cameroun
@@ -513,7 +514,7 @@ function LandingContent() {
           </div>
 
           <div className="border-t border-gray-800 pt-8 text-center text-sm text-gray-400">
-            <p>© 2024 CoCars. Tous droits réservés.</p>
+            <p>© 2024 Rideshare. Tous droits réservés.</p>
           </div>
         </div>
       </footer>

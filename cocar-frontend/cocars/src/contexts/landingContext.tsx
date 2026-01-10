@@ -1,5 +1,5 @@
 // src/contexts/landingContext.tsx
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useState, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // Types
@@ -103,27 +103,27 @@ export function LandingProvider({ children }: { children: ReactNode }) {
 
   const testimonials: Testimonial[] = [
     {
-      name: "Marie K.",
+      name: "Solange B.",
       city: "Yaoundé",
       rating: 5,
       comment: "Super expérience ! Le conducteur était ponctuel et très sympa. Je recommande à 100%.",
-      avatar: "MK",
+      avatar: "SB",
       trips: 24,
     },
     {
-      name: "Jean-Paul M.",
+      name: "Mbappe M.",
       city: "Douala",
       rating: 5,
       comment: "J'ai économisé tellement d'argent avec cette app. Les conducteurs sont fiables.",
-      avatar: "JP",
+      avatar: "MB",
       trips: 18,
     },
     {
-      name: "Sarah N.",
+      name: "Junior N.",
       city: "Bafoussam",
       rating: 5,
       comment: "Pratique et économique. J'utilise l'app pour tous mes trajets maintenant.",
-      avatar: "SN",
+      avatar: "JN",
       trips: 31,
     },
   ];
@@ -205,14 +205,7 @@ export function LandingProvider({ children }: { children: ReactNode }) {
   );
 }
 
-// Hook personnalisé
-export function useLanding() {
-  const context = useContext(LandingContext);
-  if (context === undefined) {
-    throw new Error('useLanding must be used within a LandingProvider');
-  }
-  return context;
-}
+
 
 // Export du contexte pour les cas d'usage avancés
 export { LandingContext };

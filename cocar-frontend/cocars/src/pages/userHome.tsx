@@ -861,7 +861,7 @@ export default function UserDashboard() {
                   <p className="text-sm font-semibold text-slate-900">
                     {user?.name ?? 'Utilisateur'}
                   </p>
-                  <p className="text-xs text-slate-500">{user?.role ? (user.role === 'driver' ? 'Chauffeur' : user.role === 'admin' ? 'Admin' : 'Client') : 'Client'}</p>
+                  <p className="text-xs text-slate-500">{user?.role ? ( user.role === 'admin' ? 'Admin' : 'Client') : 'Client'}</p>
                   <p className="text-xs text-slate-400">{currentTime}</p>
                 </div>
                 <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center">
@@ -1068,7 +1068,7 @@ export default function UserDashboard() {
                 <div className="flex-1 text-center md:text-left">
                   <h1 className="text-3xl md:text-4xl font-bold mb-2">{user?.name}</h1>
                   <p className="text-blue-100 text-lg mb-4 capitalize font-medium">
-                    {user?.role === 'driver' ? '🚗 Chauffeur' : user?.role === 'admin' ? '👨‍💼 Administrateur' : '👤 Client Premium'}
+                    { user?.role === 'admin' ? '👨‍💼 Administrateur' : '👤 Client Premium'}
                   </p>
                   <div className="flex flex-col md:flex-row gap-4 justify-center md:justify-start">
                     <div className="bg-blue-500 bg-opacity-50 px-4 py-2 rounded-lg">
