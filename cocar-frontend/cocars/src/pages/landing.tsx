@@ -1,321 +1,352 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+// src/pages/landing.tsx
 import {
-  Car,
-  Users,
+  Search,
   MapPin,
-  DollarSign,
+  Calendar,
+  Users,
+  Star,
   Shield,
+  DollarSign,
+  TrendingUp,
+  Heart,
+  MessageCircle,
+  CheckCircle,
+  ArrowRight,
   Menu,
   X,
-  ArrowRight,
-  Star,
-  Zap,
 } from "lucide-react";
+import { LandingProvider, useLanding } from "../contexts/landingContext";
 
+// Composant principal qui utilise le contexte
+function LandingContent() {
+  const {
+    mobileMenuOpen,
+    setMobileMenuOpen,
+    searchData,
+    setSearchData,
+    popularRoutes,
+    benefits,
+    testimonials,
+    handleSearch,
+    navigateToLogin,
+    navigateToSignup,
+    selectPopularRoute,
+  } = useLanding();
 
-const CovoiturageLanding: React.FC = () => {
-  const navigate = useNavigate();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  function handleClick(): void {
-    navigate("/user");
-  }
+  // Mapping des noms d'icônes vers les composants
+  const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+    DollarSign,
+    Shield,
+    MessageCircle,
+    TrendingUp,
+  };
 
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation */}
-      <nav className="border-b border-gray-200">
-        <div className="max-w-6xl mx-auto px-4 py-4">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-2">
-              <div className="w-10 h-10 bg-black rounded-full flex items-center justify-center">
-                <Car className="w-5 h-5 text-white" />
+      <nav className="border-b border-gray-200 sticky top-0 bg-white z-50 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center gap-8">
+              <div className="flex items-center gap-2">
+                <div className="w-10 h-10 bg-black rounded-full flex items-center justify-center">
+                  <span className="text-yellow-400 font-bold text-lg">C</span>
+                </div>
+                <span className="text-xl font-bold text-gray-900">CoCars</span>
               </div>
-              <span className="text-xl font-semibold">RideShare</span>
+              <div className="hidden md:flex items-center gap-6">
+                <button className="text-gray-700 hover:text-black font-medium transition-colors">
+                  Rechercher
+                </button>
+                <button className="text-gray-700 hover:text-black font-medium transition-colors">
+                  Proposer un trajet
+                </button>
+              </div>
             </div>
-
-            <div className="hidden md:flex items-center gap-8">
-              <a
-                href="#fonctionnement"
-                className="text-gray-600 hover:text-black"
+            <div className="hidden md:flex items-center gap-3">
+              <button
+                onClick={navigateToLogin}
+                className="text-gray-700 hover:text-black font-medium px-4 py-2 rounded-lg transition-colors"
               >
-                Fonctionnement
-              </a>
-              <button className="text-gray-600 hover:text-black" onClick={handleClick}>
-                Se connecter
+                Connexion
               </button>
-              <button className="bg-black text-white px-5 py-2.5 rounded-full hover:bg-gray-800">
-                S'inscrire
+              <button
+                onClick={navigateToSignup}
+                className="bg-yellow-400 hover:bg-yellow-500 text-black px-6 py-2.5 rounded-full font-semibold transition-all hover:scale-105"
+              >
+                Inscription
               </button>
             </div>
-
             <button
               className="md:hidden"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
               {mobileMenuOpen ? (
-                <X className="w-6 h-6" />
+                <X className="w-6 h-6 text-gray-700" />
               ) : (
-                <Menu className="w-6 h-6" />
+                <Menu className="w-6 h-6 text-gray-700" />
               )}
             </button>
           </div>
         </div>
 
+        {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-gray-200">
-            <div className="px-4 py-4 space-y-4">
-              <a href="#fonctionnement" className="block text-gray-600">
-                Fonctionnement
-              </a>
-              <button className="w-full text-left text-gray-600">
-                Se connecter
-              </button>
-              <button className="w-full bg-black text-white px-5 py-2.5 rounded-full">
-                S'inscrire
-              </button>
-            </div>
+          <div className="md:hidden border-t border-gray-200 py-4 px-4 space-y-3 bg-white">
+            <button className="block w-full text-left text-gray-700 hover:text-black font-medium py-2">
+              Rechercher
+            </button>
+            <button className="block w-full text-left text-gray-700 hover:text-black font-medium py-2">
+              Proposer un trajet
+            </button>
+            <button
+              onClick={navigateToLogin}
+              className="w-full text-left text-gray-700 hover:text-black font-medium py-2"
+            >
+              Connexion
+            </button>
+            <button
+              onClick={navigateToSignup}
+              className="w-full bg-yellow-400 hover:bg-yellow-500 text-black px-6 py-2.5 rounded-full font-semibold"
+            >
+              Inscription
+            </button>
           </div>
         )}
       </nav>
 
-      {/* Hero */}
-      <section className="max-w-6xl mx-auto px-4 pt-16 pb-24">
-        <div className="max-w-3xl">
-          <div className="inline-flex items-center gap-2 bg-yellow-50 border border-yellow-200 px-4 py-2 rounded-full mb-6">
-            <Zap className="w-4 h-4 text-yellow-600" />
-            <span className="text-sm font-medium">
-              Plus de 15 000 trajets partagés ce mois
-            </span>
+      {/* Hero Section with Search */}
+      <section className="relative bg-gradient-to-b from-gray-50 to-white pt-16 pb-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl mx-auto text-center mb-12">
+            <div className="inline-flex items-center gap-2 bg-yellow-100 px-4 py-2 rounded-full mb-6">
+              <span className="text-2xl">🚗</span>
+              <span className="text-sm font-semibold text-gray-900">
+                15 000+ trajets ce mois
+              </span>
+            </div>
+            <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold text-gray-900 mb-6 leading-tight">
+              Votre trajet à partir de{" "}
+              <span className="text-yellow-400">2 500 FCFA</span>
+            </h1>
+            <p className="text-xl text-gray-600">
+              Réservez un trajet en covoiturage partout au Cameroun
+            </p>
           </div>
 
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-            Partage de trajet entre voisins
-          </h1>
-          <p className="text-xl text-gray-600 mb-12 max-w-2xl">
-            Trouvez des personnes qui font le même trajet que vous. Divisez les
-            coûts, réduisez votre empreinte carbone, rencontrez vos voisins.
-          </p>
-
-          {/* Search */}
-          <div className="bg-gray-50 border-2 border-gray-200 rounded-2xl p-8 mb-8 w-full">
-            <div className="grid gap-4 mb-6">
-              <div>
-                <label className="block text-sm font-medium mb-2">Départ</label>
-                <div className="flex items-center gap-3 bg-white border-2 border-gray-200 rounded-xl px-4 py-3">
-                  <MapPin className="w-5 h-5 text-gray-400" />
-                  <input
-                    type="text"
-                    placeholder="Ex: Yaoundé Centre"
-                    className="flex-1 outline-none"
-                  />
+          {/* Search Form */}
+          <div className="max-w-5xl mx-auto">
+            <div className="bg-white rounded-3xl shadow-2xl p-6 sm:p-8 border border-gray-200">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4">
+                {/* From */}
+                <div className="lg:col-span-4">
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">
+                    Départ
+                  </label>
+                  <div className="relative">
+                    <div className="absolute left-4 top-1/2 transform -translate-y-1/2 w-3 h-3 bg-black rounded-full"></div>
+                    <input
+                      type="text"
+                      placeholder="Yaoundé"
+                      value={searchData.from}
+                      onChange={(e) =>
+                        setSearchData({ ...searchData, from: e.target.value })
+                      }
+                      className="w-full pl-10 pr-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none transition-all font-medium"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Destination
-                </label>
-                <div className="flex items-center gap-3 bg-white border-2 border-gray-200 rounded-xl px-4 py-3">
-                  <MapPin className="w-5 h-5 text-gray-400" />
-                  <input
-                    type="text"
-                    placeholder="Ex: Douala Akwa"
-                    className="flex-1 outline-none"
-                  />
+                {/* To */}
+                <div className="lg:col-span-4">
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">
+                    Destination
+                  </label>
+                  <div className="relative">
+                    <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-yellow-500" />
+                    <input
+                      type="text"
+                      placeholder="Douala"
+                      value={searchData.to}
+                      onChange={(e) =>
+                        setSearchData({ ...searchData, to: e.target.value })
+                      }
+                      className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none transition-all font-medium"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium mb-2">Date</label>
-                  <input
-                    type="date"
-                    className="w-full bg-white border-2 border-gray-200 rounded-xl px-4 py-3 outline-none"
-                  />
+                {/* Date */}
+                <div className="lg:col-span-2">
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">
+                    Date
+                  </label>
+                  <div className="relative">
+                    <Calendar className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <input
+                      type="date"
+                      value={searchData.date}
+                      onChange={(e) =>
+                        setSearchData({ ...searchData, date: e.target.value })
+                      }
+                      className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none transition-all font-medium"
+                    />
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">
+
+                {/* Passengers */}
+                <div className="lg:col-span-2">
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">
                     Passagers
                   </label>
-                  <select className="w-full bg-white border-2 border-gray-200 rounded-xl px-4 py-3 outline-none">
-                    <option>1 passager</option>
-                    <option>2 passagers</option>
-                    <option>3 passagers</option>
-                    <option>4 passagers</option>
-                    <option>...passagers</option>
-                  </select>
+                  <div className="relative">
+                    <Users className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <select
+                      value={searchData.passengers}
+                      onChange={(e) =>
+                        setSearchData({
+                          ...searchData,
+                          passengers: e.target.value,
+                        })
+                      }
+                      className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none transition-all appearance-none bg-white font-medium"
+                    >
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4+</option>
+                    </select>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <button className="w-full bg-black text-white py-4 rounded-xl font-medium hover:bg-gray-800 flex items-center justify-center gap-2">
-              Rechercher un trajet
-              <ArrowRight className="w-5 h-5" />
-            </button>
-          </div>
-
-          <p className="text-sm text-gray-500">
-            Plus de 5 000 conducteurs actifs • Moyenne de 2 300 FCFA économisés
-            par trajet
-          </p>
-        </div>
-      </section>
-
-      {/* Stats */}
-      <section className="border-y border-gray-200 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-4 py-16">
-          <div className="grid md:grid-cols-3 gap-12">
-            <div>
-              <div className="text-4xl font-bold mb-2">50K+</div>
-              <div className="text-gray-600">Utilisateurs actifs</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold mb-2">98%</div>
-              <div className="text-gray-600">Taux de satisfaction</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold mb-2">200+</div>
-              <div className="text-gray-600">Villes couvertes</div>
+              <button
+                onClick={handleSearch}
+                className="w-full mt-6 bg-black hover:bg-gray-900 text-white py-5 rounded-2xl font-bold text-lg transition-all hover:scale-[1.02] shadow-lg flex items-center justify-center gap-2"
+              >
+                <Search className="w-5 h-5" />
+                Rechercher
+              </button>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* How it works */}
-      <section id="fonctionnement" className="max-w-6xl mx-auto px-4 py-24">
-        <h2 className="text-3xl md:text-4xl font-bold mb-16">
-          Comment ça marche
-        </h2>
-
-        <div className="grid md:grid-cols-3 gap-12">
-          <div>
-            <div className="w-12 h-12 bg-black text-white rounded-full flex items-center justify-center font-bold text-xl mb-6">
-              1
-            </div>
-            <h3 className="text-xl font-semibold mb-3">
-              Recherchez votre trajet
+          {/* Popular Routes */}
+          <div className="max-w-5xl mx-auto mt-12">
+            <h3 className="text-center text-sm font-semibold text-gray-600 mb-4 uppercase tracking-wide">
+              Trajets populaires
             </h3>
-            <p className="text-gray-600">
-              Entrez votre point de départ et votre destination. Parcourez les
-              options disponibles selon votre horaire.
-            </p>
-          </div>
-
-          <div>
-            <div className="w-12 h-12 bg-black text-white rounded-full flex items-center justify-center font-bold text-xl mb-6">
-              2
+            <div className="flex flex-wrap justify-center gap-3">
+              {popularRoutes.map((route, i) => (
+                <button
+                  key={i}
+                  onClick={() => selectPopularRoute(route)}
+                  className="px-5 py-2.5 bg-white border-2 border-gray-200 rounded-full hover:border-black hover:bg-black hover:text-white transition-all text-sm font-semibold"
+                >
+                  {route.from} → {route.to}
+                </button>
+              ))}
             </div>
-            <h3 className="text-xl font-semibold mb-3">Réservez votre place</h3>
-            <p className="text-gray-600">
-              Choisissez le conducteur qui vous convient. Consultez les avis et
-              le profil avant de réserver.
-            </p>
-          </div>
-
-          <div>
-            <div className="w-12 h-12 bg-black text-white rounded-full flex items-center justify-center font-bold text-xl mb-6">
-              3
-            </div>
-            <h3 className="text-xl font-semibold mb-3">Voyagez ensemble</h3>
-            <p className="text-gray-600">
-              Rencontrez-vous au point de départ convenu. Partagez les frais et
-              profitez du voyage.
-            </p>
           </div>
         </div>
       </section>
 
       {/* Benefits */}
-      <section className="bg-gray-50 py-24">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                Économisez sur chaque trajet
-              </h2>
-              <p className="text-gray-600 mb-8">
-                Les frais d'essence et de péage partagés entre plusieurs
-                passagers permettent de réduire considérablement vos dépenses de
-                transport.
-              </p>
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Pourquoi choisir CoCars ?
+            </h2>
+            <p className="text-lg text-gray-600">
+              La solution de covoiturage la plus fiable au Cameroun
+            </p>
+          </div>
 
-              <div className="space-y-6">
-                <div className="flex gap-4">
-                  <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <DollarSign className="w-5 h-5 text-green-700" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {benefits.map((benefit, i) => {
+              const Icon = iconMap[benefit.icon];
+              return (
+                <div
+                  key={i}
+                  className="bg-white rounded-2xl p-6 border border-gray-100 hover:shadow-lg transition-shadow"
+                >
+                  <div
+                    className={`w-14 h-14 ${benefit.color} rounded-xl flex items-center justify-center mb-4`}
+                  >
+                    <Icon className="w-7 h-7" />
                   </div>
-                  <div>
-                    <h4 className="font-semibold mb-1">
-                      Jusqu'à 70% d'économies
-                    </h4>
-                    <p className="text-sm text-gray-600">
-                      Sur vos trajets réguliers et longues distances
-                    </p>
-                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">
+                    {benefit.title}
+                  </h3>
+                  <p className="text-gray-600">{benefit.description}</p>
                 </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
 
-                <div className="flex gap-4">
-                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Shield className="w-5 h-5 text-blue-700" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold mb-1">Paiement sécurisé</h4>
-                    <p className="text-sm text-gray-600">
-                      Transaction protégée via l'application
-                    </p>
-                  </div>
-                </div>
+      {/* How it Works */}
+      <section className="py-24 bg-black text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              Comment ça marche ?
+            </h2>
+            <p className="text-xl text-gray-400">
+              Réservez votre trajet en 3 étapes simples
+            </p>
+          </div>
 
-                <div className="flex gap-4">
-                  <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Users className="w-5 h-5 text-purple-700" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold mb-1">Profils vérifiés</h4>
-                    <p className="text-sm text-gray-600">
-                      Système d'évaluation et vérification d'identité
-                    </p>
-                  </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+            {/* Step 1 */}
+            <div className="relative">
+              <div className="bg-gray-900 rounded-3xl p-8 text-center border-2 border-gray-800 hover:border-yellow-400 transition-all">
+                <div className="w-16 h-16 bg-yellow-400 text-black rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">
+                  1
                 </div>
+                <div className="w-20 h-20 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Search className="w-10 h-10 text-yellow-400" />
+                </div>
+                <h3 className="text-2xl font-bold mb-3">Recherchez</h3>
+                <p className="text-gray-400">
+                  Indiquez votre destination et choisissez parmi les
+                  conducteurs disponibles
+                </p>
               </div>
             </div>
 
-            <div className="bg-white border-2 border-gray-200 rounded-2xl p-8">
-              <div className="mb-6">
-                <div className="text-sm text-gray-600 mb-2">
-                  Exemple de trajet
+            {/* Step 2 */}
+            <div className="relative">
+              <div className="bg-gray-900 rounded-3xl p-8 text-center border-2 border-gray-800 hover:border-yellow-400 transition-all">
+                <div className="w-16 h-16 bg-yellow-400 text-black rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">
+                  2
                 </div>
-                <div className="text-2xl font-bold">Yaoundé → Douala</div>
+                <div className="w-20 h-20 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle className="w-10 h-10 text-yellow-400" />
+                </div>
+                <h3 className="text-2xl font-bold mb-3">Réservez</h3>
+                <p className="text-gray-400">
+                  Consultez les profils, lisez les avis et réservez en quelques
+                  clics
+                </p>
               </div>
+            </div>
 
-              <div className="space-y-4 mb-6">
-                <div className="flex justify-between py-3 border-b border-gray-200">
-                  <span className="text-gray-600">
-                    Trajet solo (essence + péage)
-                  </span>
-                  <span className="font-semibold">8 500 FCFA</span>
+            {/* Step 3 */}
+            <div className="relative">
+              <div className="bg-gray-900 rounded-3xl p-8 text-center border-2 border-gray-800 hover:border-yellow-400 transition-all">
+                <div className="w-16 h-16 bg-yellow-400 text-black rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">
+                  3
                 </div>
-                <div className="flex justify-between py-3 border-b border-gray-200">
-                  <span className="text-gray-600">
-                    En covoiturage (3 passagers)
-                  </span>
-                  <span className="font-semibold">2 800 FCFA</span>
+                <div className="w-20 h-20 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Heart className="w-10 h-10 text-yellow-400" />
                 </div>
-                <div className="flex justify-between py-3">
-                  <span className="font-semibold">Vous économisez</span>
-                  <span className="text-2xl font-bold text-green-600">
-                    5 700 FCFA
-                  </span>
-                </div>
-              </div>
-
-              <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
-                <div className="text-sm">
-                  💡 Sur un mois (8 trajets), économisez jusqu'à{" "}
-                  <strong>45 600 FCFA</strong>
-                </div>
+                <h3 className="text-2xl font-bold mb-3">Voyagez</h3>
+                <p className="text-gray-400">
+                  Rencontrez votre conducteur au point de rendez-vous et
+                  profitez du trajet
+                </p>
               </div>
             </div>
           </div>
@@ -323,169 +354,178 @@ const CovoiturageLanding: React.FC = () => {
       </section>
 
       {/* Testimonials */}
-      <section className="max-w-6xl mx-auto px-4 py-24">
-        <h2 className="text-3xl md:text-4xl font-bold mb-16 text-center">
-          Ce que disent nos utilisateurs
-        </h2>
-
-        <div className="grid md:grid-cols-3 gap-8">
-          <div className="border-2 border-gray-200 rounded-2xl p-6">
-            <div className="flex gap-1 mb-4">
-              {[1, 2, 3, 4, 5].map((i) => (
-                <Star
-                  key={i}
-                  className="w-5 h-5 fill-yellow-400 text-yellow-400"
-                />
-              ))}
-            </div>
-            <p className="text-gray-700 mb-4">
-              "J'utilise RideShare tous les jours pour aller au travail. J'ai
-              économisé plus de 40 000 FCFA en 3 mois !"
+      <section className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              Ils nous font confiance
+            </h2>
+            <p className="text-xl text-gray-600">
+              Plus de 50 000 utilisateurs satisfaits
             </p>
-            <div className="font-semibold">Marie K.</div>
-            <div className="text-sm text-gray-500">Yaoundé</div>
           </div>
 
-          <div className="border-2 border-gray-200 rounded-2xl p-6">
-            <div className="flex gap-1 mb-4">
-              {[1, 2, 3, 4, 5].map((i) => (
-                <Star
-                  key={i}
-                  className="w-5 h-5 fill-yellow-400 text-yellow-400"
-                />
-              ))}
-            </div>
-            <p className="text-gray-700 mb-4">
-              "Super expérience ! Les conducteurs sont sympas et ponctuels. Je
-              recommande à 100%."
-            </p>
-            <div className="font-semibold">Jean-Paul M.</div>
-            <div className="text-sm text-gray-500">Douala</div>
-          </div>
-
-          <div className="border-2 border-gray-200 rounded-2xl p-6">
-            <div className="flex gap-1 mb-4">
-              {[1, 2, 3, 4, 5].map((i) => (
-                <Star
-                  key={i}
-                  className="w-5 h-5 fill-yellow-400 text-yellow-400"
-                />
-              ))}
-            </div>
-            <p className="text-gray-700 mb-4">
-              "Application simple et efficace. En plus, c'est bon pour
-              l'environnement !"
-            </p>
-            <div className="font-semibold">Sarah N.</div>
-            <div className="text-sm text-gray-500">Bafoussam</div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {testimonials.map((testimonial, i) => (
+              <div
+                key={i}
+                className="bg-gray-50 rounded-3xl p-8 border-2 border-gray-200 hover:border-black transition-all hover:shadow-xl"
+              >
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-16 h-16 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center shadow-lg">
+                    <span className="text-black font-bold text-lg">
+                      {testimonial.avatar}
+                    </span>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-gray-900 text-lg">
+                      {testimonial.name}
+                    </h4>
+                    <p className="text-sm text-gray-600">{testimonial.city}</p>
+                    <div className="flex items-center gap-1 mt-2">
+                      {[...Array(testimonial.rating)].map((_, j) => (
+                        <Star
+                          key={j}
+                          className="w-4 h-4 fill-yellow-400 text-yellow-400"
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <p className="text-gray-800 mb-4 text-lg leading-relaxed">
+                  "{testimonial.comment}"
+                </p>
+                <div className="text-sm text-gray-500 font-semibold">
+                  {testimonial.trips} trajets effectués
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="bg-black text-white py-24">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-5xl font-bold mb-6">
-            Prêt à commencer ?
+      {/* CTA Section */}
+      <section className="py-24 bg-gradient-to-br from-yellow-400 via-yellow-500 to-yellow-600 text-black">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-4xl md:text-6xl font-bold mb-6">
+            Prêt à partir ?
           </h2>
-          <p className="text-xl text-gray-300 mb-10">
-            Inscrivez-vous gratuitement et trouvez votre premier trajet
-            aujourd'hui
+          <p className="text-xl text-gray-900 mb-10 max-w-2xl mx-auto font-medium">
+            Rejoignez des milliers d'utilisateurs qui économisent chaque jour
+            avec CoCars
           </p>
-          <button className="bg-white text-black px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-100 inline-flex items-center gap-2">
-            Créer mon compte
-            <ArrowRight className="w-5 h-5" />
-          </button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button
+              onClick={handleSearch}
+              className="bg-black text-white px-10 py-5 rounded-full font-bold text-lg hover:bg-gray-900 transition-all hover:scale-105 shadow-xl inline-flex items-center justify-center gap-2"
+            >
+              Rechercher un trajet
+              <ArrowRight className="w-5 h-5" />
+            </button>
+            <button
+              onClick={navigateToSignup}
+              className="bg-white text-black px-10 py-5 rounded-full font-bold text-lg hover:bg-gray-100 transition-all hover:scale-105 shadow-xl"
+            >
+              Proposer un trajet
+            </button>
+          </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-gray-200 py-12">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
+      <footer className="bg-gray-900 text-white py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center">
-                  <Car className="w-4 h-4 text-white" />
+                <div className="w-10 h-10 bg-yellow-400 rounded-full flex items-center justify-center">
+                  <span className="text-black font-bold text-lg">C</span>
                 </div>
-                <span className="font-semibold">RideShare</span>
+                <span className="text-xl font-bold">CoCars</span>
               </div>
-              <p className="text-sm text-gray-600">
-                La plateforme de covoiturage qui connecte les voisins
+              <p className="text-gray-400 text-sm">
+                La plateforme de covoiturage n°1 au Cameroun
               </p>
             </div>
 
             <div>
-              <h4 className="font-semibold mb-3">Produit</h4>
-              <ul className="space-y-2 text-sm text-gray-600">
+              <h4 className="font-bold mb-4">À propos</h4>
+              <ul className="space-y-2 text-sm text-gray-400">
                 <li>
-                  <a href="#" className="hover:text-black">
-                    Fonctionnalités
-                  </a>
+                  <button className="hover:text-white transition-colors">
+                    Qui sommes-nous
+                  </button>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-black">
-                    Tarifs
-                  </a>
+                  <button className="hover:text-white transition-colors">
+                    Comment ça marche
+                  </button>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-black">
-                    Application mobile
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-semibold mb-3">Entreprise</h4>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li>
-                  <a href="#" className="hover:text-black">
-                    À propos
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-black">
+                  <button className="hover:text-white transition-colors">
                     Blog
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-black">
-                    Carrières
-                  </a>
+                  </button>
                 </li>
               </ul>
             </div>
 
             <div>
-              <h4 className="font-semibold mb-3">Support</h4>
-              <ul className="space-y-2 text-sm text-gray-600">
+              <h4 className="font-bold mb-4">Support</h4>
+              <ul className="space-y-2 text-sm text-gray-400">
                 <li>
-                  <a href="#" className="hover:text-black">
+                  <button className="hover:text-white transition-colors">
                     Centre d'aide
-                  </a>
+                  </button>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-black">
-                    Contact
-                  </a>
+                  <button className="hover:text-white transition-colors">
+                    Nous contacter
+                  </button>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-black">
+                  <button className="hover:text-white transition-colors">
+                    Signaler un problème
+                  </button>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-bold mb-4">Légal</h4>
+              <ul className="space-y-2 text-sm text-gray-400">
+                <li>
+                  <button className="hover:text-white transition-colors">
                     CGU
-                  </a>
+                  </button>
+                </li>
+                <li>
+                  <button className="hover:text-white transition-colors">
+                    Confidentialité
+                  </button>
+                </li>
+                <li>
+                  <button className="hover:text-white transition-colors">
+                    Cookies
+                  </button>
                 </li>
               </ul>
             </div>
           </div>
 
-          <div className="border-t border-gray-200 pt-8 text-center text-sm text-gray-600">
-            <p>© 2026 RideShare. Tous droits réservés.</p>
+          <div className="border-t border-gray-800 pt-8 text-center text-sm text-gray-400">
+            <p>© 2024 CoCars. Tous droits réservés.</p>
           </div>
         </div>
       </footer>
     </div>
   );
-};
+}
 
-export default CovoiturageLanding;
+// Composant wrapper avec le Provider
+export default function CovoiturageLanding() {
+  return (
+    <LandingProvider>
+      <LandingContent />
+    </LandingProvider>
+  );
+}
