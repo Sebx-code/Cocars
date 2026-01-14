@@ -52,21 +52,21 @@ function UserDashboardContent() {
 
   const vehicleTypes = [
     {
-      id: "economy",
+      id: "economy" as const,
       name: "Économique",
       description: "Partagez avec d'autres",
       price: "1,500 FCFA",
       icon: "🚗",
     },
     {
-      id: "standard",
+      id: "standard" as const,
       name: "Standard",
       description: "Confort et rapidité",
       price: "2,500 FCFA",
       icon: "🚙",
     },
     {
-      id: "premium",
+      id: "premium" as const,
       name: "Premium",
       description: "Luxe et prestige",
       price: "4,500 FCFA",
@@ -333,7 +333,7 @@ function UserDashboardContent() {
                                 <Star
                                   key={i}
                                   className={`w-4 h-4 ${
-                                    i < trip.rating
+                                    i < (trip.rating || 0)
                                       ? "fill-yellow-400 text-yellow-400"
                                       : "text-gray-300"
                                   }`}
@@ -455,7 +455,7 @@ function UserDashboardContent() {
                                 <Star
                                   key={i}
                                   className={`w-4 h-4 ${
-                                    i < trip.rating
+                                    i < (trip.rating || 0)
                                       ? "fill-yellow-400 text-yellow-400"
                                       : "text-gray-300"
                                   }`}
@@ -673,7 +673,7 @@ function UserDashboardContent() {
                           onClick={() =>
                             setBookingFormData({
                               ...bookingFormData,
-                              vehicleType: vehicle.id as any,
+                              vehicleType: vehicle.id,
                             })
                           }
                           className={`w-full p-4 rounded-xl border-2 transition-all text-left ${

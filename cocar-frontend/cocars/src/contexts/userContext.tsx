@@ -1,7 +1,6 @@
 // src/contexts/userContext.tsx
 import { createContext, useState, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
 
 // Types
 interface Trip {
@@ -59,7 +58,6 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 // Provider
 export function UserProvider({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
-  const { user } = useAuth();
   
   // States
   const [activeTab, setActiveTab] = useState<'dashboard' | 'trips' | 'upcoming' | 'history'>('dashboard');
