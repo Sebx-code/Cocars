@@ -1,1 +1,101 @@
 @import "tailwindcss";
+
+/* Variables CSS pour le thème */
+:root {
+  /* Light theme */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9fafb;
+  --bg-tertiary: #f3f4f6;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-tertiary: #6b7280;
+  --border-color: #e5e7eb;
+  --border-color-strong: #d1d5db;
+  --accent-primary: #facc15;
+  --accent-secondary: #eab308;
+  --card-bg: #ffffff;
+  --card-border: #e5e7eb;
+  --sidebar-bg: #ffffff;
+  --sidebar-text: #374151;
+  --sidebar-active-bg: #facc15;
+  --sidebar-active-text: #000000;
+  --input-bg: #ffffff;
+  --input-border: #d1d5db;
+  --hover-bg: #f3f4f6;
+}
+
+.dark {
+  /* Dark theme */
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-tertiary: #334155;
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #94a3b8;
+  --border-color: #334155;
+  --border-color-strong: #475569;
+  --accent-primary: #facc15;
+  --accent-secondary: #eab308;
+  --card-bg: #1e293b;
+  --card-border: #334155;
+  --sidebar-bg: #0f172a;
+  --sidebar-text: #cbd5e1;
+  --sidebar-active-bg: #facc15;
+  --sidebar-active-text: #000000;
+  --input-bg: #1e293b;
+  --input-border: #475569;
+  --hover-bg: #334155;
+}
+
+/* Transitions douces pour le changement de thème */
+* {
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+/* Classes utilitaires pour le thème */
+.bg-theme-primary {
+  background-color: var(--bg-primary);
+}
+
+.bg-theme-secondary {
+  background-color: var(--bg-secondary);
+}
+
+.bg-theme-tertiary {
+  background-color: var(--bg-tertiary);
+}
+
+.text-theme-primary {
+  color: var(--text-primary);
+}
+
+.text-theme-secondary {
+  color: var(--text-secondary);
+}
+
+.text-theme-tertiary {
+  color: var(--text-tertiary);
+}
+
+.border-theme {
+  border-color: var(--border-color);
+}
+
+.border-theme-strong {
+  border-color: var(--border-color-strong);
+}
+
+.card-theme {
+  background-color: var(--card-bg);
+  border-color: var(--card-border);
+}
+
+.input-theme {
+  background-color: var(--input-bg);
+  border-color: var(--input-border);
+  color: var(--text-primary);
+}
+
+.hover-theme:hover {
+  background-color: var(--hover-bg);
+}

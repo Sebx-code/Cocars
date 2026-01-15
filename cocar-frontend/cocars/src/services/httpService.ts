@@ -1,4 +1,4 @@
-// taxiYa-main/src/services/httpService.ts
+// cocar-frontend/cocars/src/services/httpService.ts
 import { API_CONFIG } from '../config/api';
 
 interface RequestOptions extends RequestInit {
@@ -35,7 +35,7 @@ class HttpService {
       }
 
       // Essayer d'extraire les messages de validation/erreur du backend
-      let errorBody: any = null;
+      let errorBody: Record<string, unknown> | null = null;
       try {
         errorBody = await response.clone().json();
       } catch (e) {
@@ -57,11 +57,20 @@ class HttpService {
         errorBody,
       });
 
-      const validationMessage =
-        errorBody?.message ||
-        (errorBody?.errors && (Object.values(errorBody.errors)[0] as any[])?.[0]) ||
-        errorBody?.error ||
-        `Erreur ${response.status}: ${response.statusText}`;
+      let validationMessage = `Erreur ${response.status}: ${response.statusText}`;
+      
+      if (errorBody) {
+        if (typeof errorBody.message === 'string') {
+          validationMessage = errorBody.message;
+        } else if (errorBody.errors && typeof errorBody.errors === 'object') {
+          const firstError = Object.values(errorBody.errors)[0];
+          if (Array.isArray(firstError) && firstError.length > 0) {
+            validationMessage = String(firstError[0]);
+          }
+        } else if (typeof errorBody.error === 'string') {
+          validationMessage = errorBody.error;
+        }
+      }
 
       throw new Error(validationMessage);
     }
@@ -79,25 +88,25 @@ class HttpService {
     return this.handleResponse<T>(response);
   }
   
-  async post<T>(url: string, data?: any, options: RequestOptions = {}): Promise<T> {
+  async post<T, D = unknown>(url: string, data?: D, options: RequestOptions = {}): Promise<T> {
     const requestUrl = `${this.baseURL}${url}`;
     console.log(`[httpService] POST ${requestUrl}`, { data, options });
     
     const response = await fetch(requestUrl, {
       method: 'POST',
       headers: this.getHeaders(options.skipAuth),
-      body: JSON.stringify(data),
+      body: data ? JSON.stringify(data) : undefined,
       ...options,
     });
     
     return this.handleResponse<T>(response);
   }
   
-  async put<T>(url: string, data?: any, options: RequestOptions = {}): Promise<T> {
+  async put<T, D = unknown>(url: string, data?: D, options: RequestOptions = {}): Promise<T> {
     const response = await fetch(`${this.baseURL}${url}`, {
       method: 'PUT',
       headers: this.getHeaders(options.skipAuth),
-      body: JSON.stringify(data),
+      body: data ? JSON.stringify(data) : undefined,
       ...options,
     });
     

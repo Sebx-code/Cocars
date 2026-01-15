@@ -1,24 +1,14 @@
-// taxiYa-main/src/hook/useAuth.ts
+// cocar-frontend/cocars/src/hooks/useAuth.tsx
 import { useState, useEffect, createContext, useContext, type ReactNode } from 'react';
 import { authService } from '../services/authService';
-
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  phone: string;
-  role: 'user' | 'admin';
-  avatar?: string;
-  is_verified: boolean;
-}
+import { User } from '../types';
 
 interface RegisterData {
   name: string;
   email: string;
-  phone: string;
+  phone?: string;
   password: string;
   password_confirmation: string;
-  [key: string]: string | number | boolean;
 }
 
 interface AuthContextType {
@@ -67,7 +57,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(true);
     try {
       const response = await authService.login({
-        login: email,
+        email,
         password,
       });
       

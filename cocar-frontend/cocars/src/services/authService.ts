@@ -1,20 +1,19 @@
-// taxiYa-main/src/services/authService.ts
+// cocar-frontend/cocars/src/services/authService.ts
 import { httpService } from './httpService';
 import { ENDPOINTS } from '../config/api';
+import { User } from '../types';
 
 interface LoginData {
-  login: string; // email ou phone
+  email: string;
   password: string;
-  fcm_token?: string;
 }
 
 interface RegisterData {
   name: string;
   email: string;
-  phone: string;
+  phone?: string;
   password: string;
   password_confirmation: string;
-  role?: 'user' | 'driver';
 }
 
 interface AuthResponse {
@@ -23,17 +22,8 @@ interface AuthResponse {
   data: {
     user: User;
     token: string;
+    token_type: string;
   };
-}
-
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  phone: string;
-  role: 'user' | 'admin';
-  avatar?: string;
-  is_verified: boolean;
 }
 
 class AuthService {
@@ -103,7 +93,7 @@ class AuthService {
     return !!this.getToken();
   }
   
-  getUserRole(): 'user' | 'driver' | 'admin' | null {
+  getUserRole(): 'user' | 'admin' | null {
     const user = this.getUser();
     return user?.role || null;
   }

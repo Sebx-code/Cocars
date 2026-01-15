@@ -136,12 +136,7 @@ export function LandingProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    // Log pour debug
-    console.log("Recherche de trajet:", searchData);
-
-    // Redirection vers la page de résultats de recherche
-    // Pour l'instant, on redirige vers le dashboard utilisateur
-    // Plus tard, vous pourrez créer une page de résultats dédiée
+    // Redirection vers la page de recherche de trajets
     const queryParams = new URLSearchParams({
       from: searchData.from,
       to: searchData.to,
@@ -149,8 +144,7 @@ export function LandingProvider({ children }: { children: ReactNode }) {
       passengers: searchData.passengers,
     });
 
-    // Rediriger vers une page de résultats (à créer) ou vers le dashboard
-    navigate(`/user?${queryParams.toString()}`);
+    navigate(`/trips?${queryParams.toString()}`);
   };
 
   const navigateToLogin = () => {
