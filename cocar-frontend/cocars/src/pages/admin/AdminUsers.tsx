@@ -14,24 +14,23 @@ export default function AdminUsers() {
   const [total, setTotal] = useState(0);
 
   useEffect(() => {
+    const loadUsers = async () => {
+      setLoading(true);
+      try {
+        const response = await adminService.getUsers(currentPage, search || undefined);
+        if (response.success) {
+          setUsers(response.data);
+          setTotalPages(response.meta.last_page);
+          setTotal(response.meta.total);
+        }
+      } catch (error) {
+        console.error('Erreur chargement utilisateurs:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
     loadUsers();
   }, [currentPage, search]);
-
-  const loadUsers = async () => {
-    setLoading(true);
-    try {
-      const response = await adminService.getUsers(currentPage, search || undefined);
-      if (response.success) {
-        setUsers(response.data);
-        setTotalPages(response.meta.last_page);
-        setTotal(response.meta.total);
-      }
-    } catch (error) {
-      console.error('Erreur chargement utilisateurs:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();

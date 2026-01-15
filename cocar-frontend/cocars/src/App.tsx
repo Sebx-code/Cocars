@@ -1,5 +1,6 @@
 // src/App.tsx - Application de covoiturage Rideshare
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 import { AuthProvider } from './hooks/useAuth';
 import { ThemeProvider } from './contexts/themeContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
@@ -24,32 +25,45 @@ import Notifications from './pages/dashboard/Notifications';
 import { AdminDashboard, AdminUsers, AdminTrips, AdminBookings, AdminSettings } from './pages/admin';
 
 import './App.css';
+import { PageTransition } from './components/animations';
 
 function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
         <Router>
-        <Routes>
+          <AnimatedRoutes />
+        </Router>
+      </AuthProvider>
+    </ThemeProvider>
+  );
+}
+
+function AnimatedRoutes() {
+  const location = useLocation();
+
+  return (
+    <AnimatePresence mode="wait" initial={false}>
+      <Routes location={location} key={location.pathname}>
           {/* ============ PAGES PUBLIQUES ============ */}
           
           {/* Page d'accueil */}
-          <Route path="/" element={<CovoiturageLanding />} />
+          <Route path="/" element={<PageTransition><CovoiturageLanding /></PageTransition>} />
           
           {/* Authentification */}
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/login" element={<PageTransition><LoginPage /></PageTransition>} />
+          <Route path="/signup" element={<PageTransition><SignupPage /></PageTransition>} />
           
           {/* Recherche et détails trajets (public) */}
-          <Route path="/trips" element={<SearchTripsPage />} />
-          <Route path="/trips/:id" element={<TripDetailPage />} />
+          <Route path="/trips" element={<PageTransition><SearchTripsPage /></PageTransition>} />
+          <Route path="/trips/:id" element={<PageTransition><TripDetailPage /></PageTransition>} />
           
           {/* Création de trajet (protégée) */}
           <Route
             path="/trips/create"
             element={
               <ProtectedRoute>
-                <CreateTripPage />
+                <PageTransition><CreateTripPage /></PageTransition>
               </ProtectedRoute>
             }
           />
@@ -58,9 +72,11 @@ function App() {
           <Route
             path="/user"
             element={
+              <PageTransition>
               <ProtectedRoute requiredRole="user">
                 <UserDashboard />
               </ProtectedRoute>
+              </PageTransition>
             }
           >
             {/* Routes enfants du dashboard */}
@@ -75,9 +91,11 @@ function App() {
           <Route
             path="/admin"
             element={
+              <PageTransition>
               <ProtectedRoute requiredRole="admin">
                 <AdminDashboard />
               </ProtectedRoute>
+              </PageTransition>
             }
           >
             <Route path="users" element={<AdminUsers />} />
@@ -88,10 +106,8 @@ function App() {
           
           {/* ============ PAGE 404 ============ */}
           <Route path="*" element={<NotFound />} />
-        </Routes>
-        </Router>
-      </AuthProvider>
-    </ThemeProvider>
+      </Routes>
+    </AnimatePresence>
   );
 }
 

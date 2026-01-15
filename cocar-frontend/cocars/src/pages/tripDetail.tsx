@@ -392,17 +392,33 @@ export default function TripDetailPage() {
                   </span>
                 </div>
 
-                <button
-                  onClick={() => setShowBookingModal(true)}
-                  disabled={trip.available_seats === 0}
-                  className="w-full bg-yellow-400 hover:bg-yellow-500 text-black py-5 rounded-full font-bold text-lg transition-all hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
-                >
-                  Réserver
-                </button>
+                {!isAuthenticated ? (
+                  <div className="space-y-3">
+                    <button
+                      onClick={() => navigate("/login", { state: { from: `/trips/${id}` } })}
+                      className="w-full bg-black hover:bg-neutral-900 text-white py-5 rounded-full font-bold text-lg transition-all hover:scale-[1.02] shadow-lg"
+                    >
+                      Se connecter pour réserver
+                    </button>
+                    <p className="text-xs text-center text-gray-500">
+                      Connectez-vous pour envoyer une demande de réservation.
+                    </p>
+                  </div>
+                ) : (
+                  <div>
+                    <button
+                      onClick={() => setShowBookingModal(true)}
+                      disabled={trip.available_seats === 0}
+                      className="w-full bg-yellow-400 hover:bg-yellow-500 text-black py-5 rounded-full font-bold text-lg transition-all hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                    >
+                      Réserver
+                    </button>
 
-                <p className="text-xs text-center text-gray-500 mt-4">
-                  Paiement après confirmation du conducteur
-                </p>
+                    <p className="text-xs text-center text-gray-500 mt-4">
+                      Paiement après confirmation du conducteur
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </div>

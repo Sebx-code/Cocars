@@ -20,6 +20,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import Layout from "../components/layout/Layout";
+import { AnimatePresence, motion } from "framer-motion";
 import { useAuth } from "../hooks/useAuth";
 import { tripService } from "../services/tripService";
 import { USE_MOCK_DATA } from "../config/api";
@@ -213,9 +214,17 @@ export default function CreateTripPage() {
           )}
 
           <form onSubmit={handleSubmit}>
+            <AnimatePresence mode="wait" initial={false}>
             {/* Step 1: Itinéraire */}
             {currentStep === 1 && (
-              <div className="bg-white rounded-3xl shadow-sm border-2 border-gray-100 p-8">
+              <motion.div
+                key="step-1"
+                initial={{ opacity: 0, x: 18 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -18 }}
+                transition={{ duration: 0.25 }}
+                className="bg-white rounded-3xl shadow-sm border-2 border-gray-100 p-8"
+              >
                 <h2 className="text-2xl font-bold text-gray-900 mb-8">Définissez votre itinéraire</h2>
 
                 <div className="mb-8">
@@ -296,12 +305,19 @@ export default function CreateTripPage() {
                     Continuer
                   </button>
                 </div>
-              </div>
+              </motion.div>
             )}
 
             {/* Step 2: Détails */}
             {currentStep === 2 && (
-              <div className="bg-white rounded-3xl shadow-sm border-2 border-gray-100 p-8">
+              <motion.div
+                key="step-2"
+                initial={{ opacity: 0, x: 18 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -18 }}
+                transition={{ duration: 0.25 }}
+                className="bg-white rounded-3xl shadow-sm border-2 border-gray-100 p-8"
+              >
                 <h2 className="text-2xl font-bold text-gray-900 mb-8">Détails du trajet</h2>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
@@ -398,12 +414,19 @@ export default function CreateTripPage() {
                     Continuer
                   </button>
                 </div>
-              </div>
+              </motion.div>
             )}
 
             {/* Step 3: Options */}
             {currentStep === 3 && (
-              <div className="bg-white rounded-3xl shadow-sm border-2 border-gray-100 p-8">
+              <motion.div
+                key="step-3"
+                initial={{ opacity: 0, x: 18 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -18 }}
+                transition={{ duration: 0.25 }}
+                className="bg-white rounded-3xl shadow-sm border-2 border-gray-100 p-8"
+              >
                 <h2 className="text-2xl font-bold text-gray-900 mb-8">Options et préférences</h2>
 
                 <div className="mb-8">
@@ -518,8 +541,9 @@ export default function CreateTripPage() {
                     )}
                   </button>
                 </div>
-              </div>
+              </motion.div>
             )}
+            </AnimatePresence>
           </form>
         </div>
       </div>

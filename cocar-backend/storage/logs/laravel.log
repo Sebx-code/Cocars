@@ -275,3 +275,29 @@
 #21 C:/Users/SEB/Desktop/Cocars/cocar-backend/artisan(12): Illuminate/Foundation/Console/Kernel->handle()
 #22 {main}
 "} 
+[2026-01-15 17:45:54] local.ERROR: Failed to extract the request port. Ensure the log line contains a valid port: 0 Accepted {"exception":"[object] (InvalidArgumentException(code: 0): Failed to extract the request port. Ensure the log line contains a valid port: 0 Accepted at C:/Users/SEB/Desktop/Cocars/cocar-backend/vendor/laravel/framework/src/Illuminate/Foundation/Console/ServeCommand.php:408)
+[stacktrace]
+#0 C:/Users/SEB/Desktop/Cocars/cocar-backend/vendor/laravel/framework/src/Illuminate/Foundation/Console/ServeCommand.php(320): Illuminate/Foundation/Console/ServeCommand::getRequestPortFromLine()
+#1 C:/Users/SEB/Desktop/Cocars/cocar-backend/vendor/laravel/framework/src/Illuminate/Collections/Traits/EnumeratesValues.php(261): Illuminate/Foundation/Console/ServeCommand->Illuminate/Foundation/Console/{closure}()
+#2 C:/Users/SEB/Desktop/Cocars/cocar-backend/vendor/laravel/framework/src/Illuminate/Foundation/Console/ServeCommand.php(305): Illuminate/Support/Collection->each()
+#3 C:/Users/SEB/Desktop/Cocars/cocar-backend/vendor/laravel/framework/src/Illuminate/Foundation/Console/ServeCommand.php(287): Illuminate/Foundation/Console/ServeCommand->flushOutputBuffer()
+#4 C:/Users/SEB/Desktop/Cocars/cocar-backend/vendor/symfony/process/Process.php(1320): Illuminate/Foundation/Console/ServeCommand->Illuminate/Foundation/Console/{closure}()
+#5 C:/Users/SEB/Desktop/Cocars/cocar-backend/vendor/symfony/process/Process.php(1420): Symfony/Component/Process/Process->Symfony/Component/Process/{closure}()
+#6 C:/Users/SEB/Desktop/Cocars/cocar-backend/vendor/symfony/process/Process.php(1340): Symfony/Component/Process/Process->readPipes()
+#7 C:/Users/SEB/Desktop/Cocars/cocar-backend/vendor/symfony/process/Process.php(875): Symfony/Component/Process/Process->updateStatus()
+#8 C:/Users/SEB/Desktop/Cocars/cocar-backend/vendor/laravel/framework/src/Illuminate/Foundation/Console/ServeCommand.php(131): Symfony/Component/Process/Process->isRunning()
+#9 C:/Users/SEB/Desktop/Cocars/cocar-backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate/Foundation/Console/ServeCommand->handle()
+#10 C:/Users/SEB/Desktop/Cocars/cocar-backend/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate/Container/BoundMethod::Illuminate/Container/{closure}()
+#11 C:/Users/SEB/Desktop/Cocars/cocar-backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(95): Illuminate/Container/Util::unwrapIfClosure()
+#12 C:/Users/SEB/Desktop/Cocars/cocar-backend/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate/Container/BoundMethod::callBoundMethod()
+#13 C:/Users/SEB/Desktop/Cocars/cocar-backend/vendor/laravel/framework/src/Illuminate/Container/Container.php(696): Illuminate/Container/BoundMethod::call()
+#14 C:/Users/SEB/Desktop/Cocars/cocar-backend/vendor/laravel/framework/src/Illuminate/Console/Command.php(213): Illuminate/Container/Container->call()
+#15 C:/Users/SEB/Desktop/Cocars/cocar-backend/vendor/symfony/console/Command/Command.php(341): Illuminate/Console/Command->execute()
+#16 C:/Users/SEB/Desktop/Cocars/cocar-backend/vendor/laravel/framework/src/Illuminate/Console/Command.php(182): Symfony/Component/Console/Command/Command->run()
+#17 C:/Users/SEB/Desktop/Cocars/cocar-backend/vendor/symfony/console/Application.php(1102): Illuminate/Console/Command->run()
+#18 C:/Users/SEB/Desktop/Cocars/cocar-backend/vendor/symfony/console/Application.php(356): Symfony/Component/Console/Application->doRunCommand()
+#19 C:/Users/SEB/Desktop/Cocars/cocar-backend/vendor/symfony/console/Application.php(195): Symfony/Component/Console/Application->doRun()
+#20 C:/Users/SEB/Desktop/Cocars/cocar-backend/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony/Component/Console/Application->run()
+#21 C:/Users/SEB/Desktop/Cocars/cocar-backend/artisan(12): Illuminate/Foundation/Console/Kernel->handle()
+#22 {main}
+"} 

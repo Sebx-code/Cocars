@@ -18,6 +18,7 @@ import {
   Dog,
 } from "lucide-react";
 import Layout from "../components/layout/Layout";
+import { AnimatePresence, motion } from "framer-motion";
 import { tripService } from "../services/tripService";
 import { USE_MOCK_DATA } from "../config/api";
 import type { Trip, TripSearchParams } from "../types";
@@ -369,8 +370,15 @@ export default function SearchTripsPage() {
           </div>
 
           {/* Filters panel */}
+          <AnimatePresence initial={false}>
           {showFilters && (
-            <div className="bg-white rounded-3xl border-2 border-gray-200 p-6 mb-6 shadow-lg">
+            <motion.div
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2 }}
+              className="bg-white rounded-3xl border-2 border-gray-200 p-6 mb-6 shadow-lg"
+            >
               <div className="flex justify-between items-center mb-4">
                 <h3 className="font-bold text-gray-900 text-lg">Filtres avancés</h3>
                 <button onClick={() => setShowFilters(false)}>
@@ -407,8 +415,9 @@ export default function SearchTripsPage() {
                   Appliquer
                 </button>
               </div>
-            </div>
+            </motion.div>
           )}
+         </AnimatePresence>
 
           {/* Loading */}
           {isLoading && (
@@ -448,10 +457,26 @@ export default function SearchTripsPage() {
 
           {/* Trips list */}
           {!isLoading && !error && trips.length > 0 && (
-            <div className="space-y-4">
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              variants={{
+                hidden: { opacity: 0 },
+                visible: {
+                  opacity: 1,
+                  transition: { staggerChildren: 0.06 },
+                },
+              }}
+              className="space-y-4"
+            >
               {trips.map((trip) => (
-                <div
+                <motion.div
                   key={trip.id}
+                  variants={{
+                    hidden: { opacity: 0, y: 14 },
+                    visible: { opacity: 1, y: 0 },
+                  }}
+                  whileHover={{ y: -2 }}
                   onClick={() => navigate(`/trips/${trip.id}`)}
                   className="bg-white rounded-3xl border-2 border-gray-200 hover:border-black hover:shadow-xl transition-all cursor-pointer overflow-hidden"
                 >
@@ -549,9 +574,9 @@ export default function SearchTripsPage() {
                       </span>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           )}
 
           {/* Pagination */}

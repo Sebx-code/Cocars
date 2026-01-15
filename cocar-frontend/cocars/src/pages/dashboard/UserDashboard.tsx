@@ -17,6 +17,7 @@ import {
   Wallet,
   Plus,
 } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 import { useAuth } from "../../hooks/useAuth";
 import type { UserStats } from "../../types";
 
@@ -60,18 +61,24 @@ export default function UserDashboard() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Mobile sidebar backdrop */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
+      <AnimatePresence>
+        {sidebarOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+      </AnimatePresence>
 
       {/* Sidebar */}
-      <aside
-        className={`fixed top-0 left-0 h-full w-72 bg-white border-r-2 border-gray-100 z-50 transform transition-transform lg:translate-x-0 ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+      <motion.aside
+        initial={false}
+        animate={{ x: sidebarOpen ? 0 : -288 }}
+        transition={{ type: "spring", stiffness: 260, damping: 28 }}
+        className={`fixed top-0 left-0 h-full w-72 bg-white border-r-2 border-gray-100 z-50 lg:translate-x-0`}
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
@@ -147,7 +154,7 @@ export default function UserDashboard() {
             </button>
           </div>
         </div>
-      </aside>
+      </motion.aside>
 
       {/* Main content */}
       <div className="lg:ml-72">
