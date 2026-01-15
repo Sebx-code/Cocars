@@ -1,12 +1,12 @@
 // src/pages/dashboard/UserDashboard.tsx
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate, Outlet, useLocation } from "react-router-dom";
 import {
   Home,
   Car,
   Calendar,
   Star,
-  User,
+  User as UserIcon,
   Bell,
   LogOut,
   Menu,
@@ -19,25 +19,15 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAuth } from "../../hooks/useAuth";
-import type { UserStats } from "../../types";
-
-const MOCK_STATS: UserStats = {
-  total_trips_as_driver: 12,
-  total_trips_as_passenger: 24,
-  total_earnings: 156000,
-  total_spent: 89500,
-  average_rating: 4.7,
-  total_ratings: 28,
-  upcoming_trips: 3,
-  completed_trips: 33,
-};
+import { userService } from "../../services/userService";
+import type { User, UserStats } from "../../types";
 
 const NAVIGATION = [
   { name: "Tableau de bord", href: "/user", icon: Home },
   { name: "Mes trajets", href: "/user/my-trips", icon: Car },
   { name: "Mes réservations", href: "/user/bookings", icon: Calendar },
   { name: "Mes évaluations", href: "/user/ratings", icon: Star },
-  { name: "Mon profil", href: "/user/profile", icon: User },
+  { name: "Mon profil", href: "/user/profile", icon: UserIcon },
   { name: "Notifications", href: "/user/notifications", icon: Bell },
 ];
 
@@ -46,7 +36,39 @@ export default function UserDashboard() {
   const navigate = useNavigate();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [stats] = useState<UserStats>(MOCK_STATS);
+  const [isDesktop, setIsDesktop] = useState(false);
+  const [stats, setStats] = useState<UserStats | null>(null);
+  const [statsLoading, setStatsLoading] = useState(true);
+
+  useEffect(() => {
+    // Desktop breakpoint aligned with Tailwind `lg` (1024px)
+    const mql = window.matchMedia("(min-width: 1024px)");
+    const update = () => setIsDesktop(mql.matches);
+    update();
+
+    // Support Safari/older browsers
+    if (mql.addEventListener) mql.addEventListener("change", update);
+    else mql.addListener(update);
+
+    return () => {
+      if (mql.removeEventListener) mql.removeEventListener("change", update);
+      else mql.removeListener(update);
+    };
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      setStatsLoading(true);
+      try {
+        const response = await userService.getUserStats();
+        setStats(response.data);
+      } catch {
+        setStats(null);
+      } finally {
+        setStatsLoading(false);
+      }
+    })();
+  }, []);
 
   const handleLogout = async () => {
     await logout();
@@ -76,9 +98,10 @@ export default function UserDashboard() {
       {/* Sidebar */}
       <motion.aside
         initial={false}
-        animate={{ x: sidebarOpen ? 0 : -288 }}
+        // Desktop: sidebar always visible. Mobile: animated.
+        animate={{ x: isDesktop ? 0 : sidebarOpen ? 0 : -288 }}
         transition={{ type: "spring", stiffness: 260, damping: 28 }}
-        className={`fixed top-0 left-0 h-full w-72 bg-white border-r-2 border-gray-100 z-50 lg:translate-x-0`}
+        className="fixed top-0 left-0 h-full w-72 bg-white border-r-2 border-gray-100 z-50"
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
@@ -106,8 +129,8 @@ export default function UserDashboard() {
                 <p className="font-bold text-gray-900">{user?.name || "Utilisateur"}</p>
                 <div className="flex items-center gap-1 text-sm text-gray-500">
                   <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                  <span className="font-semibold">{stats.average_rating}</span>
-                  <span className="text-gray-400">({stats.total_ratings} avis)</span>
+                  <span className="font-semibold">{stats?.average_rating ?? "-"}</span>
+                  <span className="text-gray-400">({stats?.total_ratings ?? 0} avis)</span>
                 </div>
               </div>
             </div>
@@ -196,7 +219,7 @@ export default function UserDashboard() {
         {/* Page content */}
         <main className="p-4 sm:p-6 lg:p-8">
           {location.pathname === "/user" ? (
-            <DashboardHome stats={stats} user={user} />
+            <DashboardHome stats={stats} statsLoading={statsLoading} user={user} />
           ) : (
             <Outlet />
           )}
@@ -206,7 +229,15 @@ export default function UserDashboard() {
   );
 }
 
-function DashboardHome({ stats, user }: { stats: UserStats; user: any }) {
+function DashboardHome({
+  stats,
+  statsLoading,
+  user,
+}: {
+  stats: UserStats | null;
+  statsLoading: boolean;
+  user: User | null;
+}) { 
   return (
     <div className="space-y-6">
       {/* Welcome */}
@@ -215,16 +246,16 @@ function DashboardHome({ stats, user }: { stats: UserStats; user: any }) {
           Bonjour, {user?.name?.split(" ")[0] || "Utilisateur"} ! 👋
         </h1>
         <p className="text-black/80 text-lg">
-          Vous avez {stats.upcoming_trips} trajet{stats.upcoming_trips > 1 ? "s" : ""} à venir.
+          Vous avez {stats?.upcoming_trips ?? 0} trajet{(stats?.upcoming_trips ?? 0) > 1 ? "s" : ""} à venir.
         </p>
       </div>
 
       {/* Stats cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard icon={Car} label="Trajets conducteur" value={stats.total_trips_as_driver} color="blue" />
-        <StatCard icon={MapPin} label="Trajets passager" value={stats.total_trips_as_passenger} color="green" />
-        <StatCard icon={TrendingUp} label="Gains totaux" value={`${stats.total_earnings.toLocaleString()} F`} color="yellow" />
-        <StatCard icon={Wallet} label="Dépenses" value={`${stats.total_spent.toLocaleString()} F`} color="purple" />
+        <StatCard icon={Car} label="Trajets conducteur" value={stats?.total_trips_as_driver ?? 0} color="blue" loading={statsLoading} />
+        <StatCard icon={MapPin} label="Trajets passager" value={stats?.total_trips_as_passenger ?? 0} color="green" loading={statsLoading} />
+        <StatCard icon={TrendingUp} label="Gains totaux" value={`${(stats?.total_earnings ?? 0).toLocaleString()} F`} color="yellow" loading={statsLoading} />
+        <StatCard icon={Wallet} label="Dépenses" value={`${(stats?.total_spent ?? 0).toLocaleString()} F`} color="purple" loading={statsLoading} />
       </div>
 
       {/* Quick actions */}
@@ -297,11 +328,13 @@ function StatCard({
   label,
   value,
   color,
+  loading,
 }: {
-  icon: any;
+  icon: React.ComponentType<{ className?: string }>;
   label: string;
   value: string | number;
   color: "blue" | "green" | "yellow" | "purple";
+  loading: boolean;
 }) {
   const colors = {
     blue: "bg-blue-100 text-blue-600",
@@ -315,7 +348,7 @@ function StatCard({
       <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 ${colors[color]}`}>
         <Icon className="w-6 h-6" />
       </div>
-      <p className="text-2xl font-bold text-gray-900">{value}</p>
+      <p className="text-2xl font-bold text-gray-900">{loading ? "…" : value}</p>
       <p className="text-sm text-gray-500 font-medium">{label}</p>
     </div>
   );

@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import { useTheme } from "../../contexts/themeContext";
+import type { AdminStats, Activity } from "../../services/adminService";
 
 const NAVIGATION = [
   { name: "Tableau de bord", href: "/admin", icon: Home },
@@ -80,7 +81,7 @@ export default function AdminDashboard() {
           {/* User info */}
           <div className="p-5 border-b-2 border-theme">
             <div className="flex items-center gap-4">
-              <div className="w-14 h-14 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center shadow-lg">
+              <div className="w-14 h-14 bg-linear-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center shadow-lg">
                 <span className="font-bold text-black text-lg">
                   {user?.name?.split(" ").map((n) => n[0]).join("") || "A"}
                 </span>
@@ -187,8 +188,11 @@ export default function AdminDashboard() {
 
 // Composant Home du dashboard admin
 function AdminHome() {
-  const [stats, setStats] = useState<any>(null);
-  const [activities, setActivities] = useState<any[]>([]);
+  // Types utilisés par le service admin
+  // (importés depuis adminService)
+
+  const [stats, setStats] = useState<AdminStats | null>(null);
+  const [activities, setActivities] = useState<Activity[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -211,16 +215,36 @@ function AdminHome() {
     }
   };
 
-  const statsCards = stats ? [
-    { label: "Utilisateurs", value: stats.total_users.toLocaleString(), change: `+${stats.new_users_this_month}`, color: "blue" },
-    { label: "Trajets", value: stats.total_trips.toLocaleString(), change: `+${stats.new_trips_this_month}`, color: "green" },
-    { label: "Réservations", value: stats.total_bookings.toLocaleString(), change: `+${stats.new_bookings_this_month}`, color: "yellow" },
-    { label: "Revenus", value: `${(stats.total_revenue / 1000000).toFixed(1)}M FCFA`, change: `+${(stats.revenue_this_month / 1000).toFixed(0)}K`, color: "purple" },
-  ] : [];
+  const statsCards = stats
+    ? [
+        {
+          label: "Utilisateurs",
+          value: stats.total_users.toLocaleString(),
+          change: `+${stats.new_users_this_month}`,
+          color: "blue",
+        },
+        {
+          label: "Trajets",
+          value: stats.total_trips.toLocaleString(),
+          change: `+${stats.new_trips_this_month}`,
+          color: "green",
+        },
+        {
+          label: "Réservations",
+          value: stats.total_bookings.toLocaleString(),
+          change: `+${stats.new_bookings_this_month}`,
+          color: "yellow",
+        },
+        {
+          label: "Revenus",
+          value: `${(stats.total_revenue / 1000000).toFixed(1)}M FCFA`,
+          change: `+${(stats.revenue_this_month / 1000).toFixed(0)}K`,
+          color: "purple",
+        },
+      ]
+    : [];
 
-  const recentActivities = activities.length > 0 ? activities : [
-    { type: "user" as const, text: "Chargement...", time: "" },
-  ];
+  const recentActivities = activities.length > 0 ? activities : [{ type: "user", text: "Chargement...", time: "" }];
 
   if (loading) {
     return (
@@ -233,7 +257,7 @@ function AdminHome() {
   return (
     <div className="space-y-6">
       {/* Welcome */}
-      <div className="bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-3xl p-8 text-black shadow-lg">
+      <div className="bg-linear-to-r from-yellow-400 to-yellow-500 rounded-3xl p-8 text-black shadow-lg">
         <h1 className="text-3xl font-bold mb-2">
           Bienvenue sur l'Administration 👋
         </h1>

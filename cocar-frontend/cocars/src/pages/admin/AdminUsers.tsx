@@ -120,7 +120,7 @@ export default function AdminUsers() {
                   <tr key={user.id} className="hover-theme">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center">
+                        <div className="w-10 h-10 bg-linear-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center">
                           <span className="font-bold text-black text-sm">
                             {user.name.split(" ").map(n => n[0]).join("")}
                           </span>

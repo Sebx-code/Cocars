@@ -3,33 +3,9 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Plus, Car, Users, MapPin, MoreVertical, Edit, Trash2, Eye, Loader2 } from "lucide-react";
 import { tripService } from "../../services/tripService";
-import { USE_MOCK_DATA } from "../../config/api";
 import type { Trip } from "../../types";
 
-const MOCK_MY_TRIPS: Trip[] = [
-  {
-    id: 1, driver_id: 1,
-    driver: { id: 1, name: "Moi", email: "", phone: "", role: "user", is_verified: true },
-    departure_city: "Yaoundé", departure_address: "Carrefour Nlongkak",
-    arrival_city: "Douala", arrival_address: "Akwa Palace",
-    departure_date: "2026-01-20", departure_time: "06:00",
-    available_seats: 3, total_seats: 4, price_per_seat: 4000,
-    status: "confirmed", luggage_allowed: true, pets_allowed: false,
-    smoking_allowed: false, music_allowed: true, air_conditioning: true,
-    created_at: "2026-01-10T10:00:00Z",
-  },
-  {
-    id: 2, driver_id: 1,
-    driver: { id: 1, name: "Moi", email: "", phone: "", role: "user", is_verified: true },
-    departure_city: "Douala", departure_address: "Bonapriso",
-    arrival_city: "Bafoussam", arrival_address: "Marché A",
-    departure_date: "2026-01-25", departure_time: "07:00",
-    available_seats: 2, total_seats: 4, price_per_seat: 5000,
-    status: "pending", luggage_allowed: true, pets_allowed: false,
-    smoking_allowed: false, music_allowed: true, air_conditioning: true,
-    created_at: "2026-01-12T14:00:00Z",
-  },
-];
+// Données réelles uniquement
 
 export default function MyTrips() {
   const [trips, setTrips] = useState<Trip[]>([]);
@@ -44,13 +20,8 @@ export default function MyTrips() {
   const loadTrips = async () => {
     setIsLoading(true);
     try {
-      if (USE_MOCK_DATA) {
-        await new Promise((r) => setTimeout(r, 500));
-        setTrips(MOCK_MY_TRIPS);
-      } else {
-        const response = await tripService.getMyTrips();
-        setTrips(response.data || []);
-      }
+      const response = await tripService.getMyTrips();
+      setTrips(response.data || []);
     } catch (error) {
       console.error('Erreur lors du chargement des trajets:', error);
       setTrips([]);

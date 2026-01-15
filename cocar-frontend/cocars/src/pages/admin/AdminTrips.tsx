@@ -1,5 +1,5 @@
 // cocar-frontend/cocars/src/pages/admin/AdminTrips.tsx
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Search, Eye, Trash2, ChevronLeft, ChevronRight, MapPin, Calendar, Clock } from "lucide-react";
 import { Trip } from "../../types";
 import { adminService } from "../../services/adminService";
@@ -14,16 +14,12 @@ export default function AdminTrips() {
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
 
-  useEffect(() => {
-    loadTrips();
-  }, [currentPage, statusFilter, search]);
-
-  const loadTrips = async () => {
+  const loadTrips = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await adminService.getTrips(currentPage, { 
-        status: statusFilter, 
-        search: search || undefined 
+      const response = await adminService.getTrips(currentPage, {
+        status: statusFilter,
+        search: search || undefined,
       });
       if (response.success) {
         setTrips(response.data);
@@ -31,11 +27,15 @@ export default function AdminTrips() {
         setTotal(response.meta.total);
       }
     } catch (error) {
-      console.error('Erreur chargement trajets:', error);
+      console.error("Erreur chargement trajets:", error);
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentPage, search, statusFilter]);
+
+  useEffect(() => {
+    loadTrips();
+  }, [loadTrips]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -166,10 +166,10 @@ export default function AdminTrips() {
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <p className="text-theme-primary font-medium">{(trip as any).driver?.name || "N/A"}</p>
+                      <p className="text-theme-primary font-medium">{trip.driver?.name || "N/A"}</p>
                     </td>
                     <td className="px-6 py-4">
-                      <p className="font-bold text-theme-primary">{(trip as any).price?.toLocaleString()} FCFA</p>
+                      <p className="font-bold text-theme-primary">{trip.price_per_seat?.toLocaleString()} FCFA</p>
                     </td>
                     <td className="px-6 py-4">
                       <span className={`font-semibold ${trip.available_seats === 0 ? "text-red-500" : "text-theme-primary"}`}>

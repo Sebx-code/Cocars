@@ -2,29 +2,9 @@
 import { useState, useEffect } from "react";
 import { Star, User, Car, MessageCircle, Loader2 } from "lucide-react";
 import { ratingService } from "../../services/ratingService";
-import { USE_MOCK_DATA } from "../../config/api";
 import type { Rating } from "../../types";
 
-const MOCK_RATINGS: Rating[] = [
-  {
-    id: 1, trip_id: 1, rater_id: 2,
-    rater: { id: 2, name: "Marie Fotso", email: "", phone: "", role: "user", is_verified: true, rating: 4.9 },
-    rated_user_id: 1,
-    rated_user: { id: 1, name: "Moi", email: "", phone: "", role: "user", is_verified: true },
-    rating: 5, comment: "Excellent passager, très ponctuel et agréable. Je recommande !",
-    rating_type: "passenger", punctuality: 5, communication: 5,
-    created_at: "2026-01-10T14:00:00Z",
-  },
-  {
-    id: 2, trip_id: 2, rater_id: 3,
-    rater: { id: 3, name: "Paul Nganou", email: "", phone: "", role: "user", is_verified: true, rating: 4.5 },
-    rated_user_id: 1,
-    rated_user: { id: 1, name: "Moi", email: "", phone: "", role: "user", is_verified: true },
-    rating: 4, comment: "Bon conducteur, trajet agréable. Petit retard au départ mais rien de grave.",
-    rating_type: "driver", punctuality: 3, communication: 5, comfort: 4,
-    created_at: "2026-01-08T10:00:00Z",
-  },
-];
+// Données réelles uniquement
 
 export default function MyRatings() {
   const [ratings, setRatings] = useState<Rating[]>([]);
@@ -38,13 +18,16 @@ export default function MyRatings() {
   const loadRatings = async () => {
     setIsLoading(true);
     try {
-      if (USE_MOCK_DATA) {
-        await new Promise((r) => setTimeout(r, 500));
-        setRatings(MOCK_RATINGS);
-      } else {
-        const response = await ratingService.getUserRatings("me");
-        setRatings(response.data);
+      // On récupère les évaluations du profil public de l'utilisateur connecté.
+      // Le backend n'expose pas un endpoint "me" public, donc on utilise l'id depuis le local storage.
+      const storedUser = localStorage.getItem("user");
+      const userId = storedUser ? (JSON.parse(storedUser) as { id?: number }).id : undefined;
+      if (!userId) {
+        setRatings([]);
+        return;
       }
+      const response = await ratingService.getUserRatings(userId);
+      setRatings(response.data);
     } finally {
       setIsLoading(false);
     }

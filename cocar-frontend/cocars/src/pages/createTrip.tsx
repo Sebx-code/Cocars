@@ -23,7 +23,6 @@ import Layout from "../components/layout/Layout";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAuth } from "../hooks/useAuth";
 import { tripService } from "../services/tripService";
-import { USE_MOCK_DATA } from "../config/api";
 import type { CreateTripData } from "../types";
 
 const POPULAR_CITIES = [
@@ -70,27 +69,24 @@ export default function CreateTripPage() {
     setError(null);
 
     try {
-      if (USE_MOCK_DATA) {
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-      } else {
-        const response = await tripService.createTrip(formData);
-        console.log('Trip created successfully:', response);
-      }
+      const response = await tripService.createTrip(formData);
+      console.log('Trip created successfully:', response);
       setSuccess(true);
       setTimeout(() => navigate("/user/my-trips"), 2000);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error creating trip:', err);
-      // Gérer les différents formats d'erreur
       let errorMessage = "Erreur lors de la création du trajet";
-      if (err.message) {
+
+      if (err instanceof Error) {
         errorMessage = err.message;
-      } else if (err.errors) {
-        // Erreurs de validation Laravel
-        const firstError = Object.values(err.errors)[0];
+      } else if (typeof err === 'object' && err !== null && 'errors' in err) {
+        const errors = (err as { errors?: Record<string, unknown> }).errors;
+        const firstError = errors ? Object.values(errors)[0] : undefined;
         if (Array.isArray(firstError) && firstError.length > 0) {
           errorMessage = String(firstError[0]);
         }
       }
+
       setError(errorMessage);
     } finally {
       setIsLoading(false);

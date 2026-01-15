@@ -2,31 +2,9 @@
 import { useState, useEffect } from "react";
 import { Bell, Calendar, Star, Car, CreditCard, CheckCircle, XCircle, Loader2, Trash2, Check } from "lucide-react";
 import { notificationService } from "../../services/notificationService";
-import { USE_MOCK_DATA } from "../../config/api";
 import type { Notification } from "../../types";
 
-const MOCK_NOTIFICATIONS: Notification[] = [
-  {
-    id: 1, user_id: 1, type: "booking_confirmed", title: "Réservation confirmée",
-    message: "Marie Fotso a confirmé votre réservation pour le trajet Yaoundé → Douala du 22 janvier.",
-    read: false, created_at: "2026-01-15T14:30:00Z",
-  },
-  {
-    id: 2, user_id: 1, type: "new_rating", title: "Nouvelle évaluation",
-    message: "Paul Nganou vous a attribué 5 étoiles. Consultez son commentaire !",
-    read: false, created_at: "2026-01-15T10:00:00Z",
-  },
-  {
-    id: 3, user_id: 1, type: "booking_request", title: "Nouvelle demande",
-    message: "Sophie Mbarga souhaite réserver 2 places pour votre trajet Douala → Bafoussam.",
-    read: true, created_at: "2026-01-14T16:00:00Z",
-  },
-  {
-    id: 4, user_id: 1, type: "trip_reminder", title: "Rappel de trajet",
-    message: "Votre trajet Yaoundé → Douala est prévu demain à 06h00.",
-    read: true, created_at: "2026-01-14T09:00:00Z",
-  },
-];
+// Données réelles uniquement
 
 export default function Notifications() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -39,28 +17,39 @@ export default function Notifications() {
   const loadNotifications = async () => {
     setIsLoading(true);
     try {
-      if (USE_MOCK_DATA) {
-        await new Promise((r) => setTimeout(r, 500));
-        setNotifications(MOCK_NOTIFICATIONS);
-      } else {
-        const response = await notificationService.getNotifications();
-        setNotifications(response.data);
-      }
+      const response = await notificationService.getNotifications();
+      // le service renvoie un PaginatedResponse
+      setNotifications(response.data);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const markAsRead = (id: number) => {
+  const markAsRead = async (id: number) => {
     setNotifications(notifications.map((n) => (n.id === id ? { ...n, read: true } : n)));
+    try {
+      await notificationService.markAsRead(id);
+    } catch {
+      // no-op: UI optimiste
+    }
   };
 
-  const markAllAsRead = () => {
+  const markAllAsRead = async () => {
     setNotifications(notifications.map((n) => ({ ...n, read: true })));
+    try {
+      await notificationService.markAllAsRead();
+    } catch {
+      // no-op
+    }
   };
 
-  const deleteNotification = (id: number) => {
+  const deleteNotification = async (id: number) => {
     setNotifications(notifications.filter((n) => n.id !== id));
+    try {
+      await notificationService.deleteNotification(id);
+    } catch {
+      // no-op
+    }
   };
 
   const getIcon = (type: string) => {

@@ -3,45 +3,10 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Calendar, Clock, User, Star, CheckCircle, XCircle, AlertCircle, Loader2, MessageCircle, Phone } from "lucide-react";
 import { bookingService } from "../../services/bookingService";
-import { USE_MOCK_DATA } from "../../config/api";
 import type { Booking } from "../../types";
 
-const MOCK_BOOKINGS: Booking[] = [
-  {
-    id: 1, trip_id: 1,
-    trip: {
-      id: 1, driver_id: 2,
-      driver: { id: 2, name: "Marie Fotso", email: "", phone: "677123456", role: "user", is_verified: true, rating: 4.9 },
-      departure_city: "Yaoundé", departure_address: "Mvan",
-      arrival_city: "Douala", arrival_address: "Bonapriso",
-      departure_date: "2026-01-22", departure_time: "08:00",
-      available_seats: 2, total_seats: 4, price_per_seat: 3500,
-      status: "confirmed", luggage_allowed: true, pets_allowed: false,
-      smoking_allowed: false, music_allowed: true, air_conditioning: true, created_at: "",
-    },
-    passenger_id: 1,
-    passenger: { id: 1, name: "Moi", email: "", phone: "", role: "user", is_verified: true },
-    seats_booked: 2, total_price: 7000, status: "confirmed",
-    created_at: "2026-01-15T10:00:00Z",
-  },
-  {
-    id: 2, trip_id: 3,
-    trip: {
-      id: 3, driver_id: 3,
-      driver: { id: 3, name: "Paul Nganou", email: "", phone: "655456789", role: "user", is_verified: true, rating: 4.5 },
-      departure_city: "Douala", departure_address: "Bonanjo",
-      arrival_city: "Bafoussam", arrival_address: "Marché A",
-      departure_date: "2026-01-25", departure_time: "07:00",
-      available_seats: 4, total_seats: 4, price_per_seat: 5000,
-      status: "confirmed", luggage_allowed: true, pets_allowed: false,
-      smoking_allowed: false, music_allowed: true, air_conditioning: true, created_at: "",
-    },
-    passenger_id: 1,
-    passenger: { id: 1, name: "Moi", email: "", phone: "", role: "user", is_verified: true },
-    seats_booked: 1, total_price: 5000, status: "pending",
-    created_at: "2026-01-14T14:00:00Z",
-  },
-];
+// Données réelles uniquement
+// (les réservations sont chargées via l'API)
 
 export default function MyBookings() {
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -55,13 +20,8 @@ export default function MyBookings() {
   const loadBookings = async () => {
     setIsLoading(true);
     try {
-      if (USE_MOCK_DATA) {
-        await new Promise((r) => setTimeout(r, 500));
-        setBookings(MOCK_BOOKINGS);
-      } else {
-        const response = await bookingService.getMyBookings();
-        setBookings(response.data || []);
-      }
+      const response = await bookingService.getMyBookings();
+      setBookings(response.data || []);
     } catch (error) {
       console.error('Erreur lors du chargement des réservations:', error);
       setBookings([]);
@@ -77,7 +37,7 @@ export default function MyBookings() {
   };
 
   const getStatusBadge = (status: string) => {
-    const badges: Record<string, { bg: string; text: string; icon: any; label: string }> = {
+    const badges: Record<string, { bg: string; text: string; icon: React.ComponentType<{ className?: string }>; label: string }> = {
       pending: { bg: "bg-yellow-100", text: "text-yellow-700", icon: AlertCircle, label: "En attente" },
       confirmed: { bg: "bg-green-100", text: "text-green-700", icon: CheckCircle, label: "Confirmée" },
       rejected: { bg: "bg-red-100", text: "text-red-700", icon: XCircle, label: "Refusée" },

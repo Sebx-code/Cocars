@@ -58,7 +58,6 @@ export default function Navbar() {
   useEffect(() => {
     setMobileMenuOpen(false);
     setUserMenuOpen(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
   return (

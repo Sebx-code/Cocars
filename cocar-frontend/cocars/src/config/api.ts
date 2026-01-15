@@ -14,8 +14,8 @@ export const API_CONFIG = {
   },
 };
 
-// Mode développement - utilise les données mockées si le backend n'est pas disponible
-export const USE_MOCK_DATA = import.meta.env.VITE_USE_MOCK_DATA === 'true';
+// Données réelles uniquement (pas de mock)
+// NB: si le backend n'est pas disponible, l'app doit afficher des états d'erreur/chargement.
 
 export const getApiUrl = (endpoint: string): string => {
   return `${API_CONFIG.BASE_URL}${API_CONFIG.API_PREFIX}${endpoint}`;

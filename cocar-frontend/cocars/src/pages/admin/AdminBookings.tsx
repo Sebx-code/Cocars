@@ -1,8 +1,10 @@
 // cocar-frontend/cocars/src/pages/admin/AdminBookings.tsx
-import { useState, useEffect } from "react";
-import { Search, Eye, CheckCircle, XCircle, ChevronLeft, ChevronRight, MapPin, User } from "lucide-react";
-import { Booking } from "../../types";
+import { useCallback, useEffect, useState } from "react";
+import { Search, Eye, CheckCircle, XCircle, ChevronLeft, ChevronRight, MapPin, User as UserIcon } from "lucide-react";
+import type { Booking, Trip, User as AppUser } from "../../types";
 import { adminService } from "../../services/adminService";
+
+type BookingWithRelations = Booking & { trip?: Trip; passenger?: AppUser };
 
 export default function AdminBookings() {
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -14,16 +16,12 @@ export default function AdminBookings() {
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
 
-  useEffect(() => {
-    loadBookings();
-  }, [currentPage, statusFilter, search]);
-
-  const loadBookings = async () => {
+  const loadBookings = useCallback(async () => {
     setLoading(true);
     try {
       const response = await adminService.getBookings(currentPage, {
         status: statusFilter,
-        search: search || undefined
+        search: search || undefined,
       });
       if (response.success) {
         setBookings(response.data);
@@ -31,11 +29,15 @@ export default function AdminBookings() {
         setTotal(response.meta.total);
       }
     } catch (error) {
-      console.error('Erreur chargement réservations:', error);
+      console.error("Erreur chargement réservations:", error);
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentPage, search, statusFilter]);
+
+  useEffect(() => {
+    loadBookings();
+  }, [loadBookings]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -158,8 +160,9 @@ export default function AdminBookings() {
                 </tr>
               ) : (
                 filteredBookings.map((booking) => {
-                  const trip = (booking as any).trip;
-                  const passenger = (booking as any).passenger;
+                  const bookingWithRelations = booking as BookingWithRelations;
+                  const trip = bookingWithRelations.trip;
+                  const passenger = bookingWithRelations.passenger;
                   return (
                     <tr key={booking.id} className="hover-theme">
                       <td className="px-6 py-4">
@@ -179,7 +182,7 @@ export default function AdminBookings() {
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2">
                           <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
-                            <User className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                            <UserIcon className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                           </div>
                           <span className="text-theme-primary font-medium">{passenger?.name}</span>
                         </div>
