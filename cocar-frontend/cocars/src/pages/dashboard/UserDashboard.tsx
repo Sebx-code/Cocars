@@ -120,7 +120,7 @@ export default function UserDashboard() {
           {/* User info */}
           <div className="p-5 border-b-2 border-gray-100">
             <div className="flex items-center gap-4">
-              <div className="w-14 h-14 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center shadow-lg">
+              <div className="w-14 h-14 bg-linear-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center shadow-lg">
                 <span className="font-bold text-black text-lg">
                   {user?.name?.split(" ").map((n) => n[0]).join("") || "U"}
                 </span>
@@ -241,7 +241,7 @@ function DashboardHome({
   return (
     <div className="space-y-6">
       {/* Welcome */}
-      <div className="bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-3xl p-8 text-black shadow-lg">
+      <div className="bg-linear-to-r from-yellow-400 to-yellow-500 rounded-3xl p-8 text-black shadow-lg">
         <h1 className="text-3xl font-bold mb-2">
           Bonjour, {user?.name?.split(" ")[0] || "Utilisateur"} ! 👋
         </h1>
