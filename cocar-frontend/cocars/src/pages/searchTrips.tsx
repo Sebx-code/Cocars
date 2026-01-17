@@ -127,7 +127,7 @@ export default function SearchTripsPage() {
                     Départ
                   </label>
                   <div className="relative">
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-black dark:bg-yellow-400 rounded-full" />
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-emerald-600 dark:bg-emerald-500 rounded-full" />
                     <input
                       type="text"
                       placeholder="Yaoundé"
@@ -135,7 +135,7 @@ export default function SearchTripsPage() {
                       onChange={(e) =>
                         setSearchData({ ...searchData, departure_city: e.target.value })
                       }
-                      className="input-theme w-full pl-9 pr-4 py-3.5 border-2 rounded-2xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none transition-all font-medium"
+                      className="input-theme w-full pl-9 pr-4 py-3.5 border-2 rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition-all font-medium"
                     />
                   </div>
                 </div>
@@ -145,13 +145,13 @@ export default function SearchTripsPage() {
                     Destination
                   </label>
                   <div className="relative">
-                    <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-yellow-500" />
+                    <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-emerald-600" />
                     <input
                       type="text"
                       placeholder="Douala"
                       value={searchData.arrival_city}
                       onChange={(e) => setSearchData({ ...searchData, arrival_city: e.target.value })}
-                      className="input-theme w-full pl-11 pr-4 py-3.5 border-2 rounded-2xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none transition-all font-medium"
+                      className="input-theme w-full pl-11 pr-4 py-3.5 border-2 rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition-all font-medium"
                     />
                   </div>
                 </div>
@@ -166,7 +166,7 @@ export default function SearchTripsPage() {
                       type="date"
                       value={searchData.date}
                       onChange={(e) => setSearchData({ ...searchData, date: e.target.value })}
-                      className="input-theme w-full pl-11 pr-4 py-3.5 border-2 rounded-2xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none transition-all font-medium"
+                      className="input-theme w-full pl-11 pr-4 py-3.5 border-2 rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition-all font-medium"
                     />
                   </div>
                 </div>
@@ -182,7 +182,7 @@ export default function SearchTripsPage() {
                       onChange={(e) =>
                         setSearchData({ ...searchData, passengers: parseInt(e.target.value) })
                       }
-                      className="input-theme w-full pl-11 pr-4 py-3.5 border-2 rounded-2xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none transition-all appearance-none font-medium"
+                      className="input-theme w-full pl-11 pr-4 py-3.5 border-2 rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition-all appearance-none font-medium"
                     >
                       <option value="1">1</option>
                       <option value="2">2</option>
@@ -196,7 +196,7 @@ export default function SearchTripsPage() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-black dark:bg-yellow-400 hover:bg-gray-900 dark:hover:bg-yellow-500 text-white dark:text-black py-4 rounded-2xl font-bold text-base transition-all hover:scale-[1.02] shadow-lg flex items-center justify-center gap-2 disabled:opacity-50"
+                className="w-full bg-emerald-600 dark:bg-emerald-500 hover:bg-emerald-700 dark:hover:bg-emerald-600 text-white dark:text-slate-950 py-4 rounded-2xl font-bold text-base transition-all hover:scale-[1.02] shadow-lg flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Search className="w-5 h-5" />}
                 Rechercher
@@ -217,7 +217,7 @@ export default function SearchTripsPage() {
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className="flex items-center gap-2 px-5 py-2.5 border-2 border-theme bg-theme-primary rounded-full hover:border-yellow-400 transition-all font-medium text-theme-primary"
+                className="flex items-center gap-2 px-5 py-2.5 border-2 border-theme bg-theme-primary rounded-full hover:border-emerald-400 transition-all font-medium text-theme-primary"
               >
                 <SlidersHorizontal className="w-4 h-4" />
                 Filtres
@@ -236,7 +236,7 @@ export default function SearchTripsPage() {
                     sort_order: sort_order as TripSearchParams["sort_order"],
                   });
                 }}
-                className="input-theme px-4 py-2.5 border-2 rounded-full font-medium focus:ring-2 focus:ring-yellow-400 outline-none"
+                className="input-theme px-4 py-2.5 border-2 rounded-full font-medium focus:ring-2 focus:ring-emerald-400 outline-none"
               >
                 <option value="date-asc">Date (proche)</option>
                 <option value="price-asc">Prix (bas)</option>
@@ -262,7 +262,7 @@ export default function SearchTripsPage() {
                         min_price: e.target.value ? parseInt(e.target.value) : undefined,
                       })
                     }
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-2xl outline-none focus:ring-2 focus:ring-yellow-400"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-2xl outline-none focus:ring-2 focus:ring-emerald-400"
                   />
                 </div>
                 <div>
@@ -278,7 +278,7 @@ export default function SearchTripsPage() {
                         max_price: e.target.value ? parseInt(e.target.value) : undefined,
                       })
                     }
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-2xl outline-none focus:ring-2 focus:ring-yellow-400"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-2xl outline-none focus:ring-2 focus:ring-emerald-400"
                   />
                 </div>
                 <div className="flex items-end">
@@ -288,7 +288,7 @@ export default function SearchTripsPage() {
                       setShowFilters(false);
                       loadTrips();
                     }}
-                    className="w-full bg-black text-white px-8 py-3 rounded-2xl font-semibold hover:bg-gray-900 transition-all"
+                    className="w-full bg-emerald-600 text-white px-8 py-3 rounded-2xl font-semibold hover:bg-emerald-700 transition-all"
                   >
                     Appliquer
                   </button>
@@ -299,7 +299,7 @@ export default function SearchTripsPage() {
 
           {isLoading && (
             <div className="flex justify-center items-center py-20">
-              <Loader2 className="w-10 h-10 animate-spin text-yellow-500" />
+              <Loader2 className="w-10 h-10 animate-spin text-emerald-500" />
             </div>
           )}
 
@@ -317,7 +317,7 @@ export default function SearchTripsPage() {
               <p className="text-theme-secondary mb-8 text-lg">Modifiez vos critères ou proposez votre trajet</p>
               <button
                 onClick={() => navigate("/trips/create")}
-                className="inline-flex items-center gap-2 bg-yellow-400 hover:bg-yellow-500 text-black px-8 py-4 rounded-2xl font-bold text-lg transition-all hover:scale-105"
+                className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-4 rounded-2xl font-bold text-lg transition-all hover:scale-105"
               >
                 Proposer un trajet
                 <ArrowRight className="w-5 h-5" />
@@ -331,16 +331,16 @@ export default function SearchTripsPage() {
                 <div
                   key={trip.id}
                   onClick={() => navigate(`/trips/${trip.id}`)}
-                  className="card-theme rounded-3xl border-2 hover:border-yellow-400 transition-all cursor-pointer overflow-hidden hover-lift group"
+                  className="card-theme rounded-3xl border-2 hover:border-emerald-400 transition-all cursor-pointer overflow-hidden hover-lift group"
                 >
                   <div className="p-6 sm:p-8">
                     <div className="flex flex-col lg:flex-row lg:items-center gap-6">
                       <div className="flex-1">
                         <div className="flex items-start gap-4">
                           <div className="flex flex-col items-center pt-1">
-                            <div className="w-3 h-3 bg-black dark:bg-yellow-400 rounded-full" />
+                            <div className="w-3 h-3 bg-emerald-600 dark:bg-emerald-500 rounded-full" />
                             <div className="w-0.5 h-20 bg-theme-tertiary" />
-                            <div className="w-3 h-3 bg-yellow-400 rounded-full" />
+                            <div className="w-3 h-3 bg-emerald-500 rounded-full" />
                           </div>
 
                           <div className="flex-1">
@@ -398,13 +398,13 @@ export default function SearchTripsPage() {
                           <div className="text-right">
                             <p className="font-semibold text-theme-primary">{trip.driver.name}</p>
                             <div className="flex items-center justify-end gap-1">
-                              <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                              <Star className="w-4 h-4 fill-emerald-500 text-emerald-500" />
                               <span className="font-medium text-theme-secondary">
                                 {trip.driver.rating || "N/A"}
                               </span>
                             </div>
                           </div>
-                          <div className="w-12 h-12 bg-linear-to-br from-yellow-400 to-yellow-500 rounded-2xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
+                          <div className="w-12 h-12 bg-linear-to-br from-emerald-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
                             <span className="font-bold text-black text-sm">
                               {trip.driver.name
                                 .split(" ")
@@ -427,7 +427,7 @@ export default function SearchTripsPage() {
                           {trip.available_seats} place{trip.available_seats > 1 ? "s" : ""}
                         </span>
                       </div>
-                      <span className="text-yellow-600 dark:text-yellow-400 font-bold flex items-center gap-1 group-hover:gap-2 transition-all">
+                      <span className="text-emerald-700 dark:text-emerald-400 font-bold flex items-center gap-1 group-hover:gap-2 transition-all">
                         Voir détails
                         <ArrowRight className="w-4 h-4" />
                       </span>
@@ -443,13 +443,13 @@ export default function SearchTripsPage() {
             <div className="flex justify-center gap-2 mt-10">
               <button
                 onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                className="px-4 py-2 rounded-full border-2 border-theme hover:border-yellow-400 font-semibold"
+                className="px-4 py-2 rounded-full border-2 border-theme hover:border-emerald-400 font-semibold"
               >
                 Précédent
               </button>
               <button
                 onClick={() => setCurrentPage((p) => p + 1)}
-                className="px-4 py-2 rounded-full border-2 border-theme hover:border-yellow-400 font-semibold"
+                className="px-4 py-2 rounded-full border-2 border-theme hover:border-emerald-400 font-semibold"
               >
                 Suivant
               </button>

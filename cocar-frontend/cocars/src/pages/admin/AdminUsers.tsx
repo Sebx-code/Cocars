@@ -83,7 +83,7 @@ export default function AdminUsers() {
             placeholder="Rechercher..."
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            className="input-theme pl-10 pr-4 py-2.5 w-full sm:w-64 rounded-xl border-2 focus:outline-none focus:border-yellow-400"
+            className="input-theme pl-10 pr-4 py-2.5 w-full sm:w-64 rounded-xl border-2 focus:outline-none focus:border-emerald-400"
           />
         </form>
       </div>
@@ -120,7 +120,7 @@ export default function AdminUsers() {
                   <tr key={user.id} className="hover-theme">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-linear-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center">
+                        <div className="w-10 h-10 bg-linear-to-br from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center">
                           <span className="font-bold text-black text-sm">
                             {user.name.split(" ").map(n => n[0]).join("")}
                           </span>
@@ -151,7 +151,7 @@ export default function AdminUsers() {
                           Vérifié
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400">
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400">
                           <XCircle className="w-3.5 h-3.5" />
                           En attente
                         </span>

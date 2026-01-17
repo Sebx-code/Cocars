@@ -91,7 +91,7 @@ export default function AdminTrips() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="input-theme px-4 py-2.5 rounded-xl border-2 focus:outline-none focus:border-yellow-400"
+            className="input-theme px-4 py-2.5 rounded-xl border-2 focus:outline-none focus:border-emerald-400"
           >
             <option value="all">Tous les statuts</option>
             <option value="active">Actifs</option>
@@ -107,7 +107,7 @@ export default function AdminTrips() {
               placeholder="Rechercher..."
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              className="input-theme pl-10 pr-4 py-2.5 w-full sm:w-64 rounded-xl border-2 focus:outline-none focus:border-yellow-400"
+              className="input-theme pl-10 pr-4 py-2.5 w-full sm:w-64 rounded-xl border-2 focus:outline-none focus:border-emerald-400"
             />
           </form>
         </div>

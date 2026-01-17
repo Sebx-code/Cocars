@@ -65,7 +65,7 @@ export default function SignupPage() {
   };
 
   const strength = passwordStrength();
-  const strengthColors = ["bg-gray-200 dark:bg-gray-700", "bg-red-500", "bg-orange-500", "bg-yellow-500", "bg-green-500"];
+  const strengthColors = ["bg-gray-200 dark:bg-gray-700", "bg-red-500", "bg-orange-500", "bg-emerald-500", "bg-green-500"];
   const strengthLabels = ["", "Faible", "Moyen", "Bon", "Fort"];
 
   return (
@@ -73,8 +73,8 @@ export default function SignupPage() {
       {/* Header */}
       <header className="p-6 animate-slide-in-left">
         <Link to="/" className="flex items-center gap-3 w-fit group">
-          <div className="w-11 h-11 bg-black dark:bg-yellow-400 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-            <span className="text-yellow-400 dark:text-black font-bold text-xl">R</span>
+          <div className="w-11 h-11 bg-emerald-600 dark:bg-emerald-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+            <span className="text-white dark:text-slate-950 font-bold text-xl">R</span>
           </div>
           <span className="text-2xl font-bold text-theme-primary tracking-tight">Rideshare</span>
         </Link>
@@ -85,8 +85,8 @@ export default function SignupPage() {
         <div className="w-full max-w-md animate-fade-in-scale">
           {/* Title */}
           <div className="text-center mb-10">
-            <div className="inline-flex items-center gap-2 bg-yellow-50 dark:bg-yellow-400/10 border border-yellow-200 dark:border-yellow-400/20 px-4 py-2 rounded-full mb-6 animate-bounce-smooth">
-              <Sparkles className="w-4 h-4 text-yellow-600 dark:text-yellow-400" />
+            <div className="inline-flex items-center gap-2 bg-emerald-50 dark:bg-emerald-400/10 border border-emerald-200 dark:border-emerald-400/20 px-4 py-2 rounded-full mb-6 animate-bounce-smooth">
+              <Sparkles className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
               <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                 Rejoignez-nous
               </span>
@@ -114,13 +114,13 @@ export default function SignupPage() {
                 Nom complet
               </label>
               <div className="relative group">
-                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-theme-tertiary group-focus-within:text-yellow-500 transition-colors" />
+                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-theme-tertiary group-focus-within:text-emerald-600 transition-colors" />
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="Jean Kamga"
-                  className="input-theme w-full pl-12 pr-4 py-4 border-2 rounded-2xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none transition-all font-medium placeholder:text-theme-tertiary"
+                  className="input-theme w-full pl-12 pr-4 py-4 border-2 rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition-all font-medium placeholder:text-theme-tertiary"
                   required
                 />
               </div>
@@ -131,13 +131,13 @@ export default function SignupPage() {
                 Email
               </label>
               <div className="relative group">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-theme-tertiary group-focus-within:text-yellow-500 transition-colors" />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-theme-tertiary group-focus-within:text-emerald-600 transition-colors" />
                 <input
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   placeholder="votre@email.com"
-                  className="input-theme w-full pl-12 pr-4 py-4 border-2 rounded-2xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none transition-all font-medium placeholder:text-theme-tertiary"
+                  className="input-theme w-full pl-12 pr-4 py-4 border-2 rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition-all font-medium placeholder:text-theme-tertiary"
                   required
                 />
               </div>
@@ -148,13 +148,13 @@ export default function SignupPage() {
                 Téléphone
               </label>
               <div className="relative group">
-                <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-theme-tertiary group-focus-within:text-yellow-500 transition-colors" />
+                <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-theme-tertiary group-focus-within:text-emerald-600 transition-colors" />
                 <input
                   type="tel"
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                   placeholder="699 123 456"
-                  className="input-theme w-full pl-12 pr-4 py-4 border-2 rounded-2xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none transition-all font-medium placeholder:text-theme-tertiary"
+                  className="input-theme w-full pl-12 pr-4 py-4 border-2 rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition-all font-medium placeholder:text-theme-tertiary"
                 />
               </div>
             </div>
@@ -164,13 +164,13 @@ export default function SignupPage() {
                 Mot de passe
               </label>
               <div className="relative group">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-theme-tertiary group-focus-within:text-yellow-500 transition-colors" />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-theme-tertiary group-focus-within:text-emerald-600 transition-colors" />
                 <input
                   type={showPassword ? "text" : "password"}
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   placeholder="••••••••"
-                  className="input-theme w-full pl-12 pr-12 py-4 border-2 rounded-2xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none transition-all font-medium"
+                  className="input-theme w-full pl-12 pr-12 py-4 border-2 rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition-all font-medium"
                   required
                   minLength={8}
                 />
@@ -207,7 +207,7 @@ export default function SignupPage() {
                 Confirmer le mot de passe
               </label>
               <div className="relative group">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-theme-tertiary group-focus-within:text-yellow-500 transition-colors" />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-theme-tertiary group-focus-within:text-emerald-600 transition-colors" />
                 <input
                   type={showPassword ? "text" : "password"}
                   value={formData.password_confirmation}
@@ -216,7 +216,7 @@ export default function SignupPage() {
                   className={`input-theme w-full pl-12 pr-12 py-4 border-2 rounded-2xl focus:ring-2 outline-none transition-all font-medium ${
                     formData.password_confirmation && formData.password !== formData.password_confirmation
                       ? "border-red-300 dark:border-red-800 focus:border-red-400 focus:ring-red-400"
-                      : "focus:ring-yellow-400 focus:border-yellow-400"
+                      : "focus:ring-emerald-400 focus:border-emerald-400"
                   }`}
                   required
                 />
@@ -232,15 +232,15 @@ export default function SignupPage() {
                   type="checkbox"
                   checked={acceptTerms}
                   onChange={(e) => setAcceptTerms(e.target.checked)}
-                  className="w-4 h-4 mt-0.5 rounded border-gray-300 dark:border-gray-600 text-yellow-400 focus:ring-yellow-400 transition-colors"
+                  className="w-4 h-4 mt-0.5 rounded border-gray-300 dark:border-gray-600 text-emerald-500 focus:ring-emerald-400 transition-colors"
                 />
                 <span className="text-sm text-theme-secondary group-hover:text-theme-primary transition-colors">
                   J'accepte les{" "}
-                  <Link to="/terms" className="font-semibold text-theme-primary hover:text-yellow-600 dark:hover:text-yellow-400">
+                  <Link to="/terms" className="font-semibold text-theme-primary hover:text-emerald-700 dark:hover:text-emerald-400">
                     Conditions d'utilisation
                   </Link>{" "}
                   et la{" "}
-                  <Link to="/privacy" className="font-semibold text-theme-primary hover:text-yellow-600 dark:hover:text-yellow-400">
+                  <Link to="/privacy" className="font-semibold text-theme-primary hover:text-emerald-700 dark:hover:text-emerald-400">
                     Politique de confidentialité
                   </Link>
                 </span>
@@ -250,7 +250,7 @@ export default function SignupPage() {
             <button
               type="submit"
               disabled={isLoading || !acceptTerms}
-              className="w-full bg-black dark:bg-yellow-400 hover:bg-gray-900 dark:hover:bg-yellow-500 text-white dark:text-black py-4 rounded-2xl font-bold text-base transition-all hover:scale-[1.02] shadow-lg hover:shadow-xl flex items-center justify-center gap-2 disabled:opacity-50 mt-6 ripple-effect"
+              className="w-full bg-emerald-600 dark:bg-emerald-500 hover:bg-emerald-700 dark:hover:bg-emerald-600 text-white dark:text-slate-950 py-4 rounded-2xl font-bold text-base transition-all hover:scale-[1.02] shadow-lg hover:shadow-xl flex items-center justify-center gap-2 disabled:opacity-50 mt-6 ripple-effect"
             >
               {isLoading ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
@@ -292,7 +292,7 @@ export default function SignupPage() {
             Déjà un compte ?{" "}
             <Link 
               to="/login" 
-              className="font-bold text-theme-primary hover:text-yellow-600 dark:hover:text-yellow-400 transition-colors"
+              className="font-bold text-theme-primary hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors"
             >
               Se connecter
             </Link>

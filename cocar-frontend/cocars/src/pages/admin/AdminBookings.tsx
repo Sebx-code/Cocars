@@ -75,7 +75,7 @@ export default function AdminBookings() {
 
   const getStatusBadge = (status: string) => {
     const styles: Record<string, string> = {
-      pending: "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400",
+      pending: "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400",
       confirmed: "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400",
       completed: "bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400",
       cancelled: "bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400",
@@ -107,7 +107,7 @@ export default function AdminBookings() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="input-theme px-4 py-2.5 rounded-xl border-2 focus:outline-none focus:border-yellow-400"
+            className="input-theme px-4 py-2.5 rounded-xl border-2 focus:outline-none focus:border-emerald-400"
           >
             <option value="all">Tous les statuts</option>
             <option value="pending">En attente</option>
@@ -124,7 +124,7 @@ export default function AdminBookings() {
               placeholder="Rechercher..."
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              className="input-theme pl-10 pr-4 py-2.5 w-full sm:w-64 rounded-xl border-2 focus:outline-none focus:border-yellow-400"
+              className="input-theme pl-10 pr-4 py-2.5 w-full sm:w-64 rounded-xl border-2 focus:outline-none focus:border-emerald-400"
             />
           </form>
         </div>

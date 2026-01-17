@@ -16,8 +16,8 @@ export default function Footer() {
     >
       {/* subtle glow */}
       <div className="absolute inset-0 opacity-30 pointer-events-none">
-        <div className="absolute -top-24 -left-24 w-72 h-72 bg-yellow-400/20 blur-3xl rounded-full" />
-        <div className="absolute -bottom-24 -right-24 w-72 h-72 bg-yellow-400/10 blur-3xl rounded-full" />
+        <div className="absolute -top-24 -left-24 w-72 h-72 bg-emerald-400/20 blur-3xl rounded-full" />
+        <div className="absolute -bottom-24 -right-24 w-72 h-72 bg-emerald-400/10 blur-3xl rounded-full" />
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -25,8 +25,8 @@ export default function Footer() {
           <div>
             <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
               <Link to="/" className="flex items-center gap-2 mb-4 w-fit">
-                <div className="w-10 h-10 bg-yellow-400 rounded-full flex items-center justify-center">
-                  <span className="text-black font-bold text-lg">Rs</span>
+                <div className="w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center">
+                  <span className="text-white font-bold text-lg">Rs</span>
                 </div>
                 <span className="text-xl font-bold">Rideshare</span>
               </Link>

@@ -47,7 +47,7 @@ export default function AdminSettings() {
               type="text"
               value={settings.siteName}
               onChange={(e) => setSettings({ ...settings, siteName: e.target.value })}
-              className="input-theme w-full px-4 py-3 rounded-xl border-2 focus:outline-none focus:border-yellow-400"
+              className="input-theme w-full px-4 py-3 rounded-xl border-2 focus:outline-none focus:border-emerald-400"
             />
           </div>
 
@@ -59,7 +59,7 @@ export default function AdminSettings() {
               type="email"
               value={settings.contactEmail}
               onChange={(e) => setSettings({ ...settings, contactEmail: e.target.value })}
-              className="input-theme w-full px-4 py-3 rounded-xl border-2 focus:outline-none focus:border-yellow-400"
+              className="input-theme w-full px-4 py-3 rounded-xl border-2 focus:outline-none focus:border-emerald-400"
             />
           </div>
 
@@ -72,7 +72,7 @@ export default function AdminSettings() {
                 type="number"
                 value={settings.commissionRate}
                 onChange={(e) => setSettings({ ...settings, commissionRate: parseInt(e.target.value) })}
-                className="input-theme w-full px-4 py-3 rounded-xl border-2 focus:outline-none focus:border-yellow-400"
+                className="input-theme w-full px-4 py-3 rounded-xl border-2 focus:outline-none focus:border-emerald-400"
               />
             </div>
             <div>
@@ -83,7 +83,7 @@ export default function AdminSettings() {
                 type="number"
                 value={settings.minPrice}
                 onChange={(e) => setSettings({ ...settings, minPrice: parseInt(e.target.value) })}
-                className="input-theme w-full px-4 py-3 rounded-xl border-2 focus:outline-none focus:border-yellow-400"
+                className="input-theme w-full px-4 py-3 rounded-xl border-2 focus:outline-none focus:border-emerald-400"
               />
             </div>
             <div>
@@ -94,7 +94,7 @@ export default function AdminSettings() {
                 type="number"
                 value={settings.maxSeats}
                 onChange={(e) => setSettings({ ...settings, maxSeats: parseInt(e.target.value) })}
-                className="input-theme w-full px-4 py-3 rounded-xl border-2 focus:outline-none focus:border-yellow-400"
+                className="input-theme w-full px-4 py-3 rounded-xl border-2 focus:outline-none focus:border-emerald-400"
               />
             </div>
           </div>
@@ -118,11 +118,11 @@ export default function AdminSettings() {
           <button
             onClick={toggleTheme}
             className={`relative w-14 h-8 rounded-full transition-colors ${
-              isDark ? "bg-yellow-400" : "bg-gray-300 dark:bg-gray-600"
+              isDark ? "bg-emerald-500" : "bg-gray-300 dark:bg-gray-600"
             }`}
           >
             <span
-              className={`absolute top-1 w-6 h-6 bg-white rounded-full shadow transition-transform ${
+              className={`absolute top-1 w-6 h-6 bg-theme-primary rounded-full shadow transition-transform ${
                 isDark ? "translate-x-7" : "translate-x-1"
               }`}
             />
@@ -148,11 +148,11 @@ export default function AdminSettings() {
             <button
               onClick={() => setSettings({ ...settings, emailNotifications: !settings.emailNotifications })}
               className={`relative w-14 h-8 rounded-full transition-colors ${
-                settings.emailNotifications ? "bg-yellow-400" : "bg-gray-300 dark:bg-gray-600"
+                settings.emailNotifications ? "bg-emerald-500" : "bg-gray-300 dark:bg-gray-600"
               }`}
             >
               <span
-                className={`absolute top-1 w-6 h-6 bg-white rounded-full shadow transition-transform ${
+                className={`absolute top-1 w-6 h-6 bg-theme-primary rounded-full shadow transition-transform ${
                   settings.emailNotifications ? "translate-x-7" : "translate-x-1"
                 }`}
               />
@@ -167,11 +167,11 @@ export default function AdminSettings() {
             <button
               onClick={() => setSettings({ ...settings, smsNotifications: !settings.smsNotifications })}
               className={`relative w-14 h-8 rounded-full transition-colors ${
-                settings.smsNotifications ? "bg-yellow-400" : "bg-gray-300 dark:bg-gray-600"
+                settings.smsNotifications ? "bg-emerald-500" : "bg-gray-300 dark:bg-gray-600"
               }`}
             >
               <span
-                className={`absolute top-1 w-6 h-6 bg-white rounded-full shadow transition-transform ${
+                className={`absolute top-1 w-6 h-6 bg-theme-primary rounded-full shadow transition-transform ${
                   settings.smsNotifications ? "translate-x-7" : "translate-x-1"
                 }`}
               />
@@ -201,7 +201,7 @@ export default function AdminSettings() {
             }`}
           >
             <span
-              className={`absolute top-1 w-6 h-6 bg-white rounded-full shadow transition-transform ${
+              className={`absolute top-1 w-6 h-6 bg-theme-primary rounded-full shadow transition-transform ${
                 settings.maintenanceMode ? "translate-x-7" : "translate-x-1"
               }`}
             />
@@ -213,7 +213,7 @@ export default function AdminSettings() {
       <div className="flex justify-end">
         <button
           onClick={handleSave}
-          className="flex items-center gap-2 bg-yellow-400 hover:bg-yellow-500 text-black px-8 py-3 rounded-full font-bold transition-all hover:scale-105"
+          className="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-3 rounded-full font-bold transition-all hover:scale-105"
         >
           <Save className="w-5 h-5" />
           Sauvegarder les paramètres

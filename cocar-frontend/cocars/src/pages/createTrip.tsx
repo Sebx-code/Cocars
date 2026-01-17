@@ -175,7 +175,7 @@ export default function CreateTripPage() {
                   <div
                     className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg transition-colors ${
                       currentStep >= step.num
-                        ? "bg-yellow-400 text-black"
+                        ? "bg-emerald-500 text-white"
                         : "bg-gray-200 text-gray-500"
                     }`}
                   >
@@ -188,7 +188,7 @@ export default function CreateTripPage() {
                   </span>
                   {index < 2 && (
                     <div className={`w-16 sm:w-24 h-1 mx-4 rounded-full ${
-                      currentStep > step.num ? "bg-yellow-400" : "bg-gray-200"
+                      currentStep > step.num ? "bg-emerald-500" : "bg-gray-200"
                     }`}></div>
                   )}
                 </div>
@@ -234,7 +234,7 @@ export default function CreateTripPage() {
                       <select
                         value={formData.departure_city}
                         onChange={(e) => setFormData({ ...formData, departure_city: e.target.value })}
-                        className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none font-medium"
+                        className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none font-medium"
                         required
                       >
                         <option value="">Sélectionnez une ville</option>
@@ -250,7 +250,7 @@ export default function CreateTripPage() {
                         value={formData.departure_address}
                         onChange={(e) => setFormData({ ...formData, departure_address: e.target.value })}
                         placeholder="Ex: Carrefour Nlongkak, devant la pharmacie"
-                        className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none font-medium"
+                        className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none font-medium"
                         required
                       />
                     </div>
@@ -259,7 +259,7 @@ export default function CreateTripPage() {
 
                 <div className="mb-8">
                   <label className="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-3">
-                    <MapPin className="w-4 h-4 text-yellow-500" />
+                    <MapPin className="w-4 h-4 text-emerald-600" />
                     Lieu d'arrivée
                   </label>
                   <div className="space-y-4">
@@ -268,7 +268,7 @@ export default function CreateTripPage() {
                       <select
                         value={formData.arrival_city}
                         onChange={(e) => setFormData({ ...formData, arrival_city: e.target.value })}
-                        className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none font-medium"
+                        className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none font-medium"
                         required
                       >
                         <option value="">Sélectionnez une ville</option>
@@ -284,7 +284,7 @@ export default function CreateTripPage() {
                         value={formData.arrival_address}
                         onChange={(e) => setFormData({ ...formData, arrival_address: e.target.value })}
                         placeholder="Ex: Akwa Palace, près du rond-point"
-                        className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none font-medium"
+                        className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none font-medium"
                         required
                       />
                     </div>
@@ -327,7 +327,7 @@ export default function CreateTripPage() {
                       value={formData.departure_date}
                       onChange={(e) => setFormData({ ...formData, departure_date: e.target.value })}
                       min={new Date().toISOString().split("T")[0]}
-                      className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none font-medium"
+                      className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none font-medium"
                       required
                     />
                   </div>
@@ -340,7 +340,7 @@ export default function CreateTripPage() {
                       type="time"
                       value={formData.departure_time}
                       onChange={(e) => setFormData({ ...formData, departure_time: e.target.value })}
-                      className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none font-medium"
+                      className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none font-medium"
                       required
                     />
                   </div>
@@ -355,7 +355,7 @@ export default function CreateTripPage() {
                     <select
                       value={formData.available_seats}
                       onChange={(e) => setFormData({ ...formData, available_seats: parseInt(e.target.value) })}
-                      className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none font-medium"
+                      className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none font-medium"
                       required
                     >
                       {[1, 2, 3, 4, 5, 6, 7].map((num) => (
@@ -375,21 +375,21 @@ export default function CreateTripPage() {
                       placeholder="Ex: 4000"
                       min="500"
                       step="100"
-                      className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none font-medium"
+                      className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none font-medium"
                       required
                     />
                   </div>
                 </div>
 
                 {formData.price_per_seat > 0 && formData.available_seats > 0 && (
-                  <div className="bg-yellow-50 border-2 border-yellow-200 rounded-2xl p-5 mb-8">
-                    <div className="flex items-center gap-3 text-yellow-800">
+                  <div className="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-5 mb-8">
+                    <div className="flex items-center gap-3 text-emerald-800">
                       <Info className="w-6 h-6" />
                       <span className="font-bold text-lg">
                         Gain potentiel: {(formData.price_per_seat * formData.available_seats).toLocaleString()} FCFA
                       </span>
                     </div>
-                    <p className="text-yellow-600 mt-1 ml-9">Si toutes les places sont réservées</p>
+                    <p className="text-emerald-700 mt-1 ml-9">Si toutes les places sont réservées</p>
                   </div>
                 )}
 
@@ -434,7 +434,7 @@ export default function CreateTripPage() {
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     placeholder="Informations supplémentaires, points de passage, etc."
                     rows={3}
-                    className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none resize-none font-medium"
+                    className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none resize-none font-medium"
                   />
                 </div>
 
@@ -459,19 +459,19 @@ export default function CreateTripPage() {
                           onClick={() => setFormData({ ...formData, [option.key]: !isActive })}
                           className={`flex items-center gap-4 p-5 rounded-2xl border-2 transition-all ${
                             isActive
-                              ? "border-yellow-400 bg-yellow-50"
+                              ? "border-emerald-400 bg-emerald-50"
                               : "border-gray-200 hover:border-gray-300"
                           }`}
                         >
                           <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                            isActive ? "bg-yellow-400" : "bg-gray-100"
+                            isActive ? "bg-emerald-500" : "bg-gray-100"
                           }`}>
-                            <Icon className={`w-6 h-6 ${isActive ? "text-black" : "text-gray-500"}`} />
+                            <Icon className={`w-6 h-6 ${isActive ? "text-white" : "text-gray-500"}`} />
                           </div>
                           <span className={`font-semibold ${isActive ? "text-gray-900" : "text-gray-600"}`}>
                             {option.label}
                           </span>
-                          {isActive && <Check className="w-5 h-5 text-yellow-600 ml-auto" />}
+                          {isActive && <Check className="w-5 h-5 text-emerald-600 ml-auto" />}
                         </button>
                       );
                     })}
@@ -504,7 +504,7 @@ export default function CreateTripPage() {
                     </div>
                     <div className="flex justify-between border-t border-gray-200 pt-3 mt-3">
                       <span className="font-semibold text-gray-900">Prix par place</span>
-                      <span className="font-bold text-xl text-yellow-600">
+                      <span className="font-bold text-xl text-emerald-700">
                         {formData.price_per_seat.toLocaleString()} FCFA
                       </span>
                     </div>
@@ -522,7 +522,7 @@ export default function CreateTripPage() {
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className="bg-yellow-400 hover:bg-yellow-500 text-black px-10 py-4 rounded-full font-bold transition-all disabled:opacity-50 flex items-center gap-2"
+                    className="bg-emerald-500 hover:bg-emerald-600 text-white px-10 py-4 rounded-full font-bold transition-all disabled:opacity-50 flex items-center gap-2"
                   >
                     {isLoading ? (
                       <>

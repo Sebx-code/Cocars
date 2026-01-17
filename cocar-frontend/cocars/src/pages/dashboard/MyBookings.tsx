@@ -38,10 +38,10 @@ export default function MyBookings() {
 
   const getStatusBadge = (status: string) => {
     const badges: Record<string, { bg: string; text: string; icon: React.ComponentType<{ className?: string }>; label: string }> = {
-      pending: { bg: "bg-yellow-100", text: "text-yellow-700", icon: AlertCircle, label: "En attente" },
+      pending: { bg: "bg-emerald-100", text: "text-emerald-700", icon: AlertCircle, label: "En attente" },
       confirmed: { bg: "bg-green-100", text: "text-green-700", icon: CheckCircle, label: "Confirmée" },
       rejected: { bg: "bg-red-100", text: "text-red-700", icon: XCircle, label: "Refusée" },
-      cancelled: { bg: "bg-gray-100", text: "text-gray-700", icon: XCircle, label: "Annulée" },
+      cancelled: { bg: "bg-gray-100", text: "text-theme-secondary", icon: XCircle, label: "Annulée" },
       completed: { bg: "bg-blue-100", text: "text-blue-700", icon: CheckCircle, label: "Terminée" },
     };
     const badge = badges[status] || badges.pending;
@@ -58,8 +58,8 @@ export default function MyBookings() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Mes réservations</h1>
-        <p className="text-gray-500">Suivez vos demandes de réservation</p>
+        <h1 className="text-2xl font-bold text-theme-primary">Mes réservations</h1>
+        <p className="text-theme-tertiary">Suivez vos demandes de réservation</p>
       </div>
 
       <div className="flex gap-2 overflow-x-auto pb-2">
@@ -74,8 +74,8 @@ export default function MyBookings() {
             onClick={() => setFilter(f.key as typeof filter)}
             className={`px-5 py-2.5 rounded-full font-semibold whitespace-nowrap transition-all ${
               filter === f.key
-                ? "bg-black text-white"
-                : "bg-white text-gray-600 border-2 border-gray-200 hover:border-black"
+                ? "bg-emerald-600 text-white"
+                : "card-theme text-theme-secondary border-2 border-theme-strong hover:border-emerald-400"
             }`}
           >
             {f.label}
@@ -85,18 +85,18 @@ export default function MyBookings() {
 
       {isLoading && (
         <div className="flex justify-center py-16">
-          <Loader2 className="w-10 h-10 animate-spin text-yellow-500" />
+          <Loader2 className="w-10 h-10 animate-spin text-emerald-500" />
         </div>
       )}
 
       {!isLoading && filteredBookings.length === 0 && (
-        <div className="bg-white rounded-3xl border-2 border-gray-100 p-16 text-center">
+        <div className="card-theme rounded-3xl border-2 p-16 text-center">
           <Calendar className="w-20 h-20 text-gray-300 mx-auto mb-6" />
-          <h3 className="text-2xl font-bold text-gray-900 mb-3">Aucune réservation</h3>
-          <p className="text-gray-500 mb-8">Vous n'avez pas encore de réservation.</p>
+          <h3 className="text-2xl font-bold text-theme-primary mb-3">Aucune réservation</h3>
+          <p className="text-theme-tertiary mb-8">Vous n'avez pas encore de réservation.</p>
           <Link
             to="/trips"
-            className="inline-flex items-center gap-2 bg-yellow-400 hover:bg-yellow-500 text-black px-8 py-4 rounded-full font-bold"
+            className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-4 rounded-full font-bold"
           >
             Rechercher un trajet
           </Link>
@@ -108,24 +108,24 @@ export default function MyBookings() {
           {filteredBookings.map((booking) => (
             <div
               key={booking.id}
-              className="bg-white rounded-3xl border-2 border-gray-100 overflow-hidden hover:border-black transition-all"
+              className="card-theme rounded-3xl border-2 overflow-hidden hover:border-emerald-400 transition-all hover-lift"
             >
               <div className="p-6">
                 <div className="flex justify-between items-start mb-4">
                   {getStatusBadge(booking.status)}
-                  <span className="text-sm text-gray-500">
+                  <span className="text-sm text-theme-tertiary">
                     Réservé le {new Date(booking.created_at).toLocaleDateString("fr-FR")}
                   </span>
                 </div>
 
                 <div className="flex flex-col lg:flex-row lg:items-center gap-6">
                   <div className="flex-1">
-                    <div className="flex items-center gap-2 text-xl font-bold text-gray-900 mb-2">
+                    <div className="flex items-center gap-2 text-xl font-bold text-theme-primary mb-2">
                       <span>{booking.trip.departure_city}</span>
                       <span className="text-gray-400">→</span>
                       <span>{booking.trip.arrival_city}</span>
                     </div>
-                    <div className="flex flex-wrap gap-4 text-sm text-gray-500">
+                    <div className="flex flex-wrap gap-4 text-sm text-theme-tertiary">
                       <span className="flex items-center gap-1.5">
                         <Calendar className="w-4 h-4" /> {formatDate(booking.trip.departure_date)}
                       </span>
@@ -140,15 +140,15 @@ export default function MyBookings() {
 
                   <div className="flex items-center gap-4">
                     <div className="text-right">
-                      <p className="text-xl font-bold text-gray-900">{booking.total_price.toLocaleString()} FCFA</p>
-                      <div className="flex items-center justify-end gap-1 text-sm text-gray-500">
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                      <p className="text-xl font-bold text-theme-primary">{booking.total_price.toLocaleString()} FCFA</p>
+                      <div className="flex items-center justify-end gap-1 text-sm text-theme-tertiary">
+                        <Star className="w-4 h-4 fill-emerald-500 text-emerald-500" />
                         <span className="font-semibold">{booking.trip.driver.rating}</span>
                         <span>• {booking.trip.driver.name}</span>
                       </div>
                     </div>
-                    <div className="w-14 h-14 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center shadow-lg">
-                      <span className="font-bold text-black">
+                    <div className="w-14 h-14 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center shadow-lg">
+                      <span className="font-bold text-white">
                         {booking.trip.driver.name.split(" ").map((n) => n[0]).join("")}
                       </span>
                     </div>
@@ -157,7 +157,7 @@ export default function MyBookings() {
               </div>
 
               {booking.status === "confirmed" && (
-                <div className="px-6 py-4 bg-gray-50 border-t-2 border-gray-100 flex flex-wrap gap-3">
+                <div className="px-6 py-4 bg-theme-secondary border-t-2 border-theme flex flex-wrap gap-3">
                   <a
                     href={`tel:${booking.trip.driver.phone}`}
                     className="flex items-center gap-2 px-5 py-2.5 bg-green-100 text-green-700 rounded-full font-semibold hover:bg-green-200"
@@ -169,7 +169,7 @@ export default function MyBookings() {
                   </button>
                   <Link
                     to={`/trips/${booking.trip_id}`}
-                    className="flex items-center gap-2 px-5 py-2.5 bg-gray-200 text-gray-700 rounded-full font-semibold hover:bg-gray-300"
+                    className="flex items-center gap-2 px-5 py-2.5 bg-theme-secondary text-theme-secondary rounded-full font-semibold hover:bg-theme-strong"
                   >
                     Voir le trajet
                   </Link>
@@ -177,8 +177,8 @@ export default function MyBookings() {
               )}
 
               {booking.status === "pending" && (
-                <div className="px-6 py-4 bg-yellow-50 border-t-2 border-yellow-200">
-                  <p className="text-sm text-yellow-700 font-medium">
+                <div className="px-6 py-4 bg-emerald-50 border-t-2 border-emerald-200">
+                  <p className="text-sm text-emerald-700 font-medium">
                     ⏳ En attente de confirmation du conducteur...
                   </p>
                 </div>

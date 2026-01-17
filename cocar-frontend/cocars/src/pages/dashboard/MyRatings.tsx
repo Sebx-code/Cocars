@@ -45,47 +45,47 @@ export default function MyRatings() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Mes évaluations</h1>
-        <p className="text-gray-500">Consultez les avis laissés par la communauté</p>
+        <h1 className="text-2xl font-bold text-theme-primary">Mes évaluations</h1>
+        <p className="text-theme-tertiary">Consultez les avis laissés par la communauté</p>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-white rounded-3xl border-2 border-gray-100 p-6">
+        <div className="card-theme rounded-3xl border-2 p-6">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 bg-yellow-100 rounded-2xl flex items-center justify-center">
-              <Star className="w-8 h-8 fill-yellow-400 text-yellow-400" />
+            <div className="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center">
+              <Star className="w-8 h-8 fill-emerald-500 text-emerald-500" />
             </div>
             <div>
-              <p className="text-3xl font-bold text-gray-900">{averageRating}</p>
-              <p className="text-gray-500">Note moyenne</p>
+              <p className="text-3xl font-bold text-theme-primary">{averageRating}</p>
+              <p className="text-theme-tertiary">Note moyenne</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-3xl border-2 border-gray-100 p-6">
+        <div className="card-theme rounded-3xl border-2 p-6">
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center">
               <MessageCircle className="w-8 h-8 text-blue-500" />
             </div>
             <div>
-              <p className="text-3xl font-bold text-gray-900">{ratings.length}</p>
-              <p className="text-gray-500">Avis reçus</p>
+              <p className="text-3xl font-bold text-theme-primary">{ratings.length}</p>
+              <p className="text-theme-tertiary">Avis reçus</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-3xl border-2 border-gray-100 p-6">
-          <p className="font-semibold text-gray-900 mb-3">Distribution</p>
+        <div className="card-theme rounded-3xl border-2 p-6">
+          <p className="font-semibold text-theme-primary mb-3">Distribution</p>
           <div className="space-y-2">
             {ratingDistribution.map((d) => (
               <div key={d.star} className="flex items-center gap-2">
                 <span className="text-sm text-gray-600 w-4">{d.star}</span>
-                <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                <Star className="w-4 h-4 fill-emerald-500 text-emerald-500" />
                 <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
-                  <div className="h-full bg-yellow-400 rounded-full" style={{ width: `${d.percentage}%` }} />
+                  <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${d.percentage}%` }} />
                 </div>
-                <span className="text-sm text-gray-500 w-6">{d.count}</span>
+                <span className="text-sm text-theme-tertiary w-6">{d.count}</span>
               </div>
             ))}
           </div>
@@ -106,8 +106,8 @@ export default function MyRatings() {
               onClick={() => setFilter(f.key as typeof filter)}
               className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-semibold transition-all ${
                 filter === f.key
-                  ? "bg-black text-white"
-                  : "bg-white text-gray-600 border-2 border-gray-200 hover:border-black"
+                  ? "bg-emerald-600 text-white"
+                  : "bg-white text-gray-600 border-2 border-gray-200 hover:border-emerald-500"
               }`}
             >
               <Icon className="w-4 h-4" /> {f.label}
@@ -118,33 +118,33 @@ export default function MyRatings() {
 
       {isLoading && (
         <div className="flex justify-center py-16">
-          <Loader2 className="w-10 h-10 animate-spin text-yellow-500" />
+          <Loader2 className="w-10 h-10 animate-spin text-emerald-500" />
         </div>
       )}
 
       {!isLoading && filteredRatings.length === 0 && (
-        <div className="bg-white rounded-3xl border-2 border-gray-100 p-16 text-center">
+        <div className="card-theme rounded-3xl border-2 p-16 text-center">
           <Star className="w-20 h-20 text-gray-300 mx-auto mb-6" />
-          <h3 className="text-2xl font-bold text-gray-900 mb-3">Aucune évaluation</h3>
-          <p className="text-gray-500">Vous n'avez pas encore reçu d'évaluation.</p>
+          <h3 className="text-2xl font-bold text-theme-primary mb-3">Aucune évaluation</h3>
+          <p className="text-theme-tertiary">Vous n'avez pas encore reçu d'évaluation.</p>
         </div>
       )}
 
       {!isLoading && filteredRatings.length > 0 && (
         <div className="space-y-4">
           {filteredRatings.map((rating) => (
-            <div key={rating.id} className="bg-white rounded-3xl border-2 border-gray-100 p-6">
+            <div key={rating.id} className="card-theme rounded-3xl border-2 p-6 hover:border-emerald-400 transition-all">
               <div className="flex items-start gap-4">
-                <div className="w-14 h-14 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
-                  <span className="font-bold text-black">
+                <div className="w-14 h-14 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
+                  <span className="font-bold text-white">
                     {rating.rater.name.split(" ").map((n) => n[0]).join("")}
                   </span>
                 </div>
                 <div className="flex-1">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
                     <div>
-                      <p className="font-bold text-gray-900">{rating.rater.name}</p>
-                      <div className="flex items-center gap-2 text-sm text-gray-500">
+                      <p className="font-bold text-theme-primary">{rating.rater.name}</p>
+                      <div className="flex items-center gap-2 text-sm text-theme-tertiary">
                         <span className="flex items-center gap-1">
                           {rating.rating_type === "driver" ? <Car className="w-4 h-4" /> : <User className="w-4 h-4" />}
                           {rating.rating_type === "driver" ? "Conducteur" : "Passager"}
@@ -157,13 +157,13 @@ export default function MyRatings() {
                       {[1, 2, 3, 4, 5].map((star) => (
                         <Star
                           key={star}
-                          className={`w-5 h-5 ${star <= rating.rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`}
+                          className={`w-5 h-5 ${star <= rating.rating ? "fill-emerald-500 text-emerald-500" : "text-gray-300"}`}
                         />
                       ))}
                     </div>
                   </div>
                   {rating.comment && (
-                    <p className="text-gray-700 mb-3 bg-gray-50 p-4 rounded-2xl">"{rating.comment}"</p>
+                    <p className="text-theme-secondary mb-3 bg-theme-secondary p-4 rounded-2xl">"{rating.comment}"</p>
                   )}
                 </div>
               </div>

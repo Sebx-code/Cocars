@@ -12,10 +12,10 @@
   --border-color: #e5e7eb;
   --border-color-strong: #d1d5db;
   
-  /* Accent colors */
-  --accent-primary: #facc15;
-  --accent-secondary: #eab308;
-  --accent-hover: #fbbf24;
+  /* Accent colors (Green palette) */
+  --accent-primary: #10b981; /* emerald-500 */
+  --accent-secondary: #059669; /* emerald-600 */
+  --accent-hover: #34d399; /* emerald-400 */
   
   /* Card styles */
   --card-bg: #ffffff;
@@ -25,8 +25,8 @@
   /* Sidebar */
   --sidebar-bg: #ffffff;
   --sidebar-text: #374151;
-  --sidebar-active-bg: #facc15;
-  --sidebar-active-text: #000000;
+  --sidebar-active-bg: #10b981;
+  --sidebar-active-text: #ffffff;
   
   /* Input */
   --input-bg: #ffffff;
@@ -34,15 +34,15 @@
   --hover-bg: #f3f4f6;
   
   /* Gradients */
-  --gradient-yellow: linear-gradient(135deg, #facc15 0%, #f59e0b 100%);
-  --gradient-gold: linear-gradient(135deg, #ffd700 0%, #ffed4e 50%, #ffd700 100%);
+  --gradient-yellow: linear-gradient(135deg, #10b981 0%, #059669 100%); /* green */
+  --gradient-gold: linear-gradient(135deg, #34d399 0%, #10b981 50%, #34d399 100%); /* green alt */
   
   /* Shadows */
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
   --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
   --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
-  --shadow-glow: 0 0 20px rgba(250, 204, 21, 0.3);
+  --shadow-glow: 0 0 20px rgba(16, 185, 129, 0.28);
 }
 
 .dark {
@@ -56,10 +56,10 @@
   --border-color: #334155;
   --border-color-strong: #475569;
   
-  /* Accent colors (same) */
-  --accent-primary: #facc15;
-  --accent-secondary: #eab308;
-  --accent-hover: #fbbf24;
+  /* Accent colors (Green palette) */
+  --accent-primary: #10b981;
+  --accent-secondary: #059669;
+  --accent-hover: #34d399;
   
   /* Card styles */
   --card-bg: #1e293b;
@@ -69,8 +69,8 @@
   /* Sidebar */
   --sidebar-bg: #0f172a;
   --sidebar-text: #cbd5e1;
-  --sidebar-active-bg: #facc15;
-  --sidebar-active-text: #000000;
+  --sidebar-active-bg: #10b981;
+  --sidebar-active-text: #052e16;
   
   /* Input */
   --input-bg: #1e293b;
@@ -82,7 +82,7 @@
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5);
   --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.6);
-  --shadow-glow: 0 0 20px rgba(250, 204, 21, 0.5);
+  --shadow-glow: 0 0 20px rgba(16, 185, 129, 0.45);
 }
 
 /* ============= TRANSITIONS GLOBALES ============= */
@@ -215,12 +215,12 @@ html {
 /* ============= SÉLECTION DE TEXTE ============= */
 ::selection {
   background-color: var(--accent-primary);
-  color: #000000;
+  color: #ffffff;
 }
 
 ::-moz-selection {
   background-color: var(--accent-primary);
-  color: #000000;
+  color: #ffffff;
 }
 
 /* ============= SCROLLBAR PERSONNALISÉE ============= */
@@ -353,7 +353,7 @@ body {
 /* ============= BOUTONS AMÉLIORÉS ============= */
 .btn-primary {
   background: var(--gradient-yellow);
-  color: #000000;
+  color: #ffffff;
   font-weight: 700;
   padding: 0.75rem 1.5rem;
   border-radius: 9999px;

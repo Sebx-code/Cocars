@@ -51,7 +51,7 @@ function LandingContent() {
             {/* Logo épuré */}
             <div className="flex items-center gap-3 animate-slide-in-left">
               <div className="w-11 h-11 bg-black rounded-2xl flex items-center justify-center shadow-lg hover-lift">
-                <span className="text-yellow-400 font-bold text-xl">R</span>
+                <span className="text-emerald-400 font-bold text-xl">R</span>
               </div>
               <span className="text-2xl font-bold text-gray-900 tracking-tight">Rideshare</span>
             </div>
@@ -72,7 +72,7 @@ function LandingContent() {
               </button>
               <button
                 onClick={navigateToSignup}
-                className="bg-black hover:bg-gray-900 text-white px-6 py-2.5 rounded-full font-semibold transition-all hover:scale-105 shadow-md hover:shadow-xl"
+                className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-full font-semibold transition-all hover:scale-105 shadow-md hover:shadow-xl"
               >
                 Inscription
               </button>
@@ -110,7 +110,7 @@ function LandingContent() {
               </button>
               <button
                 onClick={navigateToSignup}
-                className="w-full bg-black text-white py-3 rounded-xl font-semibold shadow-md"
+                className="w-full bg-emerald-600 text-white py-3 rounded-xl font-semibold shadow-md hover:bg-emerald-700"
               >
                 Inscription
               </button>
@@ -122,13 +122,13 @@ function LandingContent() {
       {/* Hero Section Épuré */}
       <section className="relative pt-32 pb-20 overflow-hidden">
         {/* Gradient Background subtil */}
-        <div className="absolute inset-0 bg-linear-to-br from-gray-50 via-white to-yellow-50/30 -z-10"></div>
+        <div className="absolute inset-0 bg-linear-to-br from-gray-50 via-white to-emerald-50/40 -z-10"></div>
         
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           {/* Badge animé */}
           <div className="flex justify-center mb-8 animate-bounce-smooth">
-            <div className="inline-flex items-center gap-2 bg-yellow-50 border border-yellow-200 px-5 py-2 rounded-full shadow-sm">
-              <Sparkles className="w-4 h-4 text-yellow-600" />
+            <div className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-200 px-5 py-2 rounded-full shadow-sm">
+              <Sparkles className="w-4 h-4 text-emerald-700" />
               <span className="text-sm font-semibold text-gray-900">
                 1000+ trajets ce mois
               </span>
@@ -165,7 +165,7 @@ function LandingContent() {
                       onChange={(e) =>
                         setSearchData({ ...searchData, from: e.target.value })
                       }
-                      className="w-full pl-9 pr-4 py-3.5 bg-white border border-gray-200 rounded-2xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none transition-all font-medium text-gray-900 placeholder:text-gray-400"
+                      className="w-full pl-9 pr-4 py-3.5 bg-white border border-gray-200 rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition-all font-medium text-gray-900 placeholder:text-gray-400"
                     />
                   </div>
                 </div>
@@ -176,7 +176,7 @@ function LandingContent() {
                     Destination
                   </label>
                   <div className="relative">
-                    <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-yellow-500" />
+                    <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-emerald-600" />
                     <input
                       type="text"
                       placeholder="Douala"
@@ -184,7 +184,7 @@ function LandingContent() {
                       onChange={(e) =>
                         setSearchData({ ...searchData, to: e.target.value })
                       }
-                      className="w-full pl-11 pr-4 py-3.5 bg-white border border-gray-200 rounded-2xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none transition-all font-medium text-gray-900 placeholder:text-gray-400"
+                      className="w-full pl-11 pr-4 py-3.5 bg-white border border-gray-200 rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition-all font-medium text-gray-900 placeholder:text-gray-400"
                     />
                   </div>
                 </div>
@@ -202,7 +202,7 @@ function LandingContent() {
                       onChange={(e) =>
                         setSearchData({ ...searchData, date: e.target.value })
                       }
-                      className="w-full pl-11 pr-4 py-3.5 bg-white border border-gray-200 rounded-2xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none transition-all font-medium text-gray-900"
+                      className="w-full pl-11 pr-4 py-3.5 bg-white border border-gray-200 rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition-all font-medium text-gray-900"
                     />
                   </div>
                 </div>
@@ -222,7 +222,7 @@ function LandingContent() {
                           passengers: e.target.value,
                         })
                       }
-                      className="w-full pl-11 pr-4 py-3.5 bg-white border border-gray-200 rounded-2xl focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none transition-all appearance-none font-medium text-gray-900"
+                      className="w-full pl-11 pr-4 py-3.5 bg-white border border-gray-200 rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition-all appearance-none font-medium text-gray-900"
                     >
                       <option value="1">1</option>
                       <option value="2">2</option>
@@ -235,7 +235,7 @@ function LandingContent() {
 
               <button
                 onClick={handleSearch}
-                className="w-full bg-black hover:bg-gray-900 text-white py-4 rounded-2xl font-bold text-base transition-all hover:scale-[1.02] shadow-lg hover:shadow-xl flex items-center justify-center gap-2 ripple-effect"
+                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-4 rounded-2xl font-bold text-base transition-all hover:scale-[1.02] shadow-lg hover:shadow-xl flex items-center justify-center gap-2 ripple-effect"
               >
                 <Search className="w-5 h-5" />
                 Rechercher un trajet
@@ -252,7 +252,7 @@ function LandingContent() {
                   <button
                     key={i}
                     onClick={() => selectPopularRoute(route)}
-                    className="px-4 py-2 bg-white border border-gray-200 rounded-full hover:border-yellow-400 hover:bg-yellow-50 transition-all text-sm font-medium text-gray-700 hover:text-gray-900 hover-lift"
+                    className="px-4 py-2 bg-white border border-gray-200 rounded-full hover:border-emerald-400 hover:bg-emerald-50 transition-all text-sm font-medium text-gray-700 hover:text-gray-900 hover-lift"
                   >
                     {route.from} → {route.to}
                   </button>
@@ -267,7 +267,7 @@ function LandingContent() {
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="text-center mb-16">
-            <p className="text-sm font-semibold text-yellow-600 mb-3 uppercase tracking-wider">
+            <p className="text-sm font-semibold text-emerald-700 mb-3 uppercase tracking-wider">
               Pourquoi nous choisir
             </p>
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">
@@ -281,10 +281,10 @@ function LandingContent() {
               return (
                 <div
                   key={i}
-                  className="group p-8 rounded-3xl bg-gray-50 hover:bg-white border border-gray-100 hover:border-yellow-400 transition-all hover-lift"
+                  className="group p-8 rounded-3xl bg-gray-50 hover:bg-white border border-gray-100 hover:border-emerald-400 transition-all hover-lift"
                 >
-                  <div className="w-14 h-14 bg-yellow-400 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-md">
-                    <Icon className="w-7 h-7 text-black" />
+                  <div className="w-14 h-14 bg-emerald-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-md">
+                    <Icon className="w-7 h-7 text-white" />
                   </div>
                   <h3 className="text-xl font-bold text-gray-900 mb-3">
                     {benefit.title}
@@ -298,10 +298,10 @@ function LandingContent() {
       </section>
 
       {/* How it Works - Minimaliste */}
-      <section className="py-24 bg-linear-to-b from-gray-900 to-black text-white overflow-hidden">
+      <section className="py-24 bg-linear-to-b from-slate-950 to-slate-900 text-white overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="text-center mb-20">
-            <p className="text-sm font-semibold text-yellow-400 mb-3 uppercase tracking-wider">
+            <p className="text-sm font-semibold text-emerald-400 mb-3 uppercase tracking-wider">
               Comment ça marche
             </p>
             <h2 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">
@@ -311,16 +311,16 @@ function LandingContent() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
             {/* Ligne de connexion */}
-            <div className="hidden md:block absolute top-24 left-1/4 right-1/4 h-0.5 bg-linear-to-r from-yellow-400/20 via-yellow-400 to-yellow-400/20"></div>
+            <div className="hidden md:block absolute top-24 left-1/4 right-1/4 h-0.5 bg-linear-to-r from-emerald-400/20 via-emerald-400 to-emerald-400/20"></div>
 
             {/* Step 1 */}
             <div className="relative group">
-              <div className="bg-gray-800/50 backdrop-blur rounded-3xl p-10 text-center border border-gray-700 hover:border-yellow-400 transition-all hover-lift">
-                <div className="w-16 h-16 bg-yellow-400 text-black rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-8 group-hover:scale-110 transition-transform shadow-glow-yellow">
+              <div className="bg-gray-800/50 backdrop-blur rounded-3xl p-10 text-center border border-gray-700 hover:border-emerald-400 transition-all hover-lift">
+                <div className="w-16 h-16 bg-emerald-500 text-white rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-8 group-hover:scale-110 transition-transform shadow-theme-glow">
                   1
                 </div>
                 <div className="w-20 h-20 bg-gray-900 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-gray-800 transition-colors">
-                  <Search className="w-10 h-10 text-yellow-400" />
+                  <Search className="w-10 h-10 text-emerald-400" />
                 </div>
                 <h3 className="text-2xl font-bold mb-4">Recherchez</h3>
                 <p className="text-gray-400 leading-relaxed">
@@ -331,12 +331,12 @@ function LandingContent() {
 
             {/* Step 2 */}
             <div className="relative group">
-              <div className="bg-gray-800/50 backdrop-blur rounded-3xl p-10 text-center border border-gray-700 hover:border-yellow-400 transition-all hover-lift">
-                <div className="w-16 h-16 bg-yellow-400 text-black rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-8 group-hover:scale-110 transition-transform shadow-glow-yellow">
+              <div className="bg-gray-800/50 backdrop-blur rounded-3xl p-10 text-center border border-gray-700 hover:border-emerald-400 transition-all hover-lift">
+                <div className="w-16 h-16 bg-emerald-500 text-white rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-8 group-hover:scale-110 transition-transform shadow-theme-glow">
                   2
                 </div>
                 <div className="w-20 h-20 bg-gray-900 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-gray-800 transition-colors">
-                  <CheckCircle className="w-10 h-10 text-yellow-400" />
+                  <CheckCircle className="w-10 h-10 text-emerald-400" />
                 </div>
                 <h3 className="text-2xl font-bold mb-4">Réservez</h3>
                 <p className="text-gray-400 leading-relaxed">
@@ -347,12 +347,12 @@ function LandingContent() {
 
             {/* Step 3 */}
             <div className="relative group">
-              <div className="bg-gray-800/50 backdrop-blur rounded-3xl p-10 text-center border border-gray-700 hover:border-yellow-400 transition-all hover-lift">
-                <div className="w-16 h-16 bg-yellow-400 text-black rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-8 group-hover:scale-110 transition-transform shadow-glow-yellow">
+              <div className="bg-gray-800/50 backdrop-blur rounded-3xl p-10 text-center border border-gray-700 hover:border-emerald-400 transition-all hover-lift">
+                <div className="w-16 h-16 bg-emerald-500 text-white rounded-2xl flex items-center justify-center text-2xl font-bold mx-auto mb-8 group-hover:scale-110 transition-transform shadow-theme-glow">
                   3
                 </div>
                 <div className="w-20 h-20 bg-gray-900 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-gray-800 transition-colors">
-                  <Zap className="w-10 h-10 text-yellow-400" />
+                  <Zap className="w-10 h-10 text-emerald-400" />
                 </div>
                 <h3 className="text-2xl font-bold mb-4">Partez</h3>
                 <p className="text-gray-400 leading-relaxed">
@@ -368,7 +368,7 @@ function LandingContent() {
       <section className="py-24 bg-gray-50">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="text-center mb-20">
-            <p className="text-sm font-semibold text-yellow-600 mb-3 uppercase tracking-wider">
+            <p className="text-sm font-semibold text-emerald-700 mb-3 uppercase tracking-wider">
               Témoignages
             </p>
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">
@@ -380,7 +380,7 @@ function LandingContent() {
             {testimonials.map((testimonial, i) => (
               <div
                 key={i}
-                className="bg-white rounded-3xl p-8 border border-gray-100 hover:border-yellow-400 transition-all hover-lift shadow-sm hover:shadow-xl"
+                className="bg-white rounded-3xl p-8 border border-gray-100 hover:border-emerald-400 transition-all hover-lift shadow-sm hover:shadow-xl"
               >
                 {/* Rating */}
                 <div className="flex items-center gap-1 mb-6">
@@ -389,7 +389,7 @@ function LandingContent() {
                       key={j}
                       className={`w-5 h-5 ${
                         j < testimonial.rating
-                          ? "fill-yellow-400 text-yellow-400"
+                          ? "fill-emerald-500 text-emerald-500"
                           : "text-gray-200"
                       }`}
                     />
@@ -403,7 +403,7 @@ function LandingContent() {
 
                 {/* Author */}
                 <div className="flex items-center gap-4 pt-6 border-t border-gray-100">
-                  <div className="w-12 h-12 bg-linear-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center shadow-md">
+                  <div className="w-12 h-12 bg-linear-to-br from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center shadow-md">
                     <span className="text-black font-bold text-sm">
                       {testimonial.avatar}
                     </span>
@@ -424,7 +424,7 @@ function LandingContent() {
       {/* CTA Section - Bold & Clean */}
       <section className="py-32 bg-black text-white relative overflow-hidden">
         {/* Background Effect */}
-        <div className="absolute inset-0 bg-linear-to-br from-yellow-400/10 to-transparent"></div>
+        <div className="absolute inset-0 bg-linear-to-br from-emerald-400/15 to-transparent"></div>
         
         <div className="max-w-4xl mx-auto px-6 lg:px-8 text-center relative z-10">
           <h2 className="text-5xl md:text-6xl font-bold mb-8 tracking-tight">
@@ -437,7 +437,7 @@ function LandingContent() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
               onClick={handleSearch}
-              className="group bg-yellow-400 hover:bg-yellow-500 text-black px-10 py-5 rounded-2xl font-bold text-lg transition-all hover:scale-105 shadow-xl inline-flex items-center justify-center gap-2 ripple-effect"
+              className="group bg-emerald-500 hover:bg-emerald-600 text-white px-10 py-5 rounded-2xl font-bold text-lg transition-all hover:scale-105 shadow-xl inline-flex items-center justify-center gap-2 ripple-effect"
             >
               <Search className="w-5 h-5 group-hover:scale-110 transition-transform" />
               Trouver un trajet
@@ -459,8 +459,8 @@ function LandingContent() {
             {/* Brand */}
             <div className="col-span-2 md:col-span-1">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-yellow-400 rounded-2xl flex items-center justify-center">
-                  <span className="text-black font-bold text-lg">R</span>
+                <div className="w-10 h-10 bg-emerald-500 rounded-2xl flex items-center justify-center">
+                  <span className="text-white font-bold text-lg">R</span>
                 </div>
                 <span className="text-xl font-bold">Rideshare</span>
               </div>

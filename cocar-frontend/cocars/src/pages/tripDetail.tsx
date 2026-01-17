@@ -103,7 +103,7 @@ export default function TripDetailPage() {
     return (
       <Layout showFooter={false}>
         <div className="min-h-[60vh] flex items-center justify-center">
-          <Loader2 className="w-10 h-10 animate-spin text-yellow-500" />
+          <Loader2 className="w-10 h-10 animate-spin text-emerald-500" />
         </div>
       </Layout>
     );
@@ -159,7 +159,7 @@ export default function TripDetailPage() {
               </div>
               <div className="flex justify-between text-lg font-bold border-t border-gray-200 pt-3 mt-3">
                 <span>Total</span>
-                <span className="text-yellow-600">
+                <span className="text-emerald-700">
                   {(trip.price_per_seat * seatsToBook).toLocaleString()} FCFA
                 </span>
               </div>
@@ -235,7 +235,7 @@ export default function TripDetailPage() {
                   <div className="flex flex-col items-center">
                     <div className="w-5 h-5 bg-black rounded-full" />
                     <div className="w-0.5 h-24 bg-gray-300" />
-                    <div className="w-5 h-5 bg-yellow-400 rounded-full" />
+                    <div className="w-5 h-5 bg-emerald-500 rounded-full" />
                   </div>
 
                   <div className="flex-1">
@@ -273,7 +273,7 @@ export default function TripDetailPage() {
                     </span>
                   )}
                   {trip.music_allowed && (
-                    <span className="inline-flex items-center gap-1 text-xs bg-yellow-50 text-yellow-700 px-3 py-1.5 rounded-full font-medium">
+                    <span className="inline-flex items-center gap-1 text-xs bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full font-medium">
                       <Music className="w-3 h-3" /> Musique
                     </span>
                   )}
@@ -296,7 +296,7 @@ export default function TripDetailPage() {
               <div className="bg-white rounded-3xl shadow-sm border-2 border-gray-100 p-8">
                 <div className="flex items-start justify-between gap-6">
                   <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-2xl flex items-center justify-center shadow-lg">
+                    <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg">
                       <span className="font-bold text-black text-lg">
                         {trip.driver.name.split(" ").map((n) => n[0]).join("")}
                       </span>
@@ -304,7 +304,7 @@ export default function TripDetailPage() {
                     <div>
                       <p className="text-xl font-bold text-gray-900">{trip.driver.name}</p>
                       <div className="flex items-center gap-2 text-sm text-gray-600 mt-1">
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                        <Star className="w-4 h-4 fill-emerald-500 text-emerald-500" />
                         <span className="font-semibold">{trip.driver.rating || "N/A"}</span>
                         {trip.driver.is_verified && (
                           <span className="inline-flex items-center gap-1 text-xs bg-green-50 text-green-700 px-2 py-1 rounded-full font-semibold">
@@ -358,7 +358,7 @@ export default function TripDetailPage() {
                       <button
                         onClick={() => setShowBookingModal(true)}
                         disabled={trip.available_seats === 0}
-                        className="w-full bg-yellow-400 hover:bg-yellow-500 text-black py-5 rounded-full font-bold text-lg transition-all hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                        className="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-5 rounded-full font-bold text-lg transition-all hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
                       >
                         Réserver
                       </button>
@@ -437,7 +437,7 @@ export default function TripDetailPage() {
                 onChange={(e) => setBookingMessage(e.target.value)}
                 placeholder="Présentez-vous ou posez une question..."
                 rows={3}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-2xl resize-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none"
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-2xl resize-none focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none"
               />
             </div>
 
@@ -451,7 +451,7 @@ export default function TripDetailPage() {
               <button
                 onClick={handleBooking}
                 disabled={isBooking}
-                className="flex-1 bg-yellow-400 hover:bg-yellow-500 py-4 rounded-full font-bold flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
+                className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white py-4 rounded-full font-bold flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
               >
                 {isBooking ? <Loader2 className="w-5 h-5 animate-spin" /> : "Confirmer"}
               </button>

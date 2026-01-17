@@ -73,8 +73,8 @@ export default function Navbar() {
           <div className="flex items-center gap-8">
             <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
               <Link to="/" className="flex items-center gap-2">
-                <div className="w-10 h-10 bg-black dark:bg-yellow-400 rounded-full flex items-center justify-center">
-                  <span className="text-yellow-400 dark:text-black font-bold text-lg">Rs</span>
+                <div className="w-10 h-10 bg-emerald-600 dark:bg-emerald-500 rounded-full flex items-center justify-center">
+                  <span className="text-white dark:text-slate-950 font-bold text-lg">Rs</span>
                 </div>
                 <span className="text-xl font-bold text-theme-primary">Rideshare</span>
               </Link>
@@ -114,7 +114,7 @@ export default function Navbar() {
               title={isDark ? "Mode clair" : "Mode sombre"}
             >
               {isDark ? (
-                <Sun className="w-5 h-5 text-yellow-400" />
+                <Sun className="w-5 h-5 text-emerald-400" />
               ) : (
                 <Moon className="w-5 h-5 text-theme-secondary" />
               )}
@@ -154,8 +154,8 @@ export default function Navbar() {
                     aria-expanded={userMenuOpen}
                     aria-haspopup="menu"
                   >
-                    <div className="w-9 h-9 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center">
-                      <span className="font-bold text-black text-sm">
+                    <div className="w-9 h-9 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center">
+                      <span className="font-bold text-white text-sm">
                         {user?.name?.split(" ").map((n) => n[0]).join("") || "U"}
                       </span>
                     </div>
@@ -274,7 +274,7 @@ export default function Navbar() {
               aria-label={isDark ? "Passer en mode clair" : "Passer en mode sombre"}
             >
               {isDark ? (
-                <Sun className="w-5 h-5 text-yellow-400" />
+                <Sun className="w-5 h-5 text-emerald-400" />
               ) : (
                 <Moon className="w-5 h-5 text-theme-secondary" />
               )}
