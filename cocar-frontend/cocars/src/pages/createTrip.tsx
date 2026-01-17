@@ -1,5 +1,5 @@
 // src/pages/createTrip.tsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   MapPin,
@@ -18,12 +18,14 @@ import {
   Dog,
   Cigarette,
   AlertCircle,
+  Plus,
 } from "lucide-react";
 import Layout from "../components/layout/Layout";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAuth } from "../hooks/useAuth";
 import { tripService } from "../services/tripService";
-import type { CreateTripData } from "../types";
+import { userVehicleService } from "../services/userVehicleService";
+import type { CreateTripData, UserVehicle, CreateUserVehicleData } from "../types";
 
 const POPULAR_CITIES = [
   "Yaoundé", "Douala", "Bafoussam", "Bamenda", "Garoua", "Maroua",
@@ -37,7 +39,11 @@ export default function CreateTripPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(0);
+  const [vehicles, setVehicles] = useState<UserVehicle[]>([]);
+  const [selectedVehicleId, setSelectedVehicleId] = useState<number | null>(null);
+  const [loadingVehicles, setLoadingVehicles] = useState(true);
+  const [showAddVehicleForm, setShowAddVehicleForm] = useState(false);
 
   const [formData, setFormData] = useState<CreateTripData>({
     departure_city: "",
@@ -108,18 +114,18 @@ export default function CreateTripPage() {
     return (
       <Layout showFooter={false}>
         <div className="min-h-[70vh] flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl shadow-2xl p-10 max-w-md w-full text-center border-2 border-gray-100">
-            <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-8">
-              <Check className="w-12 h-12 text-green-600" />
+          <div className="card-theme rounded-3xl shadow-2xl p-10 max-w-md w-full text-center border-2">
+            <div className="w-24 h-24 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-8">
+              <Check className="w-12 h-12 text-green-600 dark:text-green-400" />
             </div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-3">Trajet publié !</h2>
-            <p className="text-gray-600 text-lg mb-8">
+            <h2 className="text-3xl font-bold text-theme-primary mb-3">Trajet publié !</h2>
+            <p className="text-theme-secondary text-lg mb-8">
               Votre trajet a été publié avec succès. Les passagers peuvent maintenant le réserver.
             </p>
             <div className="flex gap-3">
               <button
                 onClick={() => navigate("/user/my-trips")}
-                className="flex-1 bg-black text-white py-4 rounded-full font-bold hover:bg-gray-900 transition-all"
+                className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-4 rounded-full font-bold transition-all"
               >
                 Voir mes trajets
               </button>
@@ -135,7 +141,7 @@ export default function CreateTripPage() {
                   });
                   setCurrentStep(1);
                 }}
-                className="flex-1 border-2 border-gray-200 py-4 rounded-full font-bold hover:bg-gray-50 transition-all"
+                className="flex-1 border-2 border-theme-strong py-4 rounded-full font-bold hover:bg-theme-secondary transition-all"
               >
                 Nouveau trajet
               </button>
@@ -148,13 +154,13 @@ export default function CreateTripPage() {
 
   return (
     <Layout showFooter={false}>
-      <div className="bg-gray-50 min-h-[calc(100vh-64px)]">
+      <div className="bg-theme-primary min-h-[calc(100vh-64px)]">
         {/* Header */}
-        <div className="bg-white border-b border-gray-200">
+        <div className="card-theme border-b border-theme">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <button
               onClick={() => navigate(-1)}
-              className="flex items-center gap-2 text-gray-600 hover:text-black font-medium transition-colors"
+              className="flex items-center gap-2 text-theme-secondary hover:text-theme-primary font-medium transition-colors"
             >
               <ArrowLeft className="w-5 h-5" />
               Retour
@@ -163,7 +169,7 @@ export default function CreateTripPage() {
         </div>
 
         {/* Progress Steps */}
-        <div className="bg-white border-b border-gray-200">
+        <div className="card-theme border-b border-theme">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <div className="flex items-center justify-between">
               {[
@@ -176,19 +182,19 @@ export default function CreateTripPage() {
                     className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg transition-colors ${
                       currentStep >= step.num
                         ? "bg-emerald-500 text-white"
-                        : "bg-gray-200 text-gray-500"
+                        : "bg-theme-secondary text-theme-tertiary"
                     }`}
                   >
                     {currentStep > step.num ? <Check className="w-6 h-6" /> : step.num}
                   </div>
                   <span className={`ml-3 font-semibold hidden sm:block ${
-                    currentStep >= step.num ? "text-gray-900" : "text-gray-400"
+                    currentStep >= step.num ? "text-theme-primary" : "text-theme-tertiary"
                   }`}>
                     {step.label}
                   </span>
                   {index < 2 && (
                     <div className={`w-16 sm:w-24 h-1 mx-4 rounded-full ${
-                      currentStep > step.num ? "bg-emerald-500" : "bg-gray-200"
+                      currentStep > step.num ? "bg-emerald-500" : "bg-theme-secondary"
                     }`}></div>
                   )}
                 </div>
@@ -219,22 +225,22 @@ export default function CreateTripPage() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -18 }}
                 transition={{ duration: 0.25 }}
-                className="bg-white rounded-3xl shadow-sm border-2 border-gray-100 p-8"
+                className="card-theme rounded-3xl shadow-sm border-2 p-8"
               >
-                <h2 className="text-2xl font-bold text-gray-900 mb-8">Définissez votre itinéraire</h2>
+                <h2 className="text-2xl font-bold text-theme-primary mb-8">Définissez votre itinéraire</h2>
 
                 <div className="mb-8">
-                  <label className="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-3">
-                    <div className="w-3 h-3 bg-black rounded-full"></div>
+                  <label className="flex items-center gap-2 text-sm font-semibold text-theme-primary mb-3">
+                    <div className="w-3 h-3 bg-emerald-600 rounded-full"></div>
                     Lieu de départ
                   </label>
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-xs text-gray-500 mb-1.5">Ville</label>
+                      <label className="block text-xs text-theme-tertiary mb-1.5">Ville</label>
                       <select
                         value={formData.departure_city}
                         onChange={(e) => setFormData({ ...formData, departure_city: e.target.value })}
-                        className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none font-medium"
+                        className="w-full px-4 py-4 border-2 border-theme rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none font-medium"
                         required
                       >
                         <option value="">Sélectionnez une ville</option>
@@ -244,13 +250,13 @@ export default function CreateTripPage() {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-xs text-gray-500 mb-1.5">Adresse / Point de rencontre</label>
+                      <label className="block text-xs text-theme-tertiary mb-1.5">Adresse / Point de rencontre</label>
                       <input
                         type="text"
                         value={formData.departure_address}
                         onChange={(e) => setFormData({ ...formData, departure_address: e.target.value })}
                         placeholder="Ex: Carrefour Nlongkak, devant la pharmacie"
-                        className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none font-medium"
+                        className="w-full px-4 py-4 border-2 border-theme rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none font-medium"
                         required
                       />
                     </div>
@@ -258,17 +264,17 @@ export default function CreateTripPage() {
                 </div>
 
                 <div className="mb-8">
-                  <label className="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-3">
+                  <label className="flex items-center gap-2 text-sm font-semibold text-theme-primary mb-3">
                     <MapPin className="w-4 h-4 text-emerald-600" />
                     Lieu d'arrivée
                   </label>
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-xs text-gray-500 mb-1.5">Ville</label>
+                      <label className="block text-xs text-theme-tertiary mb-1.5">Ville</label>
                       <select
                         value={formData.arrival_city}
                         onChange={(e) => setFormData({ ...formData, arrival_city: e.target.value })}
-                        className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none font-medium"
+                        className="w-full px-4 py-4 border-2 border-theme rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none font-medium"
                         required
                       >
                         <option value="">Sélectionnez une ville</option>
@@ -278,13 +284,13 @@ export default function CreateTripPage() {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-xs text-gray-500 mb-1.5">Adresse / Point de dépôt</label>
+                      <label className="block text-xs text-theme-tertiary mb-1.5">Adresse / Point de dépôt</label>
                       <input
                         type="text"
                         value={formData.arrival_address}
                         onChange={(e) => setFormData({ ...formData, arrival_address: e.target.value })}
                         placeholder="Ex: Akwa Palace, près du rond-point"
-                        className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none font-medium"
+                        className="w-full px-4 py-4 border-2 border-theme rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none font-medium"
                         required
                       />
                     </div>
@@ -296,7 +302,7 @@ export default function CreateTripPage() {
                     type="button"
                     onClick={nextStep}
                     disabled={!isStep1Valid()}
-                    className="bg-black text-white px-10 py-4 rounded-full font-bold hover:bg-gray-900 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="bg-emerald-600 text-white px-10 py-4 rounded-full font-bold hover:bg-emerald-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Continuer
                   </button>
@@ -312,14 +318,14 @@ export default function CreateTripPage() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -18 }}
                 transition={{ duration: 0.25 }}
-                className="bg-white rounded-3xl shadow-sm border-2 border-gray-100 p-8"
+                className="card-theme rounded-3xl shadow-sm border-2 border-theme p-8"
               >
-                <h2 className="text-2xl font-bold text-gray-900 mb-8">Détails du trajet</h2>
+                <h2 className="text-2xl font-bold text-theme-primary mb-8">Détails du trajet</h2>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
                   <div>
-                    <label className="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-3">
-                      <Calendar className="w-4 h-4 text-gray-400" />
+                    <label className="flex items-center gap-2 text-sm font-semibold text-theme-primary mb-3">
+                      <Calendar className="w-4 h-4 text-theme-tertiary" />
                       Date de départ
                     </label>
                     <input
@@ -327,20 +333,20 @@ export default function CreateTripPage() {
                       value={formData.departure_date}
                       onChange={(e) => setFormData({ ...formData, departure_date: e.target.value })}
                       min={new Date().toISOString().split("T")[0]}
-                      className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none font-medium"
+                      className="w-full px-4 py-4 border-2 border-theme rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none font-medium"
                       required
                     />
                   </div>
                   <div>
-                    <label className="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-3">
-                      <Clock className="w-4 h-4 text-gray-400" />
+                    <label className="flex items-center gap-2 text-sm font-semibold text-theme-primary mb-3">
+                      <Clock className="w-4 h-4 text-theme-tertiary" />
                       Heure de départ
                     </label>
                     <input
                       type="time"
                       value={formData.departure_time}
                       onChange={(e) => setFormData({ ...formData, departure_time: e.target.value })}
-                      className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none font-medium"
+                      className="w-full px-4 py-4 border-2 border-theme rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none font-medium"
                       required
                     />
                   </div>
@@ -348,14 +354,14 @@ export default function CreateTripPage() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
                   <div>
-                    <label className="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-3">
-                      <Users className="w-4 h-4 text-gray-400" />
+                    <label className="flex items-center gap-2 text-sm font-semibold text-theme-primary mb-3">
+                      <Users className="w-4 h-4 text-theme-tertiary" />
                       Nombre de places
                     </label>
                     <select
                       value={formData.available_seats}
                       onChange={(e) => setFormData({ ...formData, available_seats: parseInt(e.target.value) })}
-                      className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none font-medium"
+                      className="w-full px-4 py-4 border-2 border-theme rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none font-medium"
                       required
                     >
                       {[1, 2, 3, 4, 5, 6, 7].map((num) => (
@@ -364,8 +370,8 @@ export default function CreateTripPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-3">
-                      <DollarSign className="w-4 h-4 text-gray-400" />
+                    <label className="flex items-center gap-2 text-sm font-semibold text-theme-primary mb-3">
+                      <DollarSign className="w-4 h-4 text-theme-tertiary" />
                       Prix par place (FCFA)
                     </label>
                     <input
@@ -375,7 +381,7 @@ export default function CreateTripPage() {
                       placeholder="Ex: 4000"
                       min="500"
                       step="100"
-                      className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none font-medium"
+                      className="w-full px-4 py-4 border-2 border-theme rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none font-medium"
                       required
                     />
                   </div>
@@ -397,7 +403,7 @@ export default function CreateTripPage() {
                   <button
                     type="button"
                     onClick={prevStep}
-                    className="border-2 border-gray-200 px-8 py-4 rounded-full font-bold hover:bg-gray-50 transition-all"
+                    className="border-2 border-theme px-8 py-4 rounded-full font-bold hover:bg-theme-secondary transition-all"
                   >
                     Retour
                   </button>
@@ -405,7 +411,7 @@ export default function CreateTripPage() {
                     type="button"
                     onClick={nextStep}
                     disabled={!isStep2Valid()}
-                    className="bg-black text-white px-10 py-4 rounded-full font-bold hover:bg-gray-900 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="bg-emerald-600 text-white px-10 py-4 rounded-full font-bold hover:bg-emerald-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Continuer
                   </button>
@@ -421,12 +427,12 @@ export default function CreateTripPage() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -18 }}
                 transition={{ duration: 0.25 }}
-                className="bg-white rounded-3xl shadow-sm border-2 border-gray-100 p-8"
+                className="card-theme rounded-3xl shadow-sm border-2 border-theme p-8"
               >
-                <h2 className="text-2xl font-bold text-gray-900 mb-8">Options et préférences</h2>
+                <h2 className="text-2xl font-bold text-theme-primary mb-8">Options et préférences</h2>
 
                 <div className="mb-8">
-                  <label className="block text-sm font-semibold text-gray-900 mb-3">
+                  <label className="block text-sm font-semibold text-theme-primary mb-3">
                     Description du trajet (optionnel)
                   </label>
                   <textarea
@@ -434,12 +440,12 @@ export default function CreateTripPage() {
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     placeholder="Informations supplémentaires, points de passage, etc."
                     rows={3}
-                    className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none resize-none font-medium"
+                    className="w-full px-4 py-4 border-2 border-theme rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none resize-none font-medium"
                   />
                 </div>
 
                 <div className="mb-8">
-                  <label className="block text-sm font-semibold text-gray-900 mb-4">
+                  <label className="block text-sm font-semibold text-theme-primary mb-4">
                     Ce qui est autorisé dans votre véhicule
                   </label>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -460,15 +466,15 @@ export default function CreateTripPage() {
                           className={`flex items-center gap-4 p-5 rounded-2xl border-2 transition-all ${
                             isActive
                               ? "border-emerald-400 bg-emerald-50"
-                              : "border-gray-200 hover:border-gray-300"
+                              : "border-theme hover:border-gray-300"
                           }`}
                         >
                           <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                            isActive ? "bg-emerald-500" : "bg-gray-100"
+                            isActive ? "bg-emerald-500" : "bg-theme-secondary"
                           }`}>
-                            <Icon className={`w-6 h-6 ${isActive ? "text-white" : "text-gray-500"}`} />
+                            <Icon className={`w-6 h-6 ${isActive ? "text-white" : "text-theme-tertiary"}`} />
                           </div>
-                          <span className={`font-semibold ${isActive ? "text-gray-900" : "text-gray-600"}`}>
+                          <span className={`font-semibold ${isActive ? "text-theme-primary" : "text-theme-secondary"}`}>
                             {option.label}
                           </span>
                           {isActive && <Check className="w-5 h-5 text-emerald-600 ml-auto" />}
@@ -479,15 +485,15 @@ export default function CreateTripPage() {
                 </div>
 
                 {/* Récapitulatif */}
-                <div className="bg-gray-50 rounded-2xl p-6 mb-8">
-                  <h3 className="font-bold text-gray-900 text-lg mb-4">Récapitulatif</h3>
+                <div className="bg-theme-secondary rounded-2xl p-6 mb-8">
+                  <h3 className="font-bold text-theme-primary text-lg mb-4">Récapitulatif</h3>
                   <div className="space-y-3">
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Trajet</span>
+                      <span className="text-theme-secondary">Trajet</span>
                       <span className="font-semibold">{formData.departure_city} → {formData.arrival_city}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Date</span>
+                      <span className="text-theme-secondary">Date</span>
                       <span className="font-semibold">
                         {formData.departure_date && new Date(formData.departure_date).toLocaleDateString("fr-FR", {
                           weekday: "long", day: "numeric", month: "long",
@@ -495,15 +501,15 @@ export default function CreateTripPage() {
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Heure</span>
+                      <span className="text-theme-secondary">Heure</span>
                       <span className="font-semibold">{formData.departure_time}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Places</span>
+                      <span className="text-theme-secondary">Places</span>
                       <span className="font-semibold">{formData.available_seats}</span>
                     </div>
-                    <div className="flex justify-between border-t border-gray-200 pt-3 mt-3">
-                      <span className="font-semibold text-gray-900">Prix par place</span>
+                    <div className="flex justify-between border-t border-theme pt-3 mt-3">
+                      <span className="font-semibold text-theme-primary">Prix par place</span>
                       <span className="font-bold text-xl text-emerald-700">
                         {formData.price_per_seat.toLocaleString()} FCFA
                       </span>
@@ -515,7 +521,7 @@ export default function CreateTripPage() {
                   <button
                     type="button"
                     onClick={prevStep}
-                    className="border-2 border-gray-200 px-8 py-4 rounded-full font-bold hover:bg-gray-50 transition-all"
+                    className="border-2 border-theme px-8 py-4 rounded-full font-bold hover:bg-theme-secondary transition-all"
                   >
                     Retour
                   </button>

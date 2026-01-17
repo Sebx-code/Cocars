@@ -1,10 +1,10 @@
 // src/pages/dashboard/UserDashboard.tsx
 import { useEffect, useMemo, useState } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { Bell, Calendar, Car, Home, LogOut, MapPin, Plus, Star, TrendingUp, User as UserIcon, Wallet } from "lucide-react";
+import { Bell, Calendar, Car, Home, LogOut, MapPin, Plus, Star, TrendingUp, User as UserIcon, Wallet, CheckCircle, XCircle, DollarSign } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import { userService } from "../../services/userService";
-import type { UserStats } from "../../types";
+import type { UserStats, Activity } from "../../types";
 import { DashboardShell, PageHeader, Card, StatCard, type DashboardNavItem } from "../../components/dashboard";
 import ActionButton from "../../components/dashboard/ActionButton";
 
@@ -15,6 +15,8 @@ export default function UserDashboard() {
 
   const [stats, setStats] = useState<UserStats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [activities, setActivities] = useState<Activity[]>([]);
+  const [activitiesLoading, setActivitiesLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
@@ -26,6 +28,18 @@ export default function UserDashboard() {
         setStats(null);
       } finally {
         setLoading(false);
+      }
+    })();
+
+    (async () => {
+      setActivitiesLoading(true);
+      try {
+        const res = await userService.getRecentActivities(5);
+        setActivities(res.data);
+      } catch {
+        setActivities([]);
+      } finally {
+        setActivitiesLoading(false);
       }
     })();
   }, []);
@@ -87,7 +101,13 @@ export default function UserDashboard() {
       sidebarFooter={sidebarFooter}
     >
       {isHome ? (
-        <UserHome stats={stats} loading={loading} firstName={user?.name?.split(" ")[0] ?? "Utilisateur"} />
+        <UserHome 
+          stats={stats} 
+          loading={loading} 
+          activities={activities}
+          activitiesLoading={activitiesLoading}
+          firstName={user?.name?.split(" ")[0] ?? "Utilisateur"} 
+        />
       ) : (
         <Outlet />
       )}
@@ -98,10 +118,14 @@ export default function UserDashboard() {
 function UserHome({
   stats,
   loading,
+  activities,
+  activitiesLoading,
   firstName,
 }: {
   stats: UserStats | null;
   loading: boolean;
+  activities: Activity[];
+  activitiesLoading: boolean;
   firstName: string;
 }) {
   return (
@@ -206,18 +230,30 @@ function UserHome({
           <h3 className="text-lg font-extrabold text-theme-primary">Activité récente</h3>
           <p className="text-theme-tertiary text-sm mt-1">Derniers événements sur votre compte.</p>
 
-          <div className="mt-5 space-y-3">
-            {["Réservation confirmée", "Nouvel avis reçu", "Trajet terminé"].map((t, i) => (
-              <div key={i} className="flex items-center gap-3 p-3 rounded-2xl border border-theme hover:bg-theme-secondary">
-                <div className="w-10 h-10 rounded-2xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
-                  <Star className="w-5 h-5 text-emerald-700 dark:text-emerald-300" />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-theme-primary font-semibold truncate">{t}</p>
-                  <p className="text-theme-tertiary text-sm">Il y a {i + 1} jour(s)</p>
-                </div>
+          <div className="mt-5">
+            {activitiesLoading ? (
+              <div className="space-y-3">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="h-16 rounded-2xl bg-theme-secondary animate-pulse" />
+                ))}
               </div>
-            ))}
+            ) : activities.length > 0 ? (
+              <div className="space-y-3">
+                {activities.map((activity) => (
+                  <ActivityItem key={activity.id} activity={activity} />
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-8 text-center">
+                <div className="w-16 h-16 rounded-full bg-theme-secondary flex items-center justify-center mb-4">
+                  <Star className="w-8 h-8 text-theme-tertiary" />
+                </div>
+                <p className="text-theme-secondary font-semibold">Aucune activité récente</p>
+                <p className="text-theme-tertiary text-sm mt-1">
+                  Vos dernières activités apparaîtront ici
+                </p>
+              </div>
+            )}
           </div>
         </Card>
       </div>
@@ -251,5 +287,72 @@ function QuickAction({
         </div>
       </div>
     </Link>
+  );
+}
+
+function ActivityItem({ activity }: { activity: Activity }) {
+  const getActivityIcon = () => {
+    switch (activity.type) {
+      case 'trip_created':
+        return <Car className="w-5 h-5" />;
+      case 'trip_completed':
+        return <CheckCircle className="w-5 h-5" />;
+      case 'booking_created':
+      case 'booking_confirmed':
+        return <Calendar className="w-5 h-5" />;
+      case 'booking_rejected':
+      case 'booking_cancelled':
+        return <XCircle className="w-5 h-5" />;
+      case 'rating_received':
+        return <Star className="w-5 h-5" />;
+      case 'payment_received':
+        return <DollarSign className="w-5 h-5" />;
+      default:
+        return <Bell className="w-5 h-5" />;
+    }
+  };
+
+  const getActivityColor = () => {
+    switch (activity.type) {
+      case 'trip_created':
+      case 'trip_completed':
+      case 'booking_confirmed':
+      case 'payment_received':
+        return 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300';
+      case 'booking_rejected':
+      case 'booking_cancelled':
+        return 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300';
+      case 'rating_received':
+        return 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300';
+      default:
+        return 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300';
+    }
+  };
+
+  const formatTimeAgo = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+    
+    if (seconds < 60) return 'À l\'instant';
+    if (seconds < 3600) return `Il y a ${Math.floor(seconds / 60)} min`;
+    if (seconds < 86400) return `Il y a ${Math.floor(seconds / 3600)} h`;
+    if (seconds < 604800) return `Il y a ${Math.floor(seconds / 86400)} j`;
+    return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+  };
+
+  return (
+    <div className="flex items-center gap-3 p-3 rounded-2xl border border-theme hover:bg-theme-secondary transition-colors">
+      <div className={`w-10 h-10 rounded-2xl flex items-center justify-center ${getActivityColor()}`}>
+        {getActivityIcon()}
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="text-theme-primary font-semibold truncate">{activity.title}</p>
+        <p className="text-theme-tertiary text-sm truncate">{activity.description}</p>
+      </div>
+      <span className="text-xs text-theme-tertiary whitespace-nowrap">
+        {formatTimeAgo(activity.created_at)}
+      </span>
+    </div>
   );
 }

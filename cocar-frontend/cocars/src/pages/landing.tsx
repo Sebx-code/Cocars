@@ -1,4 +1,5 @@
 // src/pages/landing.tsx
+import { useEffect, useRef } from "react";
 import {
   Search,
   MapPin,
@@ -15,8 +16,21 @@ import {
   Sparkles,
   Zap,
 } from "lucide-react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { LandingProvider } from "../contexts/landingContext";
 import { useLanding } from "../hooks/useLanding";
+import { 
+  fadeInUp, 
+  scaleIn, 
+  staggerReveal, 
+  revealOnScroll,
+  hoverLift,
+  buttonPress,
+  ANIMATION_CONFIG 
+} from "../utils/animations";
+
+gsap.registerPlugin(ScrollTrigger);
 
 // Composant principal qui utilise le contexte
 function LandingContent() {
@@ -34,6 +48,179 @@ function LandingContent() {
     selectPopularRoute,
   } = useLanding();
 
+  // Refs pour animations GSAP
+  const heroRef = useRef<HTMLElement>(null);
+  const searchFormRef = useRef<HTMLDivElement>(null);
+  const benefitsRef = useRef<HTMLDivElement>(null);
+  const stepsRef = useRef<HTMLDivElement>(null);
+  const testimonialsRef = useRef<HTMLDivElement>(null);
+  const ctaRef = useRef<HTMLElement>(null);
+
+  // Animation du hero au montage
+  useEffect(() => {
+    if (heroRef.current) {
+      const ctx = gsap.context(() => {
+        // Hero title + subtitle
+        gsap.fromTo(
+          ".hero-title",
+          { opacity: 0, y: 50 },
+          { 
+            opacity: 1, 
+            y: 0, 
+            duration: 1, 
+            ease: "power3.out",
+            delay: 0.2 
+          }
+        );
+
+        gsap.fromTo(
+          ".hero-subtitle",
+          { opacity: 0, y: 30 },
+          { 
+            opacity: 1, 
+            y: 0, 
+            duration: 0.8, 
+            ease: "power2.out",
+            delay: 0.5 
+          }
+        );
+
+        // Badges
+        gsap.fromTo(
+          ".hero-badge",
+          { opacity: 0, scale: 0.8 },
+          { 
+            opacity: 1, 
+            scale: 1, 
+            duration: 0.6, 
+            ease: "back.out(1.7)",
+            stagger: 0.1,
+            delay: 0.8 
+          }
+        );
+      }, heroRef);
+
+      return () => ctx.revert();
+    }
+  }, []);
+
+  // Animation du formulaire de recherche
+  useEffect(() => {
+    if (searchFormRef.current) {
+      fadeInUp(searchFormRef.current, 1);
+    }
+  }, []);
+
+  // Animations au scroll pour les sections
+  useEffect(() => {
+    // Benefits cards stagger
+    if (benefitsRef.current) {
+      const cards = benefitsRef.current.querySelectorAll(".benefit-card");
+      if (cards.length > 0) {
+        gsap.fromTo(
+          cards,
+          { opacity: 0, y: 50 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            ease: "power2.out",
+            stagger: 0.15,
+            scrollTrigger: {
+              trigger: benefitsRef.current,
+              start: "top 80%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+      }
+    }
+
+    // Steps reveal
+    if (stepsRef.current) {
+      const stepCards = stepsRef.current.querySelectorAll(".step-card");
+      if (stepCards.length > 0) {
+        gsap.fromTo(
+          stepCards,
+          { opacity: 0, scale: 0.9, y: 30 },
+          {
+            opacity: 1,
+            scale: 1,
+            y: 0,
+            duration: 0.7,
+            ease: "back.out(1.2)",
+            stagger: 0.2,
+            scrollTrigger: {
+              trigger: stepsRef.current,
+              start: "top 75%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+      }
+    }
+
+    // Testimonials slide in
+    if (testimonialsRef.current) {
+      const testimonialCards = testimonialsRef.current.querySelectorAll(".testimonial-card");
+      if (testimonialCards.length > 0) {
+        gsap.fromTo(
+          testimonialCards,
+          { opacity: 0, x: -50 },
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.8,
+            ease: "power3.out",
+            stagger: 0.2,
+            scrollTrigger: {
+              trigger: testimonialsRef.current,
+              start: "top 80%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+      }
+    }
+
+    // CTA section reveal
+    if (ctaRef.current) {
+      gsap.fromTo(
+        ctaRef.current,
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: ctaRef.current,
+            start: "top 85%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
+    }
+
+    return () => {
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
+  }, []);
+
+  // Micro-interactions sur les boutons CTA
+  useEffect(() => {
+    const ctaButtons = document.querySelectorAll<HTMLElement>(".cta-button");
+    const interactiveCards = document.querySelectorAll<HTMLElement>(".interactive-card");
+
+    ctaButtons.forEach((btn) => {
+      buttonPress(btn);
+    });
+
+    interactiveCards.forEach((card) => {
+      hoverLift(card);
+    });
+  }, []);
+
   // Mapping des noms d'icônes vers les composants
   const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
     DollarSign,
@@ -49,15 +236,15 @@ function LandingContent() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             {/* Logo épuré */}
-            <div className="flex items-center gap-3 animate-slide-in-left">
-              <div className="w-11 h-11 bg-black rounded-2xl flex items-center justify-center shadow-lg hover-lift">
+            <div className="flex items-center gap-3">
+              <div className="w-11 h-11 bg-black rounded-2xl flex items-center justify-center shadow-lg">
                 <span className="text-emerald-400 font-bold text-xl">R</span>
               </div>
               <span className="text-2xl font-bold text-gray-900 tracking-tight">Rideshare</span>
             </div>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-8 animate-fade-in animation-delay-200">
+            <div className="hidden md:flex items-center gap-8">
               <button className="text-gray-600 hover:text-black font-medium transition-all hover:scale-105">
                 Rechercher
               </button>
@@ -72,7 +259,7 @@ function LandingContent() {
               </button>
               <button
                 onClick={navigateToSignup}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-full font-semibold transition-all hover:scale-105 shadow-md hover:shadow-xl"
+                className="cta-button bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-full font-semibold transition-all shadow-md hover:shadow-xl"
               >
                 Inscription
               </button>
@@ -94,7 +281,7 @@ function LandingContent() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-gray-100 bg-white animate-slide-in-bottom">
+          <div className="md:hidden border-t border-gray-100 bg-white">
             <div className="px-6 py-6 space-y-3">
               <button className="block w-full text-left text-gray-600 hover:text-black font-medium py-3 px-4 rounded-xl hover:bg-gray-50 transition-all">
                 Rechercher
@@ -120,14 +307,14 @@ function LandingContent() {
       </nav>
 
       {/* Hero Section Épuré */}
-      <section className="relative pt-32 pb-20 overflow-hidden">
+      <section ref={heroRef} className="relative pt-32 pb-20 overflow-hidden">
         {/* Gradient Background subtil */}
         <div className="absolute inset-0 bg-linear-to-br from-gray-50 via-white to-emerald-50/40 -z-10"></div>
         
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           {/* Badge animé */}
-          <div className="flex justify-center mb-8 animate-bounce-smooth">
-            <div className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-200 px-5 py-2 rounded-full shadow-sm">
+          <div className="flex justify-center mb-8">
+            <div className="hero-badge inline-flex items-center gap-2 bg-emerald-50 border border-emerald-200 px-5 py-2 rounded-full shadow-sm">
               <Sparkles className="w-4 h-4 text-emerald-700" />
               <span className="text-sm font-semibold text-gray-900">
                 1000+ trajets ce mois
@@ -136,19 +323,19 @@ function LandingContent() {
           </div>
 
           {/* Hero Title */}
-          <div className="text-center mb-16 animate-fade-in-scale">
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight tracking-tight">
+          <div className="text-center mb-16">
+            <h1 className="hero-title text-5xl sm:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight tracking-tight">
               Voyagez malin,
               <br />
               <span className="text-gradient-yellow">économisez plus</span>
             </h1>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+            <p className="hero-subtitle text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
               Covoiturage simple et sécurisé partout au Cameroun
             </p>
           </div>
 
           {/* Search Form Épuré */}
-          <div className="max-w-4xl mx-auto animate-slide-in-bottom animation-delay-300">
+          <div ref={searchFormRef} className="max-w-4xl mx-auto">
             <div className="glass-effect rounded-3xl p-8 shadow-xl-strong border-2 border-white/50">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                 {/* Départ */}
@@ -235,7 +422,7 @@ function LandingContent() {
 
               <button
                 onClick={handleSearch}
-                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-4 rounded-2xl font-bold text-base transition-all hover:scale-[1.02] shadow-lg hover:shadow-xl flex items-center justify-center gap-2 ripple-effect"
+                className="cta-button w-full bg-emerald-600 hover:bg-emerald-700 text-white py-4 rounded-2xl font-bold text-base transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
               >
                 <Search className="w-5 h-5" />
                 Rechercher un trajet
@@ -252,7 +439,7 @@ function LandingContent() {
                   <button
                     key={i}
                     onClick={() => selectPopularRoute(route)}
-                    className="px-4 py-2 bg-white border border-gray-200 rounded-full hover:border-emerald-400 hover:bg-emerald-50 transition-all text-sm font-medium text-gray-700 hover:text-gray-900 hover-lift"
+                    className="interactive-card px-4 py-2 bg-white border border-gray-200 rounded-full hover:border-emerald-400 hover:bg-emerald-50 transition-all text-sm font-medium text-gray-700 hover:text-gray-900"
                   >
                     {route.from} → {route.to}
                   </button>
@@ -265,7 +452,7 @@ function LandingContent() {
 
       {/* Benefits - Design Épuré */}
       <section className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <div ref={benefitsRef} className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="text-center mb-16">
             <p className="text-sm font-semibold text-emerald-700 mb-3 uppercase tracking-wider">
               Pourquoi nous choisir
@@ -281,7 +468,7 @@ function LandingContent() {
               return (
                 <div
                   key={i}
-                  className="group p-8 rounded-3xl bg-gray-50 hover:bg-white border border-gray-100 hover:border-emerald-400 transition-all hover-lift"
+                  className="benefit-card interactive-card group p-8 rounded-3xl bg-gray-50 hover:bg-white border border-gray-100 hover:border-emerald-400 transition-all"
                 >
                   <div className="w-14 h-14 bg-emerald-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-md">
                     <Icon className="w-7 h-7 text-white" />
@@ -299,7 +486,7 @@ function LandingContent() {
 
       {/* How it Works - Minimaliste */}
       <section className="py-24 bg-linear-to-b from-slate-950 to-slate-900 text-white overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <div ref={stepsRef} className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="text-center mb-20">
             <p className="text-sm font-semibold text-emerald-400 mb-3 uppercase tracking-wider">
               Comment ça marche
@@ -366,7 +553,7 @@ function LandingContent() {
 
       {/* Testimonials - Élégant */}
       <section className="py-24 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <div ref={testimonialsRef} className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="text-center mb-20">
             <p className="text-sm font-semibold text-emerald-700 mb-3 uppercase tracking-wider">
               Témoignages
@@ -380,7 +567,7 @@ function LandingContent() {
             {testimonials.map((testimonial, i) => (
               <div
                 key={i}
-                className="bg-white rounded-3xl p-8 border border-gray-100 hover:border-emerald-400 transition-all hover-lift shadow-sm hover:shadow-xl"
+                className="testimonial-card interactive-card bg-white rounded-3xl p-8 border border-gray-100 hover:border-emerald-400 transition-all shadow-sm hover:shadow-xl"
               >
                 {/* Rating */}
                 <div className="flex items-center gap-1 mb-6">
@@ -422,7 +609,7 @@ function LandingContent() {
       </section>
 
       {/* CTA Section - Bold & Clean */}
-      <section className="py-32 bg-black text-white relative overflow-hidden">
+      <section ref={ctaRef} className="py-32 bg-black text-white relative overflow-hidden">
         {/* Background Effect */}
         <div className="absolute inset-0 bg-linear-to-br from-emerald-400/15 to-transparent"></div>
         

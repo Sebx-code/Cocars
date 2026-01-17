@@ -1,28 +1,90 @@
 // src/pages/dashboard/UserProfile.tsx
-import { useState } from "react";
-import { User, Mail, Phone, Camera, Save, Shield, Star, Loader2, Check, Edit2 } from "lucide-react";
+import { useState, useRef } from "react";
+import { User, Mail, Phone, Camera, Save, Shield, Star, Loader2, Check, Edit2, X } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
+import { userService } from "../../services/userService";
 
 export default function UserProfile() {
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [formData, setFormData] = useState({
     name: user?.name || "",
     email: user?.email || "",
     phone: user?.phone || "",
-    bio: "",
+    bio: user?.bio || "",
   });
 
   const handleSave = async () => {
     setIsSaving(true);
-    await new Promise((r) => setTimeout(r, 1000));
-    setIsSaving(false);
-    setSaveSuccess(true);
-    setIsEditing(false);
-    setTimeout(() => setSaveSuccess(false), 3000);
+    setError(null);
+    try {
+      const response = await userService.updateProfile({
+        name: formData.name,
+        phone: formData.phone,
+        bio: formData.bio,
+      });
+      updateUser(response.data);
+      setSaveSuccess(true);
+      setIsEditing(false);
+      setTimeout(() => setSaveSuccess(false), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Erreur lors de la mise à jour");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Vérifier la taille (max 2MB)
+    if (file.size > 2 * 1024 * 1024) {
+      setError("La taille du fichier ne doit pas dépasser 2 MB");
+      return;
+    }
+
+    // Vérifier le type
+    if (!file.type.startsWith("image/")) {
+      setError("Le fichier doit être une image");
+      return;
+    }
+
+    setUploadingAvatar(true);
+    setError(null);
+    try {
+      const response = await userService.uploadAvatar(file);
+      updateUser({ ...user!, avatar: response.data.avatar });
+      setSaveSuccess(true);
+      setTimeout(() => setSaveSuccess(false), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Erreur lors de l'upload");
+    } finally {
+      setUploadingAvatar(false);
+    }
+  };
+
+  const handleDeleteAvatar = async () => {
+    if (!confirm("Voulez-vous vraiment supprimer votre photo de profil ?")) return;
+
+    setUploadingAvatar(true);
+    setError(null);
+    try {
+      await userService.deleteAvatar();
+      updateUser({ ...user!, avatar: null });
+      setSaveSuccess(true);
+      setTimeout(() => setSaveSuccess(false), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Erreur lors de la suppression");
+    } finally {
+      setUploadingAvatar(false);
+    }
   };
 
   return (
@@ -35,7 +97,7 @@ export default function UserProfile() {
         {!isEditing && (
           <button
             onClick={() => setIsEditing(true)}
-            className="flex items-center gap-2 px-5 py-2.5 bg-gray-100 hover:bg-gray-200 rounded-full font-semibold transition-colors"
+            className="flex items-center gap-2 px-5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-full font-semibold transition-colors"
           >
             <Edit2 className="w-4 h-4" /> Modifier
           </button>
@@ -49,19 +111,65 @@ export default function UserProfile() {
         </div>
       )}
 
+      {error && (
+        <div className="bg-red-50 border-2 border-red-200 rounded-2xl p-4 flex items-center gap-3">
+          <X className="w-5 h-5 text-red-600" />
+          <p className="text-red-700 font-semibold">{error}</p>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Profile card */}
         <div className="card-theme rounded-3xl border-2 p-8">
           <div className="text-center">
             <div className="relative inline-block">
-              <div className="w-28 h-28 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto shadow-xl">
-                <span className="text-4xl font-bold text-white">
-                  {user?.name?.split(" ").map((n) => n[0]).join("") || "U"}
-                </span>
+              {user?.avatar ? (
+                <img
+                  src={user.avatar.startsWith('http') ? user.avatar : `${import.meta.env.VITE_API_URL}/storage/${user.avatar}`}
+                  alt={user.name}
+                  className="w-28 h-28 rounded-full object-cover mx-auto shadow-xl"
+                />
+              ) : (
+                <div className="w-28 h-28 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto shadow-xl">
+                  <span className="text-4xl font-bold text-white">
+                    {user?.name?.split(" ").map((n) => n[0]).join("") || "U"}
+                  </span>
+                </div>
+              )}
+              
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleAvatarChange}
+                className="hidden"
+              />
+              
+              <div className="absolute bottom-0 right-0 flex gap-1">
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploadingAvatar}
+                  className="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center hover:bg-emerald-700 transition-colors shadow-lg disabled:opacity-50"
+                  title="Changer la photo"
+                >
+                  {uploadingAvatar ? (
+                    <Loader2 className="w-5 h-5 text-white animate-spin" />
+                  ) : (
+                    <Camera className="w-5 h-5 text-white" />
+                  )}
+                </button>
+                
+                {user?.avatar && (
+                  <button
+                    onClick={handleDeleteAvatar}
+                    disabled={uploadingAvatar}
+                    className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center hover:bg-red-700 transition-colors shadow-lg disabled:opacity-50"
+                    title="Supprimer la photo"
+                  >
+                    <X className="w-5 h-5 text-white" />
+                  </button>
+                )}
               </div>
-              <button className="absolute bottom-0 right-0 w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center hover:bg-emerald-700 transition-colors shadow-lg">
-                <Camera className="w-5 h-5 text-white" />
-              </button>
             </div>
 
             <h2 className="text-2xl font-bold text-theme-primary mt-6">{user?.name}</h2>
@@ -176,12 +284,12 @@ export default function UserProfile() {
       {/* Security */}
       <div className="card-theme rounded-3xl border-2 p-8">
         <h3 className="text-xl font-bold text-theme-primary mb-6">Sécurité</h3>
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-5 bg-gray-50 rounded-2xl">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-5 bg-theme-secondary rounded-2xl">
           <div>
             <p className="font-semibold text-theme-primary">Mot de passe</p>
             <p className="text-sm text-theme-tertiary">Dernière modification il y a 3 mois</p>
           </div>
-          <button className="px-6 py-3 border-2 border-theme-strong rounded-full font-semibold hover:bg-theme-secondary transition-colors">
+          <button className="px-6 py-3 border-2 border-theme-strong text-theme-primary rounded-full font-semibold hover:bg-theme-tertiary transition-colors">
             Modifier le mot de passe
           </button>
         </div>

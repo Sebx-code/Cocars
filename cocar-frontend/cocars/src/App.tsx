@@ -1,6 +1,5 @@
 // src/App.tsx - Application de covoiturage Rideshare
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import { AnimatePresence } from 'framer-motion';
 import { AuthProvider } from './hooks/useAuth';
 import { ThemeProvider } from './contexts/themeContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
@@ -25,7 +24,7 @@ import Notifications from './pages/dashboard/Notifications';
 import { AdminDashboard, AdminUsers, AdminTrips, AdminBookings, AdminSettings } from './pages/admin';
 
 import './App.css';
-import { PageTransition } from './components/animations';
+import { PageTransition } from './components/animations/PageTransition';
 
 function App() {
   return (
@@ -43,7 +42,6 @@ function AnimatedRoutes() {
   const location = useLocation();
 
   return (
-    <AnimatePresence mode="wait" initial={false}>
       <Routes location={location} key={location.pathname}>
           {/* ============ PAGES PUBLIQUES ============ */}
           
@@ -107,7 +105,6 @@ function AnimatedRoutes() {
           {/* ============ PAGE 404 ============ */}
           <Route path="*" element={<NotFound />} />
       </Routes>
-    </AnimatePresence>
   );
 }
 

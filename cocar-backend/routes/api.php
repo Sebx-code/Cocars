@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\VehicleController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\AdminController;
+use App\Http\Controllers\Api\UserVehicleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,6 +54,19 @@ Route::middleware('auth:sanctum')->group(function () {
     
     // --- Statistiques utilisateur ---
     Route::get('/user/stats', [UserController::class, 'stats']);
+    
+    // --- Profil utilisateur ---
+    Route::put('/user/profile', [UserController::class, 'updateProfile']);
+    Route::post('/user/avatar', [UserController::class, 'uploadAvatar']);
+    Route::delete('/user/avatar', [UserController::class, 'deleteAvatar']);
+    
+    // --- Véhicules utilisateur ---
+    Route::get('/user/vehicles', [UserVehicleController::class, 'index']);
+    Route::post('/user/vehicles', [UserVehicleController::class, 'store']);
+    Route::get('/user/vehicles/{id}', [UserVehicleController::class, 'show']);
+    Route::put('/user/vehicles/{id}', [UserVehicleController::class, 'update']);
+    Route::delete('/user/vehicles/{id}', [UserVehicleController::class, 'destroy']);
+    Route::post('/user/vehicles/{id}/set-default', [UserVehicleController::class, 'setDefault']);
     
     // --- Trajets ---
     Route::get('/my-trips', [TripController::class, 'myTrips']);

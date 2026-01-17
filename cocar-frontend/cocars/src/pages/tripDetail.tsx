@@ -213,7 +213,7 @@ export default function TripDetailPage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           {error && (
             <div className="bg-red-50 border-2 border-red-200 rounded-2xl p-5 mb-6 flex items-start gap-3">
-              <AlertCircle className="w-6 h-6 text-red-500 flex-shrink-0" />
+              <AlertCircle className="w-6 h-6 text-red-500 shrink-0" />
               <div>
                 <p className="font-semibold text-red-800">Erreur</p>
                 <p className="text-red-700">{error}</p>
@@ -296,7 +296,7 @@ export default function TripDetailPage() {
               <div className="bg-white rounded-3xl shadow-sm border-2 border-gray-100 p-8">
                 <div className="flex items-start justify-between gap-6">
                   <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg">
+                    <div className="w-16 h-16 bg-linear-to-br from-emerald-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg">
                       <span className="font-bold text-black text-lg">
                         {trip.driver.name.split(" ").map((n) => n[0]).join("")}
                       </span>

@@ -1,7 +1,7 @@
 // src/pages/login.tsx
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { Mail, Lock, Eye, EyeOff, Loader2, AlertCircle, ArrowRight, Sparkles } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, Loader2, AlertCircle, ArrowRight, Car } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { useTheme } from "../contexts/themeContext";
 
@@ -36,39 +36,83 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-theme-primary flex flex-col transition-colors">
-      {/* Header */}
-      <header className="p-6 animate-slide-in-left">
-        <Link to="/" className="flex items-center gap-3 w-fit group">
-          <div className="w-11 h-11 bg-emerald-600 dark:bg-emerald-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-            <span className="text-white dark:text-slate-950 font-bold text-xl">R</span>
+    <div className="min-h-screen bg-theme-primary flex transition-colors">
+      {/* Left side - Image/Brand */}
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-emerald-500 via-emerald-600 to-emerald-700 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMzLjMxNCAwIDYgMi42ODYgNiA2cy0yLjY4NiA2LTYgNi02LTIuNjg2LTYtNiAyLjY4Ni02IDYtNiIgc3Ryb2tlPSJyZ2JhKDI1NSwgMjU1LCAyNTUsIDAuMSkiLz48L2c+PC9zdmc+')] opacity-30"></div>
+        
+        <div className="relative z-10 flex flex-col justify-between p-12 text-white w-full">
+          <div>
+            <Link to="/" className="flex items-center gap-3 w-fit group">
+              <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                <Car className="w-7 h-7" />
+              </div>
+              <span className="text-3xl font-bold">Rideshare</span>
+            </Link>
           </div>
-          <span className="text-2xl font-bold text-theme-primary tracking-tight">Rideshare</span>
-        </Link>
-      </header>
 
-      {/* Main */}
-      <main className="flex-1 flex items-center justify-center p-6">
-        <div className="w-full max-w-md animate-fade-in-scale">
-          {/* Title */}
-          <div className="text-center mb-10">
-            <div className="inline-flex items-center gap-2 bg-emerald-50 dark:bg-emerald-400/10 border border-emerald-200 dark:border-emerald-400/20 px-4 py-2 rounded-full mb-6 animate-bounce-smooth">
-              <Sparkles className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
-              <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-                Bon retour !
-              </span>
+          <div className="space-y-6">
+            <h2 className="text-5xl font-bold leading-tight">
+              Bienvenue<br />de retour !
+            </h2>
+            <p className="text-xl text-white/90 max-w-md">
+              Connectez-vous pour accéder à vos trajets et continuer votre aventure de covoiturage.
+            </p>
+            <div className="flex gap-8 pt-6">
+              <div>
+                <div className="text-4xl font-bold">10K+</div>
+                <div className="text-white/80">Utilisateurs</div>
+              </div>
+              <div>
+                <div className="text-4xl font-bold">50K+</div>
+                <div className="text-white/80">Trajets</div>
+              </div>
+              <div>
+                <div className="text-4xl font-bold">4.8</div>
+                <div className="text-white/80">Note moyenne</div>
+              </div>
             </div>
-            <h1 className="text-4xl font-bold text-theme-primary mb-3 tracking-tight">
+          </div>
+
+          <div className="flex items-center gap-4 text-sm text-white/70">
+            <button 
+              onClick={toggleTheme}
+              className="hover:text-white transition-colors font-medium"
+            >
+              {isDark ? '☀️ Mode clair' : '🌙 Mode sombre'}
+            </button>
+            <span>•</span>
+            <span>© 2024 Rideshare</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Right side - Form */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-6">
+        <div className="w-full max-w-md">
+          {/* Mobile header */}
+          <div className="lg:hidden mb-8">
+            <Link to="/" className="flex items-center gap-3 w-fit group">
+              <div className="w-11 h-11 bg-emerald-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                <Car className="w-6 h-6 text-white" />
+              </div>
+              <span className="text-2xl font-bold text-theme-primary tracking-tight">Rideshare</span>
+            </Link>
+          </div>
+
+          {/* Title */}
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-theme-primary mb-2">
               Connexion
             </h1>
             <p className="text-theme-secondary">
-              Accédez à votre espace personnel
+              Entrez vos identifiants pour continuer
             </p>
           </div>
 
           {/* Error */}
           {error && (
-            <div className="bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-800 rounded-2xl p-4 mb-6 flex items-center gap-3 animate-shake">
+            <div className="bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-800 rounded-2xl p-4 mb-6 flex items-center gap-3">
               <AlertCircle className="w-5 h-5 text-red-500 dark:text-red-400 shrink-0" />
               <p className="text-red-700 dark:text-red-300 font-medium text-sm">{error}</p>
             </div>
@@ -77,7 +121,7 @@ export default function LoginPage() {
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-xs font-semibold text-theme-secondary mb-2 uppercase tracking-wide">
+              <label className="block text-sm font-semibold text-theme-secondary mb-2">
                 Email
               </label>
               <div className="relative group">
@@ -87,14 +131,14 @@ export default function LoginPage() {
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   placeholder="votre@email.com"
-                  className="input-theme w-full pl-12 pr-4 py-4 border-2 rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition-all font-medium placeholder:text-theme-tertiary"
+                  className="input-theme w-full pl-12 pr-4 py-3.5 border-2 rounded-xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition-all font-medium placeholder:text-theme-tertiary"
                   required
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-theme-secondary mb-2 uppercase tracking-wide">
+              <label className="block text-sm font-semibold text-theme-secondary mb-2">
                 Mot de passe
               </label>
               <div className="relative group">
@@ -104,7 +148,7 @@ export default function LoginPage() {
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   placeholder="••••••••"
-                  className="input-theme w-full pl-12 pr-12 py-4 border-2 rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition-all font-medium"
+                  className="input-theme w-full pl-12 pr-12 py-3.5 border-2 rounded-xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition-all font-medium"
                   required
                 />
                 <button
@@ -129,7 +173,7 @@ export default function LoginPage() {
               </label>
               <Link 
                 to="/forgot-password" 
-                className="text-sm font-semibold text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 transition-colors"
+                className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors"
               >
                 Mot de passe oublié ?
               </Link>
@@ -138,7 +182,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-emerald-600 dark:bg-emerald-500 hover:bg-emerald-700 dark:hover:bg-emerald-600 text-white dark:text-slate-950 py-4 rounded-2xl font-bold text-base transition-all hover:scale-[1.02] shadow-lg hover:shadow-xl flex items-center justify-center gap-2 disabled:opacity-50 ripple-effect"
+              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-xl font-bold text-base transition-all hover:shadow-lg flex items-center justify-center gap-2 disabled:opacity-50"
             >
               {isLoading ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
@@ -152,7 +196,7 @@ export default function LoginPage() {
           </form>
 
           {/* Divider */}
-          <div className="relative my-8">
+          <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-theme"></div>
             </div>
@@ -164,7 +208,7 @@ export default function LoginPage() {
           {/* Social login */}
           <button
             type="button"
-            className="w-full border-2 border-theme py-4 rounded-2xl font-semibold text-theme-primary hover-theme transition-all flex items-center justify-center gap-3 hover-lift"
+            className="w-full border-2 border-theme-strong py-3.5 rounded-xl font-semibold text-theme-primary hover:bg-theme-secondary transition-all flex items-center justify-center gap-3"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -180,27 +224,27 @@ export default function LoginPage() {
             Pas encore de compte ?{" "}
             <Link 
               to="/signup" 
-              className="font-bold text-theme-primary hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors"
+              className="font-bold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors"
             >
               S'inscrire
             </Link>
           </p>
-        </div>
-      </main>
 
-      {/* Footer */}
-      <footer className="p-6 text-center">
-        <div className="flex items-center justify-center gap-6 text-sm text-theme-tertiary">
-          <button 
-            onClick={toggleTheme}
-            className="hover:text-theme-primary transition-colors font-medium"
-          >
-            {isDark ? '☀️ Mode clair' : '🌙 Mode sombre'}
-          </button>
-          <span>•</span>
-          <p>© 2024 Rideshare</p>
+          {/* Mobile footer */}
+          <div className="lg:hidden mt-8 text-center">
+            <div className="flex items-center justify-center gap-4 text-sm text-theme-tertiary">
+              <button 
+                onClick={toggleTheme}
+                className="hover:text-theme-primary transition-colors font-medium"
+              >
+                {isDark ? '☀️ Mode clair' : '🌙 Mode sombre'}
+              </button>
+              <span>•</span>
+              <span>© 2024 Rideshare</span>
+            </div>
+          </div>
         </div>
-      </footer>
+      </div>
     </div>
   );
 }

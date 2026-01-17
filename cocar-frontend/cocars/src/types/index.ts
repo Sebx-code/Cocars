@@ -247,3 +247,63 @@ export interface AdminStats {
   active_trips: number;
   pending_verifications: number;
 }
+
+// ============== ACTIVITÉS ==============
+export type ActivityType = 
+  | 'trip_created'
+  | 'trip_completed'
+  | 'booking_created'
+  | 'booking_confirmed'
+  | 'booking_rejected'
+  | 'booking_cancelled'
+  | 'rating_received'
+  | 'payment_received';
+
+export interface Activity {
+  id: number;
+  type: ActivityType;
+  title: string;
+  description: string;
+  created_at: string;
+  data?: {
+    trip_id?: number;
+    booking_id?: number;
+    rating?: number;
+    amount?: number;
+  };
+}
+
+// ============== VÉHICULES UTILISATEUR ==============
+export interface UserVehicle {
+  id: number;
+  user_id: number;
+  registration_number: string;
+  brand: string;
+  model?: string;
+  color: string;
+  year?: number;
+  seats: number;
+  is_default: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CreateUserVehicleData {
+  registration_number: string;
+  brand: string;
+  model?: string;
+  color: string;
+  year?: number;
+  seats?: number;
+  is_default?: boolean;
+}
+
+export interface UpdateUserVehicleData {
+  registration_number?: string;
+  brand?: string;
+  model?: string;
+  color?: string;
+  year?: number;
+  seats?: number;
+  is_default?: boolean;
+}

@@ -41,11 +41,19 @@ class User extends Authenticatable
     // ============ RELATIONS ============
 
     /**
-     * Véhicules de l'utilisateur
+     * Véhicules de l'utilisateur (ancienne table)
      */
     public function vehicles()
     {
         return $this->hasMany(Vehicle::class);
+    }
+
+    /**
+     * Véhicules personnels de l'utilisateur
+     */
+    public function userVehicles()
+    {
+        return $this->hasMany(UserVehicle::class);
     }
 
     /**
