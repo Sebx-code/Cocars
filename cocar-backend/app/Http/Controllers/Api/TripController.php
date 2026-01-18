@@ -119,12 +119,15 @@ class TripController extends Controller
                 'available_seats' => 'required|integer|min:1|max:8',
                 'price_per_seat' => 'required|integer|min:100',
                 'description' => 'nullable|string|max:1000',
-                'vehicle_id' => 'nullable|exists:vehicles,id',
                 'luggage_allowed' => 'sometimes|boolean',
                 'pets_allowed' => 'sometimes|boolean',
                 'smoking_allowed' => 'sometimes|boolean',
                 'music_allowed' => 'sometimes|boolean',
                 'air_conditioning' => 'sometimes|boolean',
+                // Informations du véhicule (obligatoires)
+                'vehicle_registration' => 'required|string|max:20',
+                'vehicle_brand' => 'required|string|max:50',
+                'vehicle_color' => 'required|string|max:30',
             ]);
 
             // Normaliser le format de l'heure (enlever les secondes si présentes)
@@ -135,18 +138,66 @@ class TripController extends Controller
                 $validated['estimated_arrival_time'] = substr($validated['estimated_arrival_time'], 0, 5);
             }
 
-            // Vérifier que le véhicule appartient à l'utilisateur
+            $user = $request->user();
+            $userVehicleId = null;
+
+            // Vérifier si un véhicule avec cette immatriculation existe déjà pour cet utilisateur
+            $existingVehicle = $user->userVehicles()
+                ->where('registration_number', $validated['vehicle_registration'])
+                ->first();
+
+            if ($existingVehicle) {
+                // Mettre à jour les infos du véhicule existant si nécessaire
+                $existingVehicle->update([
+                    'brand' => $validated['vehicle_brand'],
+                    'color' => $validated['vehicle_color'],
+                ]);
+                $userVehicleId = $existingVehicle->id;
+            } else {
+                // Créer un nouveau véhicule pour l'utilisateur
+                $newVehicle = $user->userVehicles()->create([
+                    'registration_number' => $validated['vehicle_registration'],
+                    'brand' => $validated['vehicle_brand'],
+                    'color' => $validated['vehicle_color'],
+                    'seats' => $validated['available_seats'],
+                    'is_default' => $user->userVehicles()->count() === 0,
+                ]);
+                $userVehicleId = $newVehicle->id;
+            }
+
+            // Vérifier que le véhicule appartient à l'utilisateur (si vehicle_id fourni)
             if (isset($validated['vehicle_id'])) {
-                $vehicle = $request->user()->vehicles()->find($validated['vehicle_id']);
+                $vehicle = $user->userVehicles()->find($validated['vehicle_id']);
                 if (!$vehicle) {
                     return $this->error('Ce véhicule ne vous appartient pas', 403);
                 }
+                $userVehicleId = $validated['vehicle_id'];
             }
 
+            // Créer le trajet
             $trip = Trip::create([
-                ...$validated,
-                'driver_id' => $request->user()->id,
+                'driver_id' => $user->id,
+                'vehicle_id' => $userVehicleId,
+                'departure_city' => $validated['departure_city'],
+                'departure_address' => $validated['departure_address'],
+                'departure_lat' => $validated['departure_lat'] ?? null,
+                'departure_lng' => $validated['departure_lng'] ?? null,
+                'arrival_city' => $validated['arrival_city'],
+                'arrival_address' => $validated['arrival_address'],
+                'arrival_lat' => $validated['arrival_lat'] ?? null,
+                'arrival_lng' => $validated['arrival_lng'] ?? null,
+                'departure_date' => $validated['departure_date'],
+                'departure_time' => $validated['departure_time'],
+                'estimated_arrival_time' => $validated['estimated_arrival_time'] ?? null,
+                'available_seats' => $validated['available_seats'],
                 'total_seats' => $validated['available_seats'],
+                'price_per_seat' => $validated['price_per_seat'],
+                'description' => $validated['description'] ?? null,
+                'luggage_allowed' => $validated['luggage_allowed'] ?? true,
+                'pets_allowed' => $validated['pets_allowed'] ?? false,
+                'smoking_allowed' => $validated['smoking_allowed'] ?? false,
+                'music_allowed' => $validated['music_allowed'] ?? true,
+                'air_conditioning' => $validated['air_conditioning'] ?? true,
                 'status' => 'confirmed',
             ]);
 

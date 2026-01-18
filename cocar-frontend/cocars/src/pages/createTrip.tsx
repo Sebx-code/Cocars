@@ -1,5 +1,5 @@
 // src/pages/createTrip.tsx
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   MapPin,
@@ -18,14 +18,12 @@ import {
   Dog,
   Cigarette,
   AlertCircle,
-  Plus,
 } from "lucide-react";
 import Layout from "../components/layout/Layout";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAuth } from "../hooks/useAuth";
 import { tripService } from "../services/tripService";
-import { userVehicleService } from "../services/userVehicleService";
-import type { CreateTripData, UserVehicle, CreateUserVehicleData } from "../types";
+import type { CreateTripData } from "../types";
 
 const POPULAR_CITIES = [
   "Yaoundé", "Douala", "Bafoussam", "Bamenda", "Garoua", "Maroua",
@@ -39,11 +37,7 @@ export default function CreateTripPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-  const [currentStep, setCurrentStep] = useState(0);
-  const [vehicles, setVehicles] = useState<UserVehicle[]>([]);
-  const [selectedVehicleId, setSelectedVehicleId] = useState<number | null>(null);
-  const [loadingVehicles, setLoadingVehicles] = useState(true);
-  const [showAddVehicleForm, setShowAddVehicleForm] = useState(false);
+  const [currentStep, setCurrentStep] = useState(1);
 
   const [formData, setFormData] = useState<CreateTripData>({
     departure_city: "",
@@ -56,6 +50,9 @@ export default function CreateTripPage() {
     available_seats: 3,
     price_per_seat: 0,
     description: "",
+    vehicle_registration: "",
+    vehicle_brand: "",
+    vehicle_color: "",
     luggage_allowed: true,
     pets_allowed: false,
     smoking_allowed: false,
@@ -108,7 +105,8 @@ export default function CreateTripPage() {
 
   const isStep2Valid = () =>
     formData.departure_date && formData.departure_time &&
-    formData.available_seats > 0 && formData.price_per_seat > 0;
+    formData.available_seats > 0 && formData.price_per_seat > 0 &&
+    formData.vehicle_registration && formData.vehicle_brand && formData.vehicle_color;
 
   if (success) {
     return (
@@ -136,6 +134,7 @@ export default function CreateTripPage() {
                     departure_city: "", departure_address: "", arrival_city: "", arrival_address: "",
                     departure_date: "", departure_time: "", estimated_arrival_time: "",
                     available_seats: 3, price_per_seat: 0, description: "",
+                    vehicle_registration: "", vehicle_brand: "", vehicle_color: "",
                     luggage_allowed: true, pets_allowed: false, smoking_allowed: false,
                     music_allowed: true, air_conditioning: true,
                   });
@@ -385,6 +384,52 @@ export default function CreateTripPage() {
                       required
                     />
                   </div>
+                </div>
+
+                {/* Informations du véhicule */}
+                <div className="mb-8">
+                  <label className="flex items-center gap-2 text-sm font-semibold text-theme-primary mb-4">
+                    <Car className="w-4 h-4 text-emerald-600" />
+                    Informations du véhicule
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                      <label className="block text-xs text-theme-tertiary mb-1.5">Immatriculation *</label>
+                      <input
+                        type="text"
+                        value={formData.vehicle_registration}
+                        onChange={(e) => setFormData({ ...formData, vehicle_registration: e.target.value.toUpperCase() })}
+                        placeholder="Ex: LT-1234-AB"
+                        className="w-full px-4 py-4 border-2 border-theme rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none font-medium uppercase"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs text-theme-tertiary mb-1.5">Marque *</label>
+                      <input
+                        type="text"
+                        value={formData.vehicle_brand}
+                        onChange={(e) => setFormData({ ...formData, vehicle_brand: e.target.value })}
+                        placeholder="Ex: Toyota"
+                        className="w-full px-4 py-4 border-2 border-theme rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none font-medium"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs text-theme-tertiary mb-1.5">Couleur *</label>
+                      <input
+                        type="text"
+                        value={formData.vehicle_color}
+                        onChange={(e) => setFormData({ ...formData, vehicle_color: e.target.value })}
+                        placeholder="Ex: Blanche"
+                        className="w-full px-4 py-4 border-2 border-theme rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none font-medium"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <p className="text-xs text-theme-tertiary mt-2">
+                    Ces informations permettent aux passagers d'identifier facilement votre véhicule
+                  </p>
                 </div>
 
                 {formData.price_per_seat > 0 && formData.available_seats > 0 && (

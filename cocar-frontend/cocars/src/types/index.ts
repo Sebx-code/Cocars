@@ -95,6 +95,9 @@ export interface CreateTripData {
   price_per_seat: number;
   description?: string;
   vehicle_id?: number;
+  vehicle_registration: string;
+  vehicle_brand: string;
+  vehicle_color: string;
   luggage_allowed?: boolean;
   pets_allowed?: boolean;
   smoking_allowed?: boolean;

@@ -77,7 +77,7 @@ export default function UserProfile() {
     setError(null);
     try {
       await userService.deleteAvatar();
-      updateUser({ ...user!, avatar: null });
+      updateUser({ ...user!, avatar: undefined });
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 3000);
     } catch (err) {

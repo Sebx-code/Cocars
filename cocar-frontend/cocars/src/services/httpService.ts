@@ -92,10 +92,24 @@ class HttpService {
     const requestUrl = `${this.baseURL}${url}`;
     console.log(`[httpService] POST ${requestUrl}`, { data, options });
     
+    // Préparer les headers et le body
+    let headers: Record<string, string> = { ...this.getHeaders(options.skipAuth) } as Record<string, string>;
+    let body: BodyInit | undefined;
+    
+    // Si data est un FormData, ne pas le convertir en JSON et ne pas définir Content-Type
+    // (le navigateur le fera automatiquement avec le boundary)
+    if (data instanceof FormData) {
+      body = data;
+      // Supprimer Content-Type pour que le navigateur le définisse avec boundary
+      delete headers['Content-Type'];
+    } else if (data) {
+      body = JSON.stringify(data);
+    }
+    
     const response = await fetch(requestUrl, {
       method: 'POST',
-      headers: this.getHeaders(options.skipAuth),
-      body: data ? JSON.stringify(data) : undefined,
+      headers,
+      body,
       ...options,
     });
     

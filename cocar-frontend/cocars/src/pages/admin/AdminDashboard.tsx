@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Bell, Calendar, Car, Home, LogOut, Settings, Users } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
+import ThemeToggle from "../../components/ThemeToggle";
 import { adminService } from "../../services/adminService";
 import type { AdminStats, Activity } from "../../services/adminService";
 import { DashboardShell, PageHeader, Card, StatCard, type DashboardNavItem } from "../../components/dashboard";
@@ -46,6 +47,7 @@ export default function AdminDashboard() {
 
   const topRight = (
     <div className="flex items-center gap-2">
+      <ThemeToggle />
       <button className="relative p-2.5 rounded-xl hover:bg-theme-secondary border border-theme" aria-label="Notifications">
         <Bell className="w-5 h-5 text-theme-secondary" />
         <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full" />
@@ -141,8 +143,8 @@ function AdminHome({ stats, activity, loading }: { stats: AdminStats | null; act
           <h3 className="text-lg font-extrabold text-theme-primary">Activité récente</h3>
           <p className="text-theme-tertiary text-sm mt-1">Événements système.</p>
 
-          <div className="mt-5 space-y-3">
-            {(activity.length ? activity.slice(0, 6) : [{ type: "system", text: "Aucune activité", time: "" }]).map((a, i) => (
+          <div className="mt-5 max-h-60 overflow-y-auto space-y-3">
+            {(activity.length ? activity : [{ type: "system", text: "Aucune activité", time: "" }]).map((a, i) => (
               <div key={i} className="flex items-center gap-3 p-3 rounded-2xl border border-theme hover:bg-theme-secondary">
                 <div className="w-10 h-10 rounded-2xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
                   <Calendar className="w-5 h-5 text-emerald-700 dark:text-emerald-300" />

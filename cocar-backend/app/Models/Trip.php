@@ -68,7 +68,7 @@ class Trip extends Model
      */
     public function vehicle()
     {
-        return $this->belongsTo(Vehicle::class);
+        return $this->belongsTo(UserVehicle::class, 'vehicle_id');
     }
 
     /**

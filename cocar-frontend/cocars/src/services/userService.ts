@@ -64,12 +64,7 @@ class UserService {
 
     return httpService.post<ApiResponse<{ avatar: string; avatar_url: string }>>(
       '/user/avatar',
-      formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      }
+      formData
     );
   }
 
@@ -78,13 +73,6 @@ class UserService {
    */
   async deleteAvatar(): Promise<ApiResponse<null>> {
     return httpService.delete<ApiResponse<null>>('/user/avatar');
-  }
-
-  /**
-   * Mettre à jour le profil
-   */
-  async updateProfile(data: { name?: string; phone?: string; bio?: string }): Promise<ApiResponse<User>> {
-    return httpService.put<ApiResponse<User>>('/user/profile', data);
   }
 }
 

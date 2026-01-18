@@ -15,11 +15,14 @@ import {
   X,
   Sparkles,
   Zap,
+  Moon,
+  Sun,
 } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { LandingProvider } from "../contexts/landingContext";
 import { useLanding } from "../hooks/useLanding";
+import { useTheme } from "../contexts/themeContext";
 import { 
   fadeInUp, 
   scaleIn, 
@@ -47,6 +50,8 @@ function LandingContent() {
     navigateToSignup,
     selectPopularRoute,
   } = useLanding();
+  
+  const { toggleTheme, isDark } = useTheme();
 
   // Refs pour animations GSAP
   const heroRef = useRef<HTMLElement>(null);
@@ -230,30 +235,48 @@ function LandingContent() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-theme-primary">
       {/* Navigation minimaliste */}
-      <nav className="fixed top-0 w-full bg-white/80 backdrop-blur-lg border-b border-gray-100 z-50 transition-all">
+      <nav className="fixed top-0 w-full bg-theme-primary/80 backdrop-blur-lg border-b border-theme z-50 transition-all">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             {/* Logo épuré */}
             <div className="flex items-center gap-3">
-              <div className="w-11 h-11 bg-black rounded-2xl flex items-center justify-center shadow-lg">
-                <span className="text-emerald-400 font-bold text-xl">R</span>
+              <div className="w-11 h-11 bg-emerald-600 dark:bg-emerald-500 rounded-2xl flex items-center justify-center shadow-lg">
+                <span className="text-white font-bold text-xl">R</span>
               </div>
-              <span className="text-2xl font-bold text-gray-900 tracking-tight">Rideshare</span>
+              <span className="text-2xl font-bold text-theme-primary tracking-tight">Rideshare</span>
             </div>
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-8">
-              <button className="text-gray-600 hover:text-black font-medium transition-all hover:scale-105">
+              <button 
+                className="dark:text-gray-300 dark:hover:text-white font-semibold transition-all hover:scale-105"
+                style={{ color: isDark ? undefined : '#000000' }}
+              >
                 Rechercher
               </button>
-              <button className="text-gray-600 hover:text-black font-medium transition-all hover:scale-105">
+              <button 
+                className="dark:text-gray-300 dark:hover:text-white font-semibold transition-all hover:scale-105"
+                style={{ color: isDark ? undefined : '#000000' }}
+              >
                 Proposer
               </button>
               <button
+                onClick={toggleTheme}
+                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
+                title={isDark ? "Mode clair" : "Mode sombre"}
+              >
+                {isDark ? (
+                  <Sun className="w-5 h-5 text-yellow-500" />
+                ) : (
+                  <Moon className="w-5 h-5 text-gray-600" />
+                )}
+              </button>
+              <button
                 onClick={navigateToLogin}
-                className="text-gray-600 hover:text-black font-medium transition-all hover:scale-105"
+                className="dark:text-gray-300 dark:hover:text-white font-semibold transition-all hover:scale-105"
+                style={{ color: isDark ? undefined : '#000000' }}
               >
                 Connexion
               </button>
@@ -266,32 +289,45 @@ function LandingContent() {
             </div>
 
             {/* Mobile Menu Button */}
-            <button
-              className="md:hidden p-2 hover:bg-gray-100 rounded-xl transition-colors"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
-              {mobileMenuOpen ? (
-                <X className="w-6 h-6 text-gray-900" />
-              ) : (
-                <Menu className="w-6 h-6 text-gray-900" />
-              )}
-            </button>
+            <div className="md:hidden flex items-center gap-2">
+              <button
+                onClick={toggleTheme}
+                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
+                aria-label={isDark ? "Mode clair" : "Mode sombre"}
+              >
+                {isDark ? (
+                  <Sun className="w-5 h-5 text-yellow-500" />
+                ) : (
+                  <Moon className="w-5 h-5 text-gray-600" />
+                )}
+              </button>
+              <button
+                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-colors"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              >
+                {mobileMenuOpen ? (
+                  <X className="w-6 h-6 text-theme-primary" />
+                ) : (
+                  <Menu className="w-6 h-6 text-theme-primary" />
+                )}
+              </button>
+            </div>
           </div>
         </div>
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-gray-100 bg-white">
+          <div className="md:hidden border-t border-theme bg-theme-primary">
             <div className="px-6 py-6 space-y-3">
-              <button className="block w-full text-left text-gray-600 hover:text-black font-medium py-3 px-4 rounded-xl hover:bg-gray-50 transition-all">
+              <button className="block w-full text-left text-theme-secondary hover:text-theme-primary font-medium py-3 px-4 rounded-xl hover:bg-theme-secondary transition-all">
                 Rechercher
               </button>
-              <button className="block w-full text-left text-gray-600 hover:text-black font-medium py-3 px-4 rounded-xl hover:bg-gray-50 transition-all">
+              <button className="block w-full text-left text-theme-secondary hover:text-theme-primary font-medium py-3 px-4 rounded-xl hover:bg-theme-secondary transition-all">
                 Proposer
               </button>
               <button
                 onClick={navigateToLogin}
-                className="block w-full text-left text-gray-600 hover:text-black font-medium py-3 px-4 rounded-xl hover:bg-gray-50 transition-all"
+                className="block w-full text-left text-theme-secondary hover:text-theme-primary font-medium py-3 px-4 rounded-xl hover:bg-theme-secondary transition-all"
               >
                 Connexion
               </button>
@@ -307,16 +343,30 @@ function LandingContent() {
       </nav>
 
       {/* Hero Section Épuré */}
-      <section ref={heroRef} className="relative pt-32 pb-20 overflow-hidden">
-        {/* Gradient Background subtil */}
-        <div className="absolute inset-0 bg-linear-to-br from-gray-50 via-white to-emerald-50/40 -z-10"></div>
-        
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+      <section ref={heroRef} className="relative pt-32 pb-20 overflow-hidden min-h-screen">
+        {/* Background Image - En arrière-plan */}
+        <div 
+          className="absolute inset-x-0 top-0 w-full opacity-75 dark:opacity-20"
+          style={{ 
+            height: '80vh',
+            zIndex: 0
+          }}
+        >
+          <img 
+            src="/vecteezy_modern-cityscape-isometric-city-with-car-cinema_13194594.jpg"
+            alt="Ville moderne avec voitures"
+            className="w-full h-full object-cover"
+          />
+          {/* Gradient overlay pour meilleure lisibilité */}
+          <div className="absolute inset-0 bg-linear-to-b from-transparent via-theme-primary/30 to-theme-primary"></div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
           {/* Badge animé */}
           <div className="flex justify-center mb-8">
-            <div className="hero-badge inline-flex items-center gap-2 bg-emerald-50 border border-emerald-200 px-5 py-2 rounded-full shadow-sm">
-              <Sparkles className="w-4 h-4 text-emerald-700" />
-              <span className="text-sm font-semibold text-gray-900">
+            <div className="hero-badge inline-flex items-center gap-2 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-700 px-5 py-2 rounded-full shadow-sm">
+              <Sparkles className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
+              <span className="text-sm font-semibold text-theme-primary">
                 1000+ trajets ce mois
               </span>
             </div>
@@ -324,20 +374,20 @@ function LandingContent() {
 
           {/* Hero Title */}
           <div className="text-center mb-16">
-            <h1 className="hero-title text-5xl sm:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight tracking-tight">
+            <h1 className="hero-title text-5xl sm:text-6xl lg:text-7xl font-bold text-theme-primary mb-6 leading-tight tracking-tight">
               Voyagez malin,
               <br />
               <span className="text-gradient-yellow">économisez plus</span>
             </h1>
-            <p className="hero-subtitle text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+            <p className="hero-subtitle text-xl text-theme-secondary max-w-2xl mx-auto leading-relaxed">
               Covoiturage simple et sécurisé partout au Cameroun
             </p>
           </div>
 
           {/* Search Form Épuré */}
-          <div ref={searchFormRef} className="max-w-4xl mx-auto">
-            <div className="glass-effect rounded-3xl p-8 shadow-xl-strong border-2 border-white/50">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <div ref={searchFormRef} className="max-w-6xl mx-auto">
+            <div className="glass-effect rounded-2xl px-8 py-3 shadow-xl-strong border-2 border-white/50">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
                 {/* Départ */}
                 <div className="group">
                   <label className="block text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wide">
@@ -352,7 +402,7 @@ function LandingContent() {
                       onChange={(e) =>
                         setSearchData({ ...searchData, from: e.target.value })
                       }
-                      className="w-full pl-9 pr-4 py-3.5 bg-white border border-gray-200 rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition-all font-medium text-gray-900 placeholder:text-gray-400"
+                      className="w-full h-10 pl-9 pr-4 py-2.5 bg-white border border-gray-200 rounded-full focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition-all font-medium text-gray-900 placeholder:text-gray-400"
                     />
                   </div>
                 </div>
@@ -371,7 +421,7 @@ function LandingContent() {
                       onChange={(e) =>
                         setSearchData({ ...searchData, to: e.target.value })
                       }
-                      className="w-full pl-11 pr-4 py-3.5 bg-white border border-gray-200 rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition-all font-medium text-gray-900 placeholder:text-gray-400"
+                      className="w-full h-10 pl-11 pr-4 py-2.5 bg-white border border-gray-200 rounded-full focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition-all font-medium text-gray-900 placeholder:text-gray-400"
                     />
                   </div>
                 </div>
@@ -389,7 +439,7 @@ function LandingContent() {
                       onChange={(e) =>
                         setSearchData({ ...searchData, date: e.target.value })
                       }
-                      className="w-full pl-11 pr-4 py-3.5 bg-white border border-gray-200 rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition-all font-medium text-gray-900"
+                      className="w-full h-10 pl-11 pr-4 py-2.5 bg-white border border-gray-200 rounded-full focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition-all font-medium text-gray-900"
                     />
                   </div>
                 </div>
@@ -409,7 +459,7 @@ function LandingContent() {
                           passengers: e.target.value,
                         })
                       }
-                      className="w-full pl-11 pr-4 py-3.5 bg-white border border-gray-200 rounded-2xl focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition-all appearance-none font-medium text-gray-900"
+                      className="w-full h-10 pl-11 pr-4 py-2.5 bg-white border border-gray-200 rounded-full focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition-all appearance-none font-medium text-gray-900"
                     >
                       <option value="1">1</option>
                       <option value="2">2</option>
@@ -422,7 +472,7 @@ function LandingContent() {
 
               <button
                 onClick={handleSearch}
-                className="cta-button w-full bg-emerald-600 hover:bg-emerald-700 text-white py-4 rounded-2xl font-bold text-base transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                className="cta-button w-full h-10 bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-full font-bold text-base transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
               >
                 <Search className="w-5 h-5" />
                 Rechercher un trajet
@@ -708,7 +758,7 @@ function LandingContent() {
 
           <div className="border-t border-gray-800 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
             <p className="text-sm text-gray-500">
-              © 2024 Rideshare. Tous droits réservés.
+              © 2025 Rideshare. Tous droits réservés.
             </p>
             <div className="flex items-center gap-6 text-sm text-gray-500">
               <button className="hover:text-white transition-colors">Français</button>

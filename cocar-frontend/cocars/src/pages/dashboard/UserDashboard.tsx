@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Bell, Calendar, Car, Home, LogOut, MapPin, Plus, Star, TrendingUp, User as UserIcon, Wallet, CheckCircle, XCircle, DollarSign } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
+import ThemeToggle from "../../components/ThemeToggle";
 import { userService } from "../../services/userService";
 import type { UserStats, Activity } from "../../types";
 import { DashboardShell, PageHeader, Card, StatCard, type DashboardNavItem } from "../../components/dashboard";
@@ -31,6 +32,9 @@ export default function UserDashboard() {
       }
     })();
 
+    // Note: Route /api/user/stats/activities n'existe pas encore dans le backend
+    // Désactivé temporairement pour éviter les erreurs 404
+    /*
     (async () => {
       setActivitiesLoading(true);
       try {
@@ -42,6 +46,9 @@ export default function UserDashboard() {
         setActivitiesLoading(false);
       }
     })();
+    */
+    setActivities([]);
+    setActivitiesLoading(false);
   }, []);
 
   const nav: DashboardNavItem[] = useMemo(
@@ -58,6 +65,7 @@ export default function UserDashboard() {
 
   const topRight = (
     <div className="flex items-center gap-2">
+      <ThemeToggle />
       <Link
         to="/user/notifications"
         className="relative p-2.5 rounded-xl hover:bg-theme-secondary border border-theme"
@@ -230,7 +238,7 @@ function UserHome({
           <h3 className="text-lg font-extrabold text-theme-primary">Activité récente</h3>
           <p className="text-theme-tertiary text-sm mt-1">Derniers événements sur votre compte.</p>
 
-          <div className="mt-5">
+          <div className="mt-5 max-h-60 overflow-y-auto">
             {activitiesLoading ? (
               <div className="space-y-3">
                 {[1, 2, 3].map((i) => (
