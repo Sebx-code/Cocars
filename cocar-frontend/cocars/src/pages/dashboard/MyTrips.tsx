@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Plus, Car, Users, MapPin, MoreVertical, Edit, Trash2, Eye, Loader2 } from "lucide-react";
 import { tripService } from "../../services/tripService";
+import TripBookingsModal from "../../components/TripBookingsModal";
 import type { Trip } from "../../types";
 
 // Données réelles uniquement
@@ -12,6 +13,7 @@ export default function MyTrips() {
   const [isLoading, setIsLoading] = useState(true);
   const [filter, setFilter] = useState<"all" | "upcoming" | "completed" | "cancelled">("all");
   const [menuOpen, setMenuOpen] = useState<number | null>(null);
+  const [selectedTripId, setSelectedTripId] = useState<number | null>(null);
 
   useEffect(() => {
     loadTrips();
@@ -185,20 +187,30 @@ export default function MyTrips() {
                 </div>
               </div>
 
-              {trip.total_seats - trip.available_seats > 0 && (
-                <div className="mt-4 pt-4 border-t border-theme">
-                  <Link
-                    to={`/user/my-trips/${trip.id}/bookings`}
-                    className="flex items-center justify-between text-sm"
-                  >
-                    <span className="text-theme-secondary">{trip.total_seats - trip.available_seats} réservation(s)</span>
-                    <span className="text-emerald-700 font-bold">Voir les réservations →</span>
-                  </Link>
-                </div>
-              )}
+              <div className="mt-4 pt-4 border-t border-theme">
+                <button
+                  onClick={() => setSelectedTripId(trip.id)}
+                  className="flex items-center justify-between text-sm w-full hover:bg-theme-secondary p-2 rounded-xl transition-colors"
+                >
+                  <span className="text-theme-secondary">
+                    {trip.total_seats - trip.available_seats > 0 
+                      ? `${trip.total_seats - trip.available_seats} réservation(s)` 
+                      : 'Aucune réservation'}
+                  </span>
+                  <span className="text-emerald-700 font-bold">Gérer les réservations →</span>
+                </button>
+              </div>
             </div>
           ))}
         </div>
+      )}
+
+      {/* Modal des réservations */}
+      {selectedTripId && (
+        <TripBookingsModal
+          tripId={selectedTripId}
+          onClose={() => setSelectedTripId(null)}
+        />
       )}
     </div>
   );

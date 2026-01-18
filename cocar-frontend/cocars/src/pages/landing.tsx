@@ -25,12 +25,8 @@ import { useLanding } from "../hooks/useLanding";
 import { useTheme } from "../contexts/themeContext";
 import { 
   fadeInUp, 
-  scaleIn, 
-  staggerReveal, 
-  revealOnScroll,
   hoverLift,
-  buttonPress,
-  ANIMATION_CONFIG 
+  buttonPress
 } from "../utils/animations";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -317,7 +313,12 @@ function LandingContent() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-theme bg-theme-primary">
+          <div 
+            className="md:hidden border-t border-theme bg-theme-primary animate-slideDown"
+            style={{
+              animation: 'slideDown 0.3s ease-out'
+            }}
+          >
             <div className="px-6 py-6 space-y-3">
               <button className="block w-full text-left text-theme-secondary hover:text-theme-primary font-medium py-3 px-4 rounded-xl hover:bg-theme-secondary transition-all">
                 Rechercher

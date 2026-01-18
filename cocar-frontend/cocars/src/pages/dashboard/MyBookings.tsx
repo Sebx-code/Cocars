@@ -1,8 +1,9 @@
 // src/pages/dashboard/MyBookings.tsx
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Calendar, Clock, User, Star, CheckCircle, XCircle, AlertCircle, Loader2, MessageCircle, Phone } from "lucide-react";
 import { bookingService } from "../../services/bookingService";
+import messageService from "../../services/messageService";
 import type { Booking } from "../../types";
 
 // Données réelles uniquement
@@ -12,6 +13,7 @@ export default function MyBookings() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filter, setFilter] = useState<"all" | "pending" | "confirmed" | "completed">("all");
+  const navigate = useNavigate();
 
   useEffect(() => {
     loadBookings();
@@ -54,6 +56,22 @@ export default function MyBookings() {
   };
 
   const filteredBookings = bookings.filter((b) => filter === "all" || b.status === filter);
+
+  const handleOpenMessage = async (tripId: number) => {
+    try {
+      // Créer ou récupérer la conversation du trajet
+      const response = await messageService.getOrCreateTripConversation(tripId);
+      if (response.data?.conversation_id) {
+        // Naviguer vers la page messages avec l'ID de la conversation
+        navigate('/user/messages', { 
+          state: { conversationId: response.data.conversation_id } 
+        });
+      }
+    } catch (error) {
+      console.error('Erreur ouverture conversation:', error);
+      alert('Impossible d\'ouvrir la conversation');
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -164,7 +182,10 @@ export default function MyBookings() {
                   >
                     <Phone className="w-4 h-4" /> Appeler
                   </a>
-                  <button className="flex items-center gap-2 px-5 py-2.5 bg-blue-100 text-blue-700 rounded-full font-semibold hover:bg-blue-200">
+                  <button 
+                    onClick={() => handleOpenMessage(booking.trip_id)}
+                    className="flex items-center gap-2 px-5 py-2.5 bg-blue-100 text-blue-700 rounded-full font-semibold hover:bg-blue-200"
+                  >
                     <MessageCircle className="w-4 h-4" /> Message
                   </button>
                   <Link

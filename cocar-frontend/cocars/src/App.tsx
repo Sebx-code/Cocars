@@ -19,6 +19,7 @@ import MyBookings from './pages/dashboard/MyBookings';
 import MyRatings from './pages/dashboard/MyRatings';
 import UserProfile from './pages/dashboard/UserProfile';
 import Notifications from './pages/dashboard/Notifications';
+import Messages from './pages/dashboard/Messages';
 
 // Pages Admin
 import { AdminDashboard, AdminUsers, AdminTrips, AdminBookings, AdminSettings } from './pages/admin';
@@ -80,6 +81,7 @@ function AnimatedRoutes() {
             {/* Routes enfants du dashboard */}
             <Route path="my-trips" element={<MyTrips />} />
             <Route path="bookings" element={<MyBookings />} />
+            <Route path="messages" element={<Messages />} />
             <Route path="ratings" element={<MyRatings />} />
             <Route path="profile" element={<UserProfile />} />
             <Route path="notifications" element={<Notifications />} />

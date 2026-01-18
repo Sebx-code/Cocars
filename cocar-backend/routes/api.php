@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\VehicleController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\UserVehicleController;
+use App\Http\Controllers\Api\MessageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -107,6 +108,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/notifications/{notification}/read', [NotificationController::class, 'markAsRead']);
     Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead']);
     Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy']);
+    
+    // --- Messagerie ---
+    Route::get('/conversations', [MessageController::class, 'conversations']);
+    Route::get('/conversations/{conversation}/messages', [MessageController::class, 'messages']);
+    Route::post('/conversations/{conversation}/messages', [MessageController::class, 'sendMessage']);
+    Route::post('/conversations/trip/{trip}', [MessageController::class, 'getOrCreateTripConversation']);
+    Route::post('/conversations/support', [MessageController::class, 'createSupportConversation']);
+    Route::get('/messages/unread-count', [MessageController::class, 'unreadCount']);
     
     // ============ ROUTES ADMIN ============
     Route::prefix('admin')->middleware(\App\Http\Middleware\AdminMiddleware::class)->group(function () {

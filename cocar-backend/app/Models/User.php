@@ -57,6 +57,35 @@ class User extends Authenticatable
     }
 
     /**
+     * Conversations de l'utilisateur
+     */
+    public function conversations()
+    {
+        return $this->belongsToMany(Conversation::class, 'conversation_user')
+            ->withPivot('last_read_at')
+            ->withTimestamps()
+            ->orderBy('last_message_at', 'desc');
+    }
+
+    /**
+     * Messages envoyés par l'utilisateur
+     */
+    public function sentMessages()
+    {
+        return $this->hasMany(Message::class, 'sender_id');
+    }
+
+    /**
+     * Nombre total de messages non lus
+     */
+    public function unreadMessagesCount()
+    {
+        return $this->conversations->sum(function ($conversation) {
+            return $conversation->unreadCountForUser($this->id);
+        });
+    }
+
+    /**
      * Trajets créés par l'utilisateur (en tant que conducteur)
      */
     public function tripsAsDriver()

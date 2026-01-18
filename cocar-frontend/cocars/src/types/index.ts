@@ -211,6 +211,53 @@ export interface Notification {
   created_at: string;
 }
 
+// ============== MESSAGERIE ==============
+
+export interface Message {
+  id: number;
+  content: string;
+  type: 'text' | 'image' | 'file';
+  attachment_url?: string;
+  sender: {
+    id: number;
+    name: string;
+    avatar?: string;
+  };
+  is_own: boolean;
+  is_read?: boolean;
+  read_at?: string;
+  created_at: string;
+}
+
+export interface Conversation {
+  id: number;
+  type: 'trip' | 'support';
+  subject?: string;
+  trip?: Trip;
+  participants: Array<{
+    id: number;
+    name: string;
+    avatar?: string;
+  }>;
+  last_message?: {
+    content: string;
+    sender_name: string;
+    created_at: string;
+  };
+  unread_count: number;
+  last_message_at?: string;
+}
+
+export interface CreateSupportConversationData {
+  subject: string;
+  message: string;
+}
+
+export interface SendMessageData {
+  content: string;
+  type?: 'text' | 'image' | 'file';
+}
+
 // ============== RÉPONSES API ==============
 export interface ApiResponse<T> {
   success: boolean;

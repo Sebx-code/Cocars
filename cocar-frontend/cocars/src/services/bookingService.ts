@@ -68,6 +68,13 @@ class BookingService {
       cancellation_reason: reason
     });
   }
+
+  /**
+   * Obtenir les réservations pour un trajet spécifique
+   */
+  async getBookingsForTrip(tripId: number): Promise<ApiResponse<Booking[]>> {
+    return httpService.get<ApiResponse<Booking[]>>(`${ENDPOINTS.BOOKINGS}?trip_id=${tripId}`);
+  }
   
 }
 

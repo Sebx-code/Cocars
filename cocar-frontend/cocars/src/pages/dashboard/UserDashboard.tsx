@@ -1,7 +1,7 @@
 // src/pages/dashboard/UserDashboard.tsx
 import { useEffect, useMemo, useState } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { Bell, Calendar, Car, Home, LogOut, MapPin, Plus, Star, TrendingUp, User as UserIcon, Wallet, CheckCircle, XCircle, DollarSign } from "lucide-react";
+import { Bell, Calendar, Car, Home, LogOut, MapPin, Plus, Star, TrendingUp, User as UserIcon, Wallet, CheckCircle, XCircle, DollarSign, MessageCircle } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import ThemeToggle from "../../components/ThemeToggle";
 import { userService } from "../../services/userService";
@@ -56,6 +56,7 @@ export default function UserDashboard() {
       { label: "Tableau de bord", to: "/user", icon: Home },
       { label: "Mes trajets", to: "/user/my-trips", icon: Car },
       { label: "Réservations", to: "/user/bookings", icon: Calendar },
+      { label: "Messages", to: "/user/messages", icon: MessageCircle },
       { label: "Évaluations", to: "/user/ratings", icon: Star },
       { label: "Profil", to: "/user/profile", icon: UserIcon },
       { label: "Notifications", to: "/user/notifications", icon: Bell },
