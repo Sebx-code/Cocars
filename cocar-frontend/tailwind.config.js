@@ -1,0 +1,136 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        // Argon Dashboard Green Theme
+        argon: {
+          green: {
+            50: '#e6f9f0',
+            100: '#c2f0db',
+            200: '#9ae7c4',
+            300: '#6ddcab',
+            400: '#4ad398',
+            500: '#2dce89', // Primary Argon Green
+            600: '#26ab71',
+            700: '#1f8a5c',
+            800: '#186847',
+            900: '#114633',
+          },
+          blue: {
+            50: '#e8f4fc',
+            100: '#c5e4f7',
+            200: '#9ed2f2',
+            300: '#77c0ed',
+            400: '#5bb2e9',
+            500: '#11cdef', // Argon Cyan
+            600: '#0da5c1',
+            700: '#0a7d93',
+            800: '#075565',
+            900: '#042d37',
+          },
+          orange: {
+            50: '#fff5e6',
+            100: '#ffe5bf',
+            200: '#ffd494',
+            300: '#ffc269',
+            400: '#ffb547',
+            500: '#fb6340', // Argon Orange
+            600: '#f53d05',
+            700: '#c73004',
+            800: '#992503',
+            900: '#6b1a02',
+          },
+          red: {
+            50: '#fce8ea',
+            100: '#f8c5ca',
+            200: '#f49ea7',
+            300: '#f07784',
+            400: '#ec5a69',
+            500: '#f5365c', // Argon Red
+            600: '#dc2c50',
+            700: '#b32441',
+            800: '#8a1c32',
+            900: '#611423',
+          },
+          purple: {
+            50: '#f3e8fc',
+            100: '#e0c5f8',
+            200: '#cc9ef4',
+            300: '#b877f0',
+            400: '#a85aec',
+            500: '#8965e0', // Argon Purple
+            600: '#7051c4',
+            700: '#5a41a0',
+            800: '#44317c',
+            900: '#2e2158',
+          },
+        },
+        primary: {
+          50: '#e6f9f0',
+          100: '#c2f0db',
+          200: '#9ae7c4',
+          300: '#6ddcab',
+          400: '#4ad398',
+          500: '#2dce89',
+          600: '#26ab71',
+          700: '#1f8a5c',
+          800: '#186847',
+          900: '#114633',
+        },
+        secondary: {
+          50: '#e8f4fc',
+          100: '#c5e4f7',
+          200: '#9ed2f2',
+          300: '#77c0ed',
+          400: '#5bb2e9',
+          500: '#11cdef',
+          600: '#0da5c1',
+          700: '#0a7d93',
+          800: '#075565',
+          900: '#042d37',
+        },
+        accent: {
+          50: '#fdf4ff',
+          100: '#fae8ff',
+          200: '#f5d0fe',
+          300: '#f0abfc',
+          400: '#e879f9',
+          500: '#d946ef',
+          600: '#c026d3',
+          700: '#a21caf',
+          800: '#86198f',
+          900: '#701a75',
+        },
+      },
+      fontFamily: {
+        sans: ['Open Sans', 'Inter', 'system-ui', 'sans-serif'],
+      },
+      boxShadow: {
+        'card': '0 0 2rem 0 rgba(136, 152, 170, 0.15)',
+        'card-hover': '0 0 3rem 0 rgba(136, 152, 170, 0.25)',
+        'argon': '0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08)',
+        'argon-lg': '0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07)',
+      },
+      borderRadius: {
+        '4xl': '2rem',
+        'argon': '0.375rem',
+      },
+      backgroundImage: {
+        'argon-gradient': 'linear-gradient(87deg, #2dce89 0, #2dcecc 100%)',
+        'argon-sidebar': 'linear-gradient(195deg, #42424a 0%, #191919 100%)',
+        'argon-green-gradient': 'linear-gradient(87deg, #2dce89 0, #2dcecc 100%)',
+        'argon-blue-gradient': 'linear-gradient(87deg, #11cdef 0, #1171ef 100%)',
+        'argon-orange-gradient': 'linear-gradient(87deg, #fb6340 0, #fbb140 100%)',
+        'argon-red-gradient': 'linear-gradient(87deg, #f5365c 0, #f56036 100%)',
+        'argon-purple-gradient': 'linear-gradient(87deg, #8965e0 0, #bc65e0 100%)',
+      },
+    },
+  },
+  plugins: [],
+}

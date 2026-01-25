@@ -1,0 +1,434 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============= FONTS ============= */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap');
+
+/* ============= BASE STYLES ============= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Open Sans', 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  @apply bg-gray-100 text-gray-800;
+}
+
+.dark body {
+  @apply bg-slate-900 text-gray-100;
+}
+
+/* ============= ARGON STYLE CARDS ============= */
+.card {
+  @apply bg-white rounded-2xl shadow-argon border-0
+         transition-all duration-300;
+}
+
+.card:hover {
+  @apply shadow-argon-lg;
+}
+
+.dark .card {
+  @apply bg-slate-800 border-slate-700;
+}
+
+/* ============= STAT CARDS - Argon Style ============= */
+.stat-card {
+  @apply card p-5;
+}
+
+.stat-icon {
+  @apply w-12 h-12 rounded-full flex items-center justify-center text-white shadow-lg;
+}
+
+.stat-icon-blue {
+  @apply stat-icon bg-gradient-to-br from-cyan-400 to-blue-500;
+}
+
+.stat-icon-green {
+  @apply stat-icon bg-gradient-to-br from-emerald-400 to-teal-500;
+}
+
+.stat-icon-orange {
+  @apply stat-icon bg-gradient-to-br from-orange-400 to-red-500;
+}
+
+.stat-icon-red {
+  @apply stat-icon bg-gradient-to-br from-red-400 to-pink-500;
+}
+
+.stat-icon-purple {
+  @apply stat-icon bg-gradient-to-br from-purple-400 to-indigo-500;
+}
+
+.stat-icon-cyan {
+  @apply stat-icon bg-gradient-to-br from-cyan-400 to-teal-500;
+}
+
+/* ============= ARGON GRADIENTS ============= */
+.gradient-header {
+  @apply bg-gradient-to-r from-emerald-500 to-teal-500;
+}
+
+.gradient-sidebar {
+  @apply bg-gradient-to-b from-emerald-500 via-emerald-600 to-teal-700;
+}
+
+.gradient-green {
+  @apply bg-gradient-to-r from-emerald-400 to-teal-500;
+}
+
+.gradient-blue {
+  @apply bg-gradient-to-r from-cyan-400 to-blue-500;
+}
+
+.gradient-orange {
+  @apply bg-gradient-to-r from-orange-400 to-red-500;
+}
+
+.gradient-red {
+  @apply bg-gradient-to-r from-red-400 to-pink-500;
+}
+
+.gradient-purple {
+  @apply bg-gradient-to-r from-purple-500 to-pink-500;
+}
+
+/* ============= BUTTONS - Argon Style ============= */
+.btn {
+  @apply px-5 py-2.5 rounded-lg font-semibold transition-all duration-200 
+         inline-flex items-center justify-center gap-2 text-sm
+         active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+.btn-primary {
+  @apply btn bg-gradient-to-r from-emerald-500 to-teal-500 text-white 
+         hover:from-emerald-600 hover:to-teal-600
+         shadow-lg shadow-emerald-500/30 hover:shadow-xl hover:shadow-emerald-500/40;
+}
+
+.btn-secondary {
+  @apply btn bg-gradient-to-r from-cyan-500 to-blue-500 text-white 
+         hover:from-cyan-600 hover:to-blue-600
+         shadow-lg shadow-cyan-500/30 hover:shadow-xl hover:shadow-cyan-500/40;
+}
+
+.btn-danger {
+  @apply btn bg-gradient-to-r from-red-500 to-pink-500 text-white 
+         hover:from-red-600 hover:to-pink-600
+         shadow-lg shadow-red-500/30 hover:shadow-xl hover:shadow-red-500/40;
+}
+
+.btn-warning {
+  @apply btn bg-gradient-to-r from-orange-500 to-yellow-500 text-white 
+         hover:from-orange-600 hover:to-yellow-600
+         shadow-lg shadow-orange-500/30 hover:shadow-xl hover:shadow-orange-500/40;
+}
+
+.btn-outline {
+  @apply btn border border-gray-300 text-gray-700 hover:bg-gray-50
+         dark:border-slate-600 dark:text-gray-300 dark:hover:bg-slate-700;
+}
+
+.btn-ghost {
+  @apply btn text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-slate-700;
+}
+
+/* ============= INPUTS - Argon Style ============= */
+.input {
+  @apply w-full px-4 py-2.5 rounded-lg border border-gray-300 
+         bg-white text-gray-800 text-sm
+         placeholder:text-gray-400
+         focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 focus:shadow-lg
+         outline-none transition-all duration-200;
+}
+
+/* Input with icon - ensure proper padding for icons */
+/* For pl-10 (icons at left-3) */
+.input.pl-10, input.pl-10, select.pl-10,
+.input[class*="pl-10"], input[class*="pl-10"], select[class*="pl-10"] {
+  padding-left: 2.75rem !important; /* 44px to avoid icon overlap */
+}
+
+/* For pl-12 (icons at left-4) */
+.input.pl-12, input.pl-12, select.pl-12,
+.input[class*="pl-12"], input[class*="pl-12"], select[class*="pl-12"] {
+  padding-left: 3.25rem !important; /* 52px to avoid icon overlap */
+}
+
+.dark .input {
+  @apply bg-slate-800 border-slate-600 text-white 
+         focus:border-emerald-500 focus:ring-emerald-900/50;
+}
+
+/* ============= SIDEBAR - Argon Style ============= */
+.sidebar-item {
+  @apply flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-sm
+         text-white/80 hover:bg-white/10 transition-all duration-200;
+}
+
+.sidebar-item.active {
+  @apply bg-white text-emerald-600 shadow-lg;
+}
+
+/* ============= BADGES - Argon Style ============= */
+.badge {
+  @apply inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold;
+}
+
+.badge-primary {
+  @apply badge bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400;
+}
+
+.badge-success {
+  @apply badge bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400;
+}
+
+.badge-warning {
+  @apply badge bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400;
+}
+
+.badge-danger {
+  @apply badge bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400;
+}
+
+.badge-info {
+  @apply badge bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-400;
+}
+
+/* ============= TABLES - Argon Style ============= */
+.table-argon {
+  @apply w-full;
+}
+
+.table-argon thead tr {
+  @apply border-b border-gray-200 dark:border-slate-700;
+}
+
+.table-argon th {
+  @apply text-left py-3 px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider;
+}
+
+.table-argon tbody tr {
+  @apply border-b border-gray-100 dark:border-slate-700/50 hover:bg-gray-50 dark:hover:bg-slate-700/30 transition-colors;
+}
+
+.table-argon td {
+  @apply py-4 px-4;
+}
+
+/* ============= SCROLLBAR ============= */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 dark:bg-slate-600 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-400 dark:bg-slate-500;
+}
+
+/* ============= ANIMATIONS ============= */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+.animate-slideIn {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 2s ease-in-out infinite;
+}
+
+/* Gradient animation for text */
+@keyframes gradient {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient 3s ease infinite;
+}
+
+/* Gradient animation for backgrounds */
+@keyframes gradient-x {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.animate-gradient-x {
+  background-size: 200% 200%;
+  animation: gradient-x 5s ease infinite;
+}
+
+/* Float animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Bounce in animation */
+@keyframes bounceIn {
+  0% { opacity: 0; transform: scale(0.3); }
+  50% { transform: scale(1.05); }
+  70% { transform: scale(0.9); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.animate-bounceIn {
+  animation: bounceIn 0.6s ease-out;
+}
+
+/* Slide up animation */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-slideUp {
+  animation: slideUp 0.6s ease-out;
+}
+
+/* Scale in animation */
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.animate-scaleIn {
+  animation: scaleIn 0.5s ease-out;
+}
+
+/* Rotate animation */
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-rotate {
+  animation: rotate 20s linear infinite;
+}
+
+/* Shimmer animation for loading */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Glow effect */
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(45, 206, 137, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(45, 206, 137, 0.5); }
+}
+
+.animate-glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+/* ============= ARGON SPECIFIC UTILITIES ============= */
+.text-gradient {
+  @apply bg-gradient-to-r from-emerald-500 to-teal-500 bg-clip-text text-transparent;
+}
+
+.border-gradient {
+  border-image: linear-gradient(to right, #2dce89, #11cdef) 1;
+}
+
+/* Card with colored top border */
+.card-bordered-top {
+  @apply card relative overflow-hidden;
+}
+
+.card-bordered-top::before {
+  content: '';
+  @apply absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 to-teal-500;
+}
+
+/* ============= CUSTOM SCROLLBAR ============= */
+/* Thin scrollbar for modern browsers */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db transparent;
+}
+
+.dark .scrollbar-thin {
+  scrollbar-color: #475569 transparent;
+}
+
+/* Webkit scrollbar (Chrome, Safari, Edge) */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 10px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* Dark mode scrollbar */
+.dark .scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+
+.dark .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Hide scrollbar but keep functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
