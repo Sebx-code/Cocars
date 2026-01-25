@@ -90,17 +90,14 @@ export default function NotificationDropdown() {
         onClick={() => setIsOpen(!isOpen)}
         className="relative p-2 hover:bg-white/80 dark:hover:bg-slate-700 rounded-lg transition-colors"
       >
-        <Bell className={`w-5 h-5 ${isConnected ? 'text-gray-500 dark:text-gray-400' : 'text-gray-400 dark:text-gray-500'}`} />
+        <Bell className={`w-5 h-5 ${unreadCount > 0 ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
         
         {/* Badge de notifications non lues */}
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 min-w-[20px] h-5 px-1 bg-gradient-to-br from-red-400 to-pink-500 text-white text-xs font-bold rounded-full flex items-center justify-center shadow-md animate-pulse">
+          <span className="absolute -top-1 -right-1 min-w-[20px] h-5 px-1 bg-gradient-to-br from-red-500 to-pink-500 text-white text-xs font-bold rounded-full flex items-center justify-center shadow-md">
             {unreadCount > 99 ? '99+' : unreadCount}
           </span>
         )}
-
-        {/* Indicateur de connexion temps réel */}
-        <span className={`absolute bottom-1 right-1 w-2 h-2 rounded-full ${isConnected ? 'bg-emerald-500' : 'bg-gray-400'}`} />
       </button>
 
       {/* Dropdown */}

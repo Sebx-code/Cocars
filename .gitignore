@@ -1,1 +1,11 @@
 acli.exe
+# Laravel
+/vendor
+/node_modules
+/storage/framework/*
+/storage/logs/*
+.env
+
+# OS
+.DS_Store
+Thumbs.db
