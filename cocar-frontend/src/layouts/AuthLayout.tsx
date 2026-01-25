@@ -1,6 +1,5 @@
 import { Outlet, Navigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
-import { Car } from 'lucide-react'
 
 export default function AuthLayout() {
   const { isAuthenticated, isLoading } = useAuth()
@@ -22,8 +21,8 @@ export default function AuthLayout() {
       {/* Left side - Branding */}
       <div className="hidden lg:flex lg:w-1/2 gradient-header items-center justify-center p-12">
         <div className="max-w-md text-white text-center">
-          <div className="w-20 h-20 bg-white/20 rounded-3xl flex items-center justify-center mx-auto mb-8 backdrop-blur-sm">
-            <Car className="w-10 h-10" />
+          <div className="w-20 h-20 rounded-3xl overflow-hidden mx-auto mb-8 shadow-xl">
+            <img src="/logo.png" alt="CoCar" className="w-full h-full object-cover" />
           </div>
           <h1 className="text-4xl font-bold mb-4">CoCar</h1>
           <p className="text-xl text-white/80 mb-8">

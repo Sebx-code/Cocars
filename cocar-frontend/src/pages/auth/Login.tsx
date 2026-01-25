@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
-import { Mail, Lock, Eye, EyeOff, Loader2, Car } from 'lucide-react'
+import { Mail, Lock, Eye, EyeOff, Loader2 } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 export default function Login() {
@@ -38,8 +38,8 @@ export default function Login() {
     <div className="animate-fadeIn">
       {/* Mobile logo */}
       <div className="lg:hidden text-center mb-8">
-        <div className="w-16 h-16 gradient-header rounded-2xl flex items-center justify-center mx-auto mb-4">
-          <Car className="w-8 h-8 text-white" />
+        <div className="w-16 h-16 rounded-2xl overflow-hidden mx-auto mb-4 shadow-lg">
+          <img src="/logo.png" alt="CoCar" className="w-full h-full object-cover" />
         </div>
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">CoCar</h1>
       </div>

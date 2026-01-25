@@ -68,8 +68,8 @@ export default function AdminLayout() {
           {/* Header / Logo */}
           <div className="h-20 flex items-center justify-between px-6">
             <Link to="/admin" className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-red-500 to-orange-500 rounded-xl flex items-center justify-center shadow-lg">
-                <Shield className="w-5 h-5 text-white" />
+              <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg">
+                <img src="/logo.png" alt="CoCar" className="w-full h-full object-cover" />
               </div>
               <div className="flex flex-col">
                 <span className="text-xl font-bold text-white">CoCar</span>

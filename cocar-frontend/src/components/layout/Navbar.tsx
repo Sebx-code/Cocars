@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
 import { useTheme } from '../../contexts/ThemeContext'
-import { Car, Menu, X, Sun, Moon, User, LogOut, LayoutDashboard, Search } from 'lucide-react'
+import { Menu, X, Sun, Moon, User, LogOut, LayoutDashboard, Search } from 'lucide-react'
 
 export default function Navbar() {
   const { isAuthenticated, user, logout } = useAuth()
@@ -22,8 +22,8 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-xl flex items-center justify-center shadow-lg">
-              <Car className="w-5 h-5 text-white" />
+            <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg">
+              <img src="/logo.png" alt="CoCar" className="w-full h-full object-cover" />
             </div>
             <span className="text-xl font-bold text-gray-800 dark:text-white">CoCar</span>
           </Link>

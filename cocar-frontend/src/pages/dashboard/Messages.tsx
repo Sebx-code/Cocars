@@ -70,9 +70,10 @@ export default function Messages() {
     setNewMessage('')
     setIsSending(true)
 
-    // Optimistic update
+    // Optimistic update avec un ID temporaire négatif pour le distinguer
+    const tempId = -Date.now()
     const tempMessage: Message = {
-      id: Date.now(),
+      id: tempId,
       conversation_id: selectedConv.id,
       sender_id: user?.id || 0,
       sender: user as any,
@@ -85,12 +86,24 @@ export default function Messages() {
     setMessages(prev => [...prev, tempMessage])
 
     try {
-      await messagesApi.sendMessage(selectedConv.id, messageContent)
-      loadMessages(selectedConv)
+      const response = await messagesApi.sendMessage(selectedConv.id, messageContent)
+      // Remplacer le message temporaire par le vrai message de l'API
+      const sentMessage = response.data?.data || response.data
+      if (sentMessage && sentMessage.id) {
+        setMessages(prev => prev.map(m => 
+          m.id === tempId ? { ...sentMessage, sender_id: user?.id || sentMessage.sender_id } : m
+        ))
+      }
+      // Mettre à jour la conversation pour le dernier message
+      setConversations(prev => prev.map(c => 
+        c.id === selectedConv.id 
+          ? { ...c, last_message: sentMessage || tempMessage }
+          : c
+      ))
     } catch (error) {
       toast.error("Erreur lors de l'envoi")
       // Revert optimistic update
-      setMessages(prev => prev.filter(m => m.id !== tempMessage.id))
+      setMessages(prev => prev.filter(m => m.id !== tempId))
       setNewMessage(messageContent)
     } finally {
       setIsSending(false)

@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
 import { 
-  Car, X, LayoutDashboard, Route, PlusCircle, CalendarCheck, 
+  X, LayoutDashboard, Route, PlusCircle, CalendarCheck, 
   MessageSquare, Bell, User, CarFront, Settings, LogOut,
   ChevronDown, Shield, Wallet, Users
 } from 'lucide-react'
@@ -62,8 +62,8 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           {/* Header / Logo */}
           <div className="h-20 flex items-center justify-between px-6">
             <Link to="/" className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                <Car className="w-6 h-6 text-white" />
+              <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg">
+                <img src="/logo.png" alt="CoCar" className="w-full h-full object-cover" />
               </div>
               <div className="flex flex-col">
                 <span className="text-xl font-bold text-white">CoCar</span>
