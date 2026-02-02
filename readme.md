@@ -70,3 +70,15 @@ npm run dev
 ```
 
 L'API sera accessible sur `http://localhost:5173`
+
+## utilisation
+
+### Se connecter en tant que admin
+
+email: adminrideshare@gmail.cm
+mot de passe: password
+
+### Se connecter en tant que utilisateur
+
+email: pio@rideshare.cm
+mot de passe: password
