@@ -30,6 +30,10 @@ export default function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-4">
+            <Link to="/feed" className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 font-medium transition-colors text-sm">
+              Fil
+            </Link>
+
             <Link to="/search" className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 font-medium transition-colors text-sm">
               <Search className="w-4 h-4" />
               Rechercher
@@ -119,6 +123,9 @@ export default function Navbar() {
       {isMenuOpen && (
         <div className="md:hidden bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-700 animate-fadeIn shadow-argon">
           <div className="px-4 py-6 space-y-4">
+            <Link to="/feed" className="block py-2 font-medium text-gray-700 dark:text-gray-300 text-sm" onClick={() => setIsMenuOpen(false)}>
+              Fil d’actualité
+            </Link>
             <Link to="/search" className="block py-2 font-medium text-gray-700 dark:text-gray-300 text-sm" onClick={() => setIsMenuOpen(false)}>
               Rechercher un trajet
             </Link>

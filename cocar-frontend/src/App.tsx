@@ -13,6 +13,7 @@ import AdminLayout from './layouts/AdminLayout'
 import Landing from './pages/Landing'
 import Login from './pages/auth/Login'
 import Register from './pages/auth/Register'
+import Feed from './pages/trips/Feed'
 import SearchTrips from './pages/trips/SearchTrips'
 import TripDetail from './pages/trips/TripDetail'
 
@@ -48,6 +49,7 @@ function App() {
             {/* Pages publiques avec MainLayout */}
             <Route element={<MainLayout />}>
               <Route path="/" element={<Landing />} />
+              <Route path="/feed" element={<Feed />} />
               <Route path="/search" element={<SearchTrips />} />
               <Route path="/trips/:id" element={<TripDetail />} />
             </Route>
@@ -61,6 +63,7 @@ function App() {
             {/* Pages protégées avec DashboardLayout */}
             <Route element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/trip-feed" element={<Feed />} />
               <Route path="/my-trips" element={<MyTrips />} />
               <Route path="/create-trip" element={<CreateTrip />} />
               <Route path="/my-bookings" element={<MyBookings />} />

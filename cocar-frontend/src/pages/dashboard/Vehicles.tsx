@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { vehiclesApi } from '../../services/api'
 import { Vehicle } from '../../types'
-import { Car, Plus, Edit, Trash2, Star, Loader2 } from 'lucide-react'
+import { Car, Plus, Trash2, Star, Loader2 } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 export default function Vehicles() {
@@ -26,7 +26,11 @@ export default function Vehicles() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      await vehiclesApi.create(formData)
+      await vehiclesApi.create({
+        ...formData,
+        seats: Number(formData.seats),
+        year: formData.year ? Number(formData.year) : undefined,
+      } as any)
       toast.success('Véhicule ajouté')
       setShowForm(false)
       setFormData({ brand: '', model: '', color: '', registration_number: '', seats: '4', year: '' })

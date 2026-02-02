@@ -12,7 +12,6 @@ export default function NotificationDropdown() {
     notifications,
     unreadCount,
     isLoading,
-    isConnected,
     markAsRead,
     markAllAsRead,
     deleteNotification,

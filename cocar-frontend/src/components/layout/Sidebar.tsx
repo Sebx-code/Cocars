@@ -14,6 +14,7 @@ interface SidebarProps {
 
 const menuItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
+  { icon: Route, label: 'Fil des trajets', path: '/trip-feed' },
   { icon: Route, label: 'Mes trajets', path: '/my-trips' },
   { icon: PlusCircle, label: 'Créer un trajet', path: '/create-trip' },
   { icon: CalendarCheck, label: 'Mes réservations', path: '/my-bookings' },

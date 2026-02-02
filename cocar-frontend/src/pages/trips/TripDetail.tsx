@@ -4,8 +4,8 @@ import { tripsApi, bookingsApi } from '../../services/api'
 import { Trip } from '../../types'
 import { useAuth } from '../../contexts/AuthContext'
 import { 
-  MapPin, Calendar, Clock, Users, Car, Star, MessageSquare, 
-  Loader2, ArrowLeft, CheckCircle, XCircle, Music, Dog, Cigarette, Luggage 
+  Calendar, Clock, Users, Car, Star, MessageSquare, 
+  Loader2, ArrowLeft, Music, Dog, Cigarette, Luggage 
 } from 'lucide-react'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'

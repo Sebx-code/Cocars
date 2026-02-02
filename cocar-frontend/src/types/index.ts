@@ -7,6 +7,7 @@ export interface User {
   avatar?: string
   role: 'user' | 'admin'
   is_verified: boolean
+  rating?: number
   created_at: string
   updated_at: string
 }
@@ -72,6 +73,16 @@ export interface Booking {
 export type BookingStatus = 'pending' | 'confirmed' | 'rejected' | 'cancelled' | 'completed' | 'in_progress'
 
 // ============= VEHICLE TYPES =============
+export interface UserVehiclePhoto {
+  id: number
+  vehicle_id: number
+  path: string
+  url: string
+  is_primary: boolean
+  sort_order: number
+  created_at: string
+}
+
 export interface Vehicle {
   id: number
   user_id: number
@@ -82,6 +93,7 @@ export interface Vehicle {
   seats: number
   year?: number
   is_default: boolean
+  photos?: UserVehiclePhoto[]
   created_at: string
   updated_at: string
 }

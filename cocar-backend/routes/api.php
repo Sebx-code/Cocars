@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\UserVehicleController;
 use App\Http\Controllers\Api\MessageController;
 use App\Http\Controllers\Api\VerificationController;
+use App\Http\Controllers\Api\FeedController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +29,9 @@ Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/refresh', [AuthController::class, 'refresh']); // Refresh token
 });
+
+// Fil d'actualité (lecture publique)
+Route::get('/feed', [FeedController::class, 'index']);
 
 // Trajets (lecture publique)
 Route::get('/trips', [TripController::class, 'index']);
@@ -73,6 +77,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/user/vehicles/{id}', [UserVehicleController::class, 'update']);
     Route::delete('/user/vehicles/{id}', [UserVehicleController::class, 'destroy']);
     Route::post('/user/vehicles/{id}/set-default', [UserVehicleController::class, 'setDefault']);
+
+    // --- Photos des véhicules utilisateur ---
+    Route::get('/user/vehicles/{id}/photos', [UserVehicleController::class, 'listPhotos']);
+    Route::post('/user/vehicles/{id}/photos', [UserVehicleController::class, 'uploadPhoto']);
+    Route::post('/user/vehicles/{id}/photos/{photoId}/primary', [UserVehicleController::class, 'setPrimaryPhoto']);
+    Route::delete('/user/vehicles/{id}/photos/{photoId}', [UserVehicleController::class, 'deletePhoto']);
     
     // --- Trajets ---
     Route::get('/my-trips', [TripController::class, 'myTrips']);

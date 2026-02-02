@@ -55,6 +55,12 @@ export const authApi = {
     api.put('/auth/profile/password', data),
 }
 
+// ============= FEED API =============
+export const feedApi = {
+  get: (params?: Record<string, unknown>) =>
+    api.get<ApiResponse<Trip[]>>('/feed', { params }),
+}
+
 // ============= TRIPS API =============
 export const tripsApi = {
   getAll: (params?: Record<string, unknown>) => 
@@ -66,8 +72,12 @@ export const tripsApi = {
   getById: (id: number) => 
     api.get<ApiResponse<Trip>>(`/trips/${id}`),
   
-  create: (data: Partial<Trip>) => 
-    api.post<ApiResponse<Trip>>('/trips', data),
+  create: (data: any) => {
+    const isFormData = typeof FormData !== 'undefined' && data instanceof FormData
+    return api.post<ApiResponse<Trip>>('/trips', data, {
+      headers: isFormData ? { 'Content-Type': 'multipart/form-data' } : undefined,
+    })
+  },
   
   update: (id: number, data: Partial<Trip>) => 
     api.put<ApiResponse<Trip>>(`/trips/${id}`, data),

@@ -127,7 +127,9 @@ class TripController extends Controller
      */
     public function store(Request $request)
     {
+        Log::info('donnees avant validation',['data'=> $request->all()]);
         try {
+             Log::info('donnees avant validation-try',['data'=> $request->all()]);
             $validated = $request->validate([
                 'departure_city' => 'required|string|max:100',
                 'departure_address' => 'required|string|max:255',
@@ -148,11 +150,16 @@ class TripController extends Controller
                 'smoking_allowed' => 'sometimes|boolean',
                 'music_allowed' => 'sometimes|boolean',
                 'air_conditioning' => 'sometimes|boolean',
-                // Informations du véhicule (obligatoires)
+                //Informations du véhicule (obligatoires)
                 'vehicle_registration' => 'required|string|max:20',
                 'vehicle_brand' => 'required|string|max:50',
                 'vehicle_color' => 'required|string|max:30',
+
+                // Photos du véhicule (optionnel)
+                'vehicle_photos' => 'nullable|array|max:6',
+                'vehicle_photos.*' => 'image|mimes:jpeg,png,jpg,webp|max:4096'
             ]);
+            Log::info('donnees apres validation',['data'=> $request]);
 
             // Normaliser le format de l'heure (enlever les secondes si présentes)
             if (isset($validated['departure_time'])) {
@@ -198,6 +205,32 @@ class TripController extends Controller
                 $userVehicleId = $validated['vehicle_id'];
             }
 
+            // Charger le véhicule final
+            $vehicle = $user->userVehicles()->with('photos')->findOrFail($userVehicleId);
+
+            // Upload photos véhicule (optionnel)
+            if ($request->hasFile('vehicle_photos')) {
+                $files = $request->file('vehicle_photos');
+
+                // Si aucune photo principale n'existe, la première uploadée devient principale
+                $hasPrimary = $vehicle->photos()->where('is_primary', true)->exists();
+
+                $baseSort = (int) $vehicle->photos()->max('sort_order');
+                $baseSort = $baseSort < 0 ? 0 : $baseSort;
+
+                foreach ($files as $idx => $file) {
+                    $path = $file->store("vehicles/{$vehicle->id}", 'public');
+
+                    $isPrimary = (!$hasPrimary && $idx === 0);
+
+                    $vehicle->photos()->create([
+                        'path' => $path,
+                        'is_primary' => $isPrimary,
+                        'sort_order' => $baseSort + 1 + $idx,
+                    ]);
+                }
+            }
+
             // Créer le trajet
             $trip = Trip::create([
                 'driver_id' => $user->id,
@@ -224,11 +257,16 @@ class TripController extends Controller
                 'air_conditioning' => $validated['air_conditioning'] ?? true,
                 'status' => 'confirmed',
             ]);
-
-            $trip->load(['driver', 'vehicle']);
+ Log::info('donnees avant validation-apresvalidation',['data'=> $request->all()]);
+            $trip->load(['driver', 'vehicle.photos']);
 
             return $this->success($trip, 'Trajet créé avec succès', 201);
         } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::warning('Trip creation validation failed', [
+                'errors' => $e->errors(),
+                'payload_keys' => array_keys($request->all()),
+            ]);
+
             return $this->error('Erreur de validation', 422, $e->errors());
         } catch (\Exception $e) {
             Log::error('Erreur création trajet: ' . $e->getMessage(), [

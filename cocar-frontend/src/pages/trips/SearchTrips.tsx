@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom'
 import { tripsApi } from '../../services/api'
 import { Trip } from '../../types'
 import TripCard from '../../components/ui/TripCard'
-import { Search, MapPin, Calendar, Users, SlidersHorizontal, Loader2, Car } from 'lucide-react'
+import { Search, MapPin, Calendar, SlidersHorizontal, Loader2 } from 'lucide-react'
 
 export default function SearchTrips() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -189,7 +189,7 @@ export default function SearchTrips() {
           </div>
         ) : (
           <div className="card p-12 text-center">
-            <Car className="w-16 h-16 mx-auto text-gray-300 dark:text-slate-600 mb-4" />
+            <Search className="w-16 h-16 mx-auto text-gray-300 dark:text-slate-600 mb-4" />
             <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
               Aucun trajet trouvé
             </h3>

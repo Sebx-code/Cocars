@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Trip } from '../../types'
-import { MapPin, Calendar, Clock, Users, Star, ArrowRight } from 'lucide-react'
+import { Calendar, Clock, Users, Star, ArrowRight } from 'lucide-react'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
 

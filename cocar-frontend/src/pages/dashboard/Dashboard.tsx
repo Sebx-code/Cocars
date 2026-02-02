@@ -7,7 +7,7 @@ import StatCard from '../../components/ui/StatCard'
 import { Car, Users, Calendar, DollarSign, Leaf, TrendingUp, ArrowRight, Plus, Wallet } from 'lucide-react'
 
 export default function Dashboard() {
-  const { user } = useAuth()
+  useAuth()
   const [stats, setStats] = useState<UserStats | null>(null)
   const [recentTrips, setRecentTrips] = useState<Trip[]>([])
   const [recentBookings, setRecentBookings] = useState<Booking[]>([])
