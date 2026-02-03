@@ -1,3 +1,6 @@
 # Laravel
 .env
 node_modules
+
+# Documentation
+../docs/questionnaire.md

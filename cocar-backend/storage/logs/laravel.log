@@ -42,3 +42,19 @@ User-Agent:         Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) Apple
 
 "}} 
 [2026-02-02 17:42:55] local.INFO: donnees avant validation-apresvalidation {"data":{"departure_city":"Yaounde","departure_address":"werty","arrival_city":"wertewretr","arrival_address":"ewretrth","departure_date":"2026-02-03","departure_time":"17:30","available_seats":"4","price_per_seat":"6000","description":"qwertyukjhgfds","smoking_allowed":"0","music_allowed":"1","pets_allowed":"0","vehicle_registration":"qwwefe","vehicle_brand":"rerwqa","vehicle_color":"TREWQ","vehicle_photos":[{"Illuminate\\Http\\UploadedFile":"C:\\Users\\SEB\\AppData\\Local\\Temp\\php19E4.tmp"}]}} 
+[2026-02-03 09:50:51] local.ERROR: Command "reverb:" is ambiguous.
+Did you mean one of these?
+    reverb:install Install the Reverb dependencies
+    reverb:start   Start the Reverb server
+    reverb:restart Restart the Reverb server. {"exception":"[object] (Symfony\\Component\\Console\\Exception\\CommandNotFoundException(code: 0): Command \"reverb:\" is ambiguous.
+Did you mean one of these?
+    reverb:install Install the Reverb dependencies
+    reverb:start   Start the Reverb server
+    reverb:restart Restart the Reverb server. at C:/dev/Cocars-main/cocar-backend/vendor/symfony/console/Application.php:800)
+[stacktrace]
+#0 C:/dev/Cocars-main/cocar-backend/vendor/symfony/console/Application.php(298): Symfony/Component/Console/Application->find('reverb:')
+#1 C:/dev/Cocars-main/cocar-backend/vendor/symfony/console/Application.php(195): Symfony/Component/Console/Application->doRun(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#2 C:/dev/Cocars-main/cocar-backend/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony/Component/Console/Application->run(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#3 C:/dev/Cocars-main/cocar-backend/artisan(12): Illuminate/Foundation/Console/Kernel->handle(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#4 {main}
+"} 

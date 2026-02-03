@@ -1,0 +1,171 @@
+classDiagram
+  class User {
+    +int id
+    +string name
+    +string email
+    +string role
+    +bool is_verified
+    +decimal rating
+    +getStats()
+    +updateRating()
+    +isAdmin()
+  }
+
+  class Trip {
+    +int id
+    +int driver_id
+    +int vehicle_id
+    +string departure_city
+    +string arrival_city
+    +date departure_date
+    +time departure_time
+    +int available_seats
+    +int total_seats
+    +int price_per_seat
+    +string status
+    +updateAvailableSeats()
+    +canBeBooked(seats)
+    +cancel(reason)
+  }
+
+  class Booking {
+    +int id
+    +int trip_id
+    +int passenger_id
+    +int seats_booked
+    +int total_price
+    +string status
+    +bool driver_confirmed_departure
+    +bool passenger_confirmed_departure
+    +bool trip_started
+    +bool passenger_no_show
+    +confirm(response)
+    +reject(reason)
+    +cancel(reason)
+    +cancelWithRefund(reason, cancelledBy)
+    +driverConfirmsDeparture()
+    +passengerConfirmsDeparture()
+    +markAsNoShow()
+    +isPaid()
+    +hasEscrowPayment()
+  }
+
+  class Payment {
+    +int id
+    +int booking_id
+    +int payer_id
+    +int amount
+    +string payment_method
+    +string status
+    +string escrow_status
+    +int commission_amount
+    +int driver_amount
+    +int refund_amount
+    +markAsCompletedAndHold()
+    +releaseToDriver()
+    +refund(applyPenalty)
+    +refundNoShow()
+    +canBeRefunded()
+    +isLateCancellation()
+  }
+
+  class Wallet {
+    +int id
+    +int user_id
+    +int balance
+    +int pending_balance
+    +credit(amount,type)
+    +debit(amount,type)
+    +holdInEscrow(amount)
+    +releaseFromEscrow(amount)
+    +refundFromEscrow(amount)
+    +getTotalBalanceAttribute()
+  }
+
+  class WalletTransaction {
+    +int id
+    +int wallet_id
+    +int amount
+    +string type
+    +string reference
+  }
+
+  class Notification {
+    +int id
+    +int user_id
+    +string type
+    +string title
+    +string message
+    +bool read
+    +markAsRead()
+  }
+
+  class Conversation {
+    +int id
+    +int trip_id
+    +string type
+    +string subject
+    +datetime last_message_at
+    +unreadCountForUser(userId)
+    +markAsReadForUser(userId)
+  }
+
+  class Message {
+    +int id
+    +int conversation_id
+    +int sender_id
+    +string type
+    +string content
+    +bool is_read
+  }
+
+  class Rating {
+    +int id
+    +int trip_id
+    +int rater_id
+    +int rated_user_id
+    +int rating
+    +string rating_type
+  }
+
+  class UserVehicle {
+    +int id
+    +int user_id
+    +string registration_number
+    +string brand
+    +string color
+    +int seats
+    +bool is_default
+  }
+
+  class UserVehiclePhoto {
+    +int id
+    +int vehicle_id
+    +string path
+    +bool is_primary
+    +int sort_order
+    +string url
+  }
+
+
+  User "1" --> "0..*" Trip
+  User "1" --> "0..*" Booking
+  Trip "1" --> "0..*" Booking
+  Booking "1" --> "0..*" Payment
+  User "1" --> "0..*" Payment
+
+  User "1" --> "0..1" Wallet
+  Wallet "1" --> "0..*" WalletTransaction
+  Payment "1" --> "0..*" WalletTransaction
+
+  User "1" --> "0..*" Notification
+
+  Conversation "1" --> "0..*" Message
+  User "0..*" --> "0..*" Conversation
+
+  Trip "1" --> "0..*" Rating
+  User "1" --> "0..*" Rating
+
+  User "1" --> "0..*" UserVehicle
+  UserVehicle "1" --> "0..*" UserVehiclePhoto
+  Trip "1" --> "1" UserVehicle
