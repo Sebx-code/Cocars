@@ -59,8 +59,16 @@ export default function MyTrips() {
                     </div>
                     <div>
                       <h3 className="font-bold text-gray-900 dark:text-white">{trip.departure_city} → {trip.arrival_city}</h3>
-                      <span className={`badge ${trip.status === 'active' ? 'badge-success' : trip.status === 'completed' ? 'badge-primary' : 'badge-danger'}`}>
-                        {trip.status === 'active' ? 'Actif' : trip.status === 'completed' ? 'Terminé' : 'Annulé'}
+                      <span className={`badge ${trip.status === 'confirmed' || trip.status === 'in_progress' ? 'badge-success' : trip.status === 'completed' ? 'badge-primary' : trip.status === 'pending' ? 'badge-warning' : 'badge-danger'}`}>
+                        {trip.status === 'pending'
+                          ? 'En attente'
+                          : trip.status === 'confirmed'
+                            ? 'Confirmé'
+                            : trip.status === 'in_progress'
+                              ? 'En cours'
+                              : trip.status === 'completed'
+                                ? 'Terminé'
+                                : 'Annulé'}
                       </span>
                     </div>
                   </div>

@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\UserVehicleController;
 use App\Http\Controllers\Api\MessageController;
 use App\Http\Controllers\Api\VerificationController;
 use App\Http\Controllers\Api\FeedController;
+use App\Http\Controllers\Api\AnalyticsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -103,6 +104,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/bookings/{booking}/confirm-departure/driver', [BookingController::class, 'confirmDepartureByDriver']);
     Route::post('/bookings/{booking}/confirm-departure/passenger', [BookingController::class, 'confirmDepartureByPassenger']);
     Route::post('/bookings/{booking}/no-show', [BookingController::class, 'markNoShow']);
+    Route::post('/bookings/{booking}/driver-no-show', [BookingController::class, 'markDriverNoShow']);
     Route::get('/bookings/{booking}/departure-status', [BookingController::class, 'departureStatus']);
     
     // --- Paiements ---
@@ -117,6 +119,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/wallet', [PaymentController::class, 'wallet']);
     Route::get('/wallet/transactions', [PaymentController::class, 'walletTransactions']);
     Route::post('/wallet/withdraw', [PaymentController::class, 'withdraw']);
+
+    // --- Analytics ---
+    Route::get('/analytics/driver/financial', [AnalyticsController::class, 'driverFinancial']);
     
     // --- Évaluations ---
     Route::post('/ratings', [RatingController::class, 'store']);
@@ -177,5 +182,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/bookings', [AdminController::class, 'bookings']);
         Route::post('/bookings/{booking}/confirm', [AdminController::class, 'confirmBooking']);
         Route::post('/bookings/{booking}/cancel', [AdminController::class, 'cancelBooking']);
+
+        // Analytics entreprise + rapport imprimable
+        Route::get('/analytics/company/financial', [AnalyticsController::class, 'companyFinancial']);
+        Route::get('/analytics/company/financial.pdf', [AnalyticsController::class, 'companyFinancialPdf']);
     });
 });

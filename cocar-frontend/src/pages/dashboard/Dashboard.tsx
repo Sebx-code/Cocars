@@ -130,8 +130,16 @@ export default function Dashboard() {
                   </div>
                   <div className="text-right">
                     <p className="font-bold text-emerald-500 text-sm">{trip.price_per_seat.toLocaleString()} FCFA</p>
-                    <span className={`badge text-xs ${trip.status === 'active' ? 'badge-success' : 'badge-warning'}`}>
-                      {trip.status === 'active' ? 'Actif' : 'Terminé'}
+                    <span className={`badge text-xs ${trip.status === 'confirmed' || trip.status === 'in_progress' ? 'badge-success' : trip.status === 'completed' ? 'badge-primary' : trip.status === 'pending' ? 'badge-warning' : 'badge-danger'}`}>
+                      {trip.status === 'pending'
+                        ? 'En attente'
+                        : trip.status === 'confirmed'
+                          ? 'Confirmé'
+                          : trip.status === 'in_progress'
+                            ? 'En cours'
+                            : trip.status === 'completed'
+                              ? 'Terminé'
+                              : 'Annulé'}
                     </span>
                   </div>
                 </Link>

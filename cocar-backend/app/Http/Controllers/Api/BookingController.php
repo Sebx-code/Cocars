@@ -318,8 +318,49 @@ class BookingController extends Controller
     }
 
     /**
-     * Obtenir le statut de confirmation de départ d'une réservation
+     * Passager signale que le chauffeur est absent (driver no-show)
      */
+    public function markDriverNoShow(Request $request, Booking $booking)
+    {
+        $user = $request->user();
+
+        // Vérifier que l'utilisateur est le passager
+        if ($booking->passenger_id !== $user->id) {
+            return $this->error('Vous n\'êtes pas autorisé à signaler une absence du chauffeur', 403);
+        }
+
+        // La réservation doit être confirmée et payée
+        if ($booking->status !== Booking::STATUS_CONFIRMED) {
+            return $this->error('La réservation doit être confirmée', 400);
+        }
+
+        if (!$booking->isPaid()) {
+            return $this->error('Le paiement doit être effectué avant de signaler une absence', 400);
+        }
+
+        // Si le chauffeur a déjà confirmé le départ, il n'est pas absent
+        if ($booking->driver_confirmed_departure) {
+            return $this->error('Le conducteur a déjà confirmé le départ', 400);
+        }
+
+        // Vérifier que c'est le jour du voyage ou après
+        $departureDate = $booking->trip->departure_date;
+        if (now()->format('Y-m-d') < $departureDate) {
+            return $this->error('Vous ne pouvez signaler une absence qu\'à partir du jour du voyage', 400);
+        }
+
+        if ($booking->driver_no_show) {
+            return $this->error('Le chauffeur a déjà été signalé absent', 400);
+        }
+
+        $booking->markDriverAsNoShow();
+
+        return $this->success(
+            $booking->fresh(['trip.driver', 'passenger', 'payment']),
+            'Absence du chauffeur signalée. Un remboursement complet a été effectué.'
+        );
+    }
+
     public function departureStatus(Request $request, Booking $booking)
     {
         $user = $request->user();

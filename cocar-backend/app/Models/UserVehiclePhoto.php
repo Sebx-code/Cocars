@@ -34,6 +34,19 @@ class UserVehiclePhoto extends Model
 
     public function getUrlAttribute(): string
     {
-        return Storage::disk('public')->url($this->path);
+        $relative = Storage::disk('public')->url($this->path);
+
+        // Storage::url() renvoie souvent une URL relative (/storage/..).
+        // Pour le frontend (host différent), on renvoie une URL absolue basée sur APP_URL.
+        if (str_starts_with($relative, 'http://') || str_starts_with($relative, 'https://')) {
+            return $relative;
+        }
+
+        $appUrl = rtrim(config('app.url'), '/');
+        if (!$appUrl) {
+            return $relative;
+        }
+
+        return $appUrl . (str_starts_with($relative, '/') ? $relative : '/' . $relative);
     }
 }

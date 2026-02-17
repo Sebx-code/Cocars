@@ -1,0 +1,112 @@
+flowchart TD
+    subgraph System["COCAR - Système de Covoiturage"]
+
+        subgraph Auth["Authentification"]
+            UC1(("S'inscrire"))
+            UC2(("Se connecter"))
+            UC3(("Modifier profil"))
+        end
+
+        subgraph Verif["Vérification"]
+            UC4(("Télécharger documents"))
+            UC5(("Vérifier téléphone"))
+        end
+
+        subgraph Vehicles["Véhicules"]
+            UC6(("Ajouter véhicule"))
+            UC7(("Consulter véhicules"))
+            UC8(("Modifier véhicule"))
+        end
+
+        subgraph Trips["Trajets"]
+            UC9(("Créer trajet"))
+            UC10(("Consulter trajets"))
+            UC11(("Rechercher trajets"))
+        end
+
+        subgraph Bookings["Réservations"]
+            UC12(("Réserver place"))
+            UC13(("Confirmer réservation"))
+            UC14(("Annuler réservation"))
+        end
+
+        subgraph Departure["Départ"]
+            UC15(("Confirmer départ"))
+            UC16(("Marquer absent"))
+        end
+
+        subgraph Payments["Paiements"]
+            UC17(("Effectuer paiement"))
+            UC18(("Payer espèces"))
+            UC19(("Payer mobile money"))
+        end
+
+        subgraph Wallet["Portefeuille"]
+            UC20(("Consulter portefeuille"))
+            UC21(("Retirer argent"))
+        end
+
+        subgraph Ratings["Évaluations"]
+            UC22(("Laisser évaluation"))
+            UC23(("Ajouter commentaire"))
+        end
+
+        subgraph Messaging["Messagerie"]
+            UC24(("Envoyer message"))
+            UC25(("Consulter messages"))
+        end
+
+        subgraph AdminMod["Administration"]
+            UC26(("Gérer utilisateurs"))
+            UC27(("Gérer trajets"))
+            UC28(("Gérer paiements"))
+        end
+
+        Auth --> Verif --> Vehicles --> Trips --> Bookings --> Departure --> Payments --> Wallet --> Ratings --> Messaging --> AdminMod
+    end
+
+    User([fa:fa-user Utilisateur])
+
+    Driver([fa:fa-user Conducteur])
+    Passenger([fa:fa-user Passager])
+    Admin([fa:fa-user Admin])
+
+    User --> UC1
+    User --> UC2
+    User --> UC3
+    User --> UC4
+    User --> UC5
+    User --> UC24
+    User --> UC25
+
+    Driver --> UC6
+    Driver --> UC7
+    Driver --> UC8
+    Driver --> UC9
+    Driver --> UC13
+    Driver --> UC15
+    Driver --> UC20
+    Driver --> UC21
+    Driver --> UC22
+    Driver --> UC23
+
+    Passenger --> UC10
+    Passenger --> UC11
+    Passenger --> UC12
+    Passenger --> UC14
+    Passenger --> UC16
+    Passenger --> UC17
+    Passenger --> UC18
+    Passenger --> UC19
+    Passenger --> UC20
+    Passenger --> UC22
+
+    Admin --> UC26
+    Admin --> UC27
+    Admin --> UC28
+
+    UC12 -->|include| UC17
+    UC17 -->|include| UC18
+    UC17 -->|include| UC19
+    UC22 -->|include| UC23
+    UC20 -->|include| UC21

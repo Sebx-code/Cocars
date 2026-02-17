@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { adminApi } from '../../services/api'
+import { adminApi, analyticsApi } from '../../services/api'
+import { CompanyFinancialStats, AnalyticsGroup } from '../../types'
+import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts'
 import StatCard from '../../components/ui/StatCard'
 import { 
   Users, Route, CalendarCheck, DollarSign, TrendingUp, 
@@ -30,10 +32,25 @@ export default function AdminDashboard() {
   const [stats, setStats] = useState<AdminStats | null>(null)
   const [activities, setActivities] = useState<ActivityItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [financial, setFinancial] = useState<CompanyFinancialStats | null>(null)
+  const [group, setGroup] = useState<AnalyticsGroup>('day')
+  const [filters, setFilters] = useState<{ payment_method?: string; status?: string; escrow_status?: string }>({})
+  const [period, setPeriod] = useState<{ from: string; to: string }>(() => {
+    const to = new Date()
+    const from = new Date()
+    from.setDate(to.getDate() - 30)
+    const fmt = (d: Date) => d.toISOString().slice(0, 10)
+    return { from: fmt(from), to: fmt(to) }
+  })
 
   useEffect(() => {
     loadData()
   }, [])
+
+  useEffect(() => {
+    loadFinancial()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [group, period.from, period.to])
 
   const loadData = async () => {
     try {
@@ -49,6 +66,46 @@ export default function AdminDashboard() {
       console.error('Error loading admin data:', error)
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  const loadFinancial = async () => {
+    try {
+      const res = await analyticsApi.companyFinancial({
+        from: period.from,
+        to: period.to,
+        group,
+        payment_method: filters.payment_method,
+        status: filters.status,
+        escrow_status: filters.escrow_status,
+      })
+      setFinancial(res.data.data)
+    } catch {
+      setFinancial(null)
+    }
+  }
+
+  const downloadReport = async () => {
+    try {
+      const res = await analyticsApi.companyFinancialReport({
+        from: period.from,
+        to: period.to,
+        group,
+        payment_method: filters.payment_method,
+        status: filters.status,
+        escrow_status: filters.escrow_status,
+      })
+      const blob = new Blob([res.data], { type: 'text/html' })
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `rapport-financier-${period.from}-${period.to}.html`
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+      window.URL.revokeObjectURL(url)
+    } catch {
+      console.error('Erreur téléchargement rapport')
     }
   }
 
@@ -175,6 +232,216 @@ export default function AdminDashboard() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Finances entreprise */}
+      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-argon p-6">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-4">
+          <div>
+            <h2 className="text-lg font-bold text-gray-800 dark:text-white">Finances (entreprise)</h2>
+            <p className="text-sm text-gray-500">CA brut, commission, payouts, remboursements</p>
+          </div>
+
+          <div className="flex flex-wrap gap-2 items-end">
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">Du</label>
+              <input type="date" className="input h-10" value={period.from} onChange={(e) => setPeriod((p) => ({ ...p, from: e.target.value }))} />
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">Au</label>
+              <input type="date" className="input h-10" value={period.to} onChange={(e) => setPeriod((p) => ({ ...p, to: e.target.value }))} />
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">Grouper</label>
+              <select className="input h-10" value={group} onChange={(e) => setGroup(e.target.value as AnalyticsGroup)}>
+                <option value="day">Jour</option>
+                <option value="week">Semaine</option>
+                <option value="month">Mois</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">Méthode</label>
+              <select className="input h-10" value={filters.payment_method ?? ''} onChange={(e) => setFilters((f) => ({ ...f, payment_method: e.target.value || undefined }))}>
+                <option value="">Toutes</option>
+                <option value="cash">Cash</option>
+                <option value="mobile_money">Mobile money</option>
+                <option value="orange_money">Orange money</option>
+                <option value="mtn_money">MTN money</option>
+                <option value="card">Carte</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">Statut paiement</label>
+              <select className="input h-10" value={filters.status ?? ''} onChange={(e) => setFilters((f) => ({ ...f, status: e.target.value || undefined }))}>
+                <option value="">Tous</option>
+                <option value="pending">Pending</option>
+                <option value="processing">Processing</option>
+                <option value="completed">Completed</option>
+                <option value="failed">Failed</option>
+                <option value="refunded">Refunded</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">Statut escrow</label>
+              <select className="input h-10" value={filters.escrow_status ?? ''} onChange={(e) => setFilters((f) => ({ ...f, escrow_status: e.target.value || undefined }))}>
+                <option value="">Tous</option>
+                <option value="none">None</option>
+                <option value="held">Held</option>
+                <option value="released">Released</option>
+                <option value="refunded">Refunded</option>
+                <option value="partial_refund">Partial refund</option>
+              </select>
+            </div>
+            <button className="btn-outline h-10" onClick={downloadReport}>
+              Télécharger rapport
+            </button>
+          </div>
+        </div>
+
+        {financial ? (
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div className="rounded-xl p-3 bg-slate-50 dark:bg-slate-700/40">
+                <p className="text-xs text-gray-500">CA brut</p>
+                <p className="font-bold text-gray-800 dark:text-white">{financial.totals.gross_revenue.toLocaleString()} FCFA</p>
+              </div>
+              <div className="rounded-xl p-3 bg-emerald-50 dark:bg-emerald-900/20">
+                <p className="text-xs text-emerald-700 dark:text-emerald-300">Commission</p>
+                <p className="font-bold text-emerald-800 dark:text-emerald-200">{financial.totals.commission_revenue.toLocaleString()} FCFA</p>
+              </div>
+              <div className="rounded-xl p-3 bg-blue-50 dark:bg-blue-900/20">
+                <p className="text-xs text-blue-700 dark:text-blue-300">Payout chauffeurs</p>
+                <p className="font-bold text-blue-800 dark:text-blue-200">{financial.totals.driver_payouts.toLocaleString()} FCFA</p>
+              </div>
+              <div className="rounded-xl p-3 bg-red-50 dark:bg-red-900/20">
+                <p className="text-xs text-red-700 dark:text-red-300">Remboursements</p>
+                <p className="font-bold text-red-800 dark:text-red-200">{financial.totals.refunds.toLocaleString()} FCFA</p>
+              </div>
+              <div className="rounded-xl p-3 bg-amber-50 dark:bg-amber-900/20">
+                <p className="text-xs text-amber-700 dark:text-amber-300">Pénalités</p>
+                <p className="font-bold text-amber-800 dark:text-amber-200">{(financial.totals.penalties ?? 0).toLocaleString()} FCFA</p>
+              </div>
+            </div>
+
+            <div className="h-80">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={financial.series} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="gross" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#6366f1" stopOpacity={0.35} />
+                      <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+                    </linearGradient>
+                    <linearGradient id="commission" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.35} />
+                      <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
+                  <XAxis dataKey="date" tick={{ fontSize: 12 }} />
+                  <YAxis tick={{ fontSize: 12 }} />
+                  <Tooltip formatter={(v: number) => `${v.toLocaleString('fr-FR')} FCFA`} />
+                  <Area type="monotone" dataKey="gross_revenue" stroke="#6366f1" fillOpacity={1} fill="url(#gross)" name="CA brut" />
+                  <Area type="monotone" dataKey="commission_revenue" stroke="#10b981" fillOpacity={1} fill="url(#commission)" name="Commission" />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+
+            {/* TOP TABLES */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              <div className="rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
+                <h3 className="font-semibold text-gray-800 dark:text-white mb-3">Top chauffeurs</h3>
+                <div className="overflow-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="text-left text-gray-500">
+                        <th className="py-2">Nom</th>
+                        <th className="py-2 text-right">Payout</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {(financial.top?.drivers ?? []).map((d) => (
+                        <tr key={d.driver_id} className="border-t border-slate-100 dark:border-slate-700">
+                          <td className="py-2">{d.driver_name}</td>
+                          <td className="py-2 text-right">{d.driver_payouts.toLocaleString()} FCFA</td>
+                        </tr>
+                      ))}
+                      {(financial.top?.drivers?.length ?? 0) === 0 && (
+                        <tr>
+                          <td className="py-2 text-gray-500" colSpan={2}>
+                            Aucune donnée
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
+                <h3 className="font-semibold text-gray-800 dark:text-white mb-3">Top trajets</h3>
+                <div className="overflow-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="text-left text-gray-500">
+                        <th className="py-2">Départ</th>
+                        <th className="py-2">Arrivée</th>
+                        <th className="py-2 text-right">Réserv.</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {(financial.top?.routes ?? []).map((r, idx) => (
+                        <tr key={`${r.departure_city}-${r.arrival_city}-${idx}`} className="border-t border-slate-100 dark:border-slate-700">
+                          <td className="py-2">{r.departure_city}</td>
+                          <td className="py-2">{r.arrival_city}</td>
+                          <td className="py-2 text-right">{r.bookings}</td>
+                        </tr>
+                      ))}
+                      {(financial.top?.routes?.length ?? 0) === 0 && (
+                        <tr>
+                          <td className="py-2 text-gray-500" colSpan={3}>
+                            Aucune donnée
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
+                <h3 className="font-semibold text-gray-800 dark:text-white mb-3">Top villes</h3>
+                <div className="grid grid-cols-1 gap-3">
+                  <div>
+                    <p className="text-xs text-gray-500 mb-2">Départs</p>
+                    <div className="space-y-1">
+                      {(financial.top?.departure_cities ?? []).slice(0, 5).map((c, idx) => (
+                        <div key={`${c.city}-${idx}`} className="flex justify-between text-sm">
+                          <span>{c.city}</span>
+                          <span className="text-gray-500">{c.bookings}</span>
+                        </div>
+                      ))}
+                      {(financial.top?.departure_cities?.length ?? 0) === 0 && <div className="text-sm text-gray-500">Aucune donnée</div>}
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500 mb-2">Arrivées</p>
+                    <div className="space-y-1">
+                      {(financial.top?.arrival_cities ?? []).slice(0, 5).map((c, idx) => (
+                        <div key={`${c.city}-${idx}`} className="flex justify-between text-sm">
+                          <span>{c.city}</span>
+                          <span className="text-gray-500">{c.bookings}</span>
+                        </div>
+                      ))}
+                      {(financial.top?.arrival_cities?.length ?? 0) === 0 && <div className="text-sm text-gray-500">Aucune donnée</div>}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+        ) : (
+          <p className="text-sm text-gray-500">Aucune donnée disponible.</p>
+        )}
       </div>
 
       {/* Main content */}

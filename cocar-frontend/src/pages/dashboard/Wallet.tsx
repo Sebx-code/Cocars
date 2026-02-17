@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react'
 import { walletApi } from '../../services/api'
 import { Wallet as WalletType, WalletTransaction } from '../../types'
-import { 
-  Wallet as WalletIcon, 
-  ArrowDownCircle, 
-  ArrowUpCircle, 
-  Lock, 
-  Unlock, 
-  RefreshCw, 
-  AlertCircle, 
+import {
+  Wallet as WalletIcon,
+  ArrowDownCircle,
+  ArrowUpCircle,
+  Lock,
+  Unlock,
+  RefreshCw,
+  AlertCircle,
   Gift,
   Percent,
   Loader2,
@@ -18,6 +18,9 @@ import {
   Phone,
   Send
 } from 'lucide-react'
+import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts'
+import { analyticsApi } from '../../services/api'
+import { AnalyticsGroup, DriverFinancialStats } from '../../types'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
 import toast from 'react-hot-toast'
@@ -27,6 +30,15 @@ export default function WalletPage() {
   const [transactions, setTransactions] = useState<WalletTransaction[]>([])
   const [stats, setStats] = useState<{ earned: number; spent: number; refunded: number; pending: number } | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [financial, setFinancial] = useState<DriverFinancialStats | null>(null)
+  const [group, setGroup] = useState<AnalyticsGroup>('day')
+  const [period, setPeriod] = useState<{ from: string; to: string }>(() => {
+    const to = new Date()
+    const from = new Date()
+    from.setDate(to.getDate() - 30)
+    const fmt = (d: Date) => d.toISOString().slice(0, 10)
+    return { from: fmt(from), to: fmt(to) }
+  })
   const [isWithdrawing, setIsWithdrawing] = useState(false)
   const [showWithdrawModal, setShowWithdrawModal] = useState(false)
   const [withdrawForm, setWithdrawForm] = useState({
@@ -39,6 +51,11 @@ export default function WalletPage() {
     loadWallet()
   }, [])
 
+  useEffect(() => {
+    loadFinancial()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [group, period.from, period.to])
+
   const loadWallet = async () => {
     try {
       setIsLoading(true)
@@ -50,6 +67,20 @@ export default function WalletPage() {
       toast.error('Erreur lors du chargement du portefeuille')
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  const loadFinancial = async () => {
+    try {
+      const res = await analyticsApi.driverFinancial({
+        from: period.from,
+        to: period.to,
+        group,
+      })
+      setFinancial(res.data.data)
+    } catch {
+      // silencieux: le wallet doit rester utilisable même sans analytics
+      setFinancial(null)
     }
   }
 
@@ -244,6 +275,93 @@ export default function WalletPage() {
           </div>
         </div>
       )}
+
+      {/* Analytics chauffeur */}
+      <div className="card p-6">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-4">
+          <div>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Statistiques financières</h2>
+            <p className="text-sm text-gray-600 dark:text-gray-400">Revenus (net) et montants en escrow</p>
+          </div>
+
+          <div className="flex flex-wrap gap-2 items-end">
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">Du</label>
+              <input
+                type="date"
+                className="input h-10"
+                value={period.from}
+                onChange={(e) => setPeriod((p) => ({ ...p, from: e.target.value }))}
+              />
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">Au</label>
+              <input
+                type="date"
+                className="input h-10"
+                value={period.to}
+                onChange={(e) => setPeriod((p) => ({ ...p, to: e.target.value }))}
+              />
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">Grouper</label>
+              <select
+                className="input h-10"
+                value={group}
+                onChange={(e) => setGroup(e.target.value as AnalyticsGroup)}
+              >
+                <option value="day">Jour</option>
+                <option value="week">Semaine</option>
+                <option value="month">Mois</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        {financial ? (
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="rounded-2xl p-4 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800">
+                <p className="text-sm text-emerald-700 dark:text-emerald-300">Revenus (net)</p>
+                <p className="text-2xl font-bold text-emerald-800 dark:text-emerald-200">
+                  {financial.totals.earned.toLocaleString('fr-FR')} FCFA
+                </p>
+              </div>
+              <div className="rounded-2xl p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
+                <p className="text-sm text-amber-700 dark:text-amber-300">En escrow</p>
+                <p className="text-2xl font-bold text-amber-800 dark:text-amber-200">
+                  {financial.totals.pending.toLocaleString('fr-FR')} FCFA
+                </p>
+              </div>
+            </div>
+
+            <div className="h-72">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={financial.series} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="earned" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.4} />
+                      <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                    </linearGradient>
+                    <linearGradient id="pending" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.35} />
+                      <stop offset="95%" stopColor="#f59e0b" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
+                  <XAxis dataKey="date" tick={{ fontSize: 12 }} />
+                  <YAxis tick={{ fontSize: 12 }} />
+                  <Tooltip formatter={(v: number) => `${v.toLocaleString('fr-FR')} FCFA`} />
+                  <Area type="monotone" dataKey="earned" stroke="#10b981" fillOpacity={1} fill="url(#earned)" name="Revenus" />
+                  <Area type="monotone" dataKey="pending" stroke="#f59e0b" fillOpacity={1} fill="url(#pending)" name="Escrow" />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        ) : (
+          <p className="text-sm text-gray-500 dark:text-gray-400">Aucune donnée disponible pour cette période.</p>
+        )}
+      </div>
 
       {/* Historique des transactions */}
       <div className="card">

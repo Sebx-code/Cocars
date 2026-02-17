@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ApiResponse, LoginCredentials, RegisterData, Trip, Booking, Vehicle, User, UserStats, Notification, Conversation, Message, Payment, Wallet, WalletTransaction, PaymentMethodInfo, EscrowInfo } from '../types'
+import { ApiResponse, LoginCredentials, RegisterData, Trip, Booking, Vehicle, User, UserStats, Notification, Conversation, Message, Payment, Wallet, WalletTransaction, PaymentMethodInfo, EscrowInfo, DriverFinancialStats, CompanyFinancialStats, AnalyticsGroup } from '../types'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api'
 
@@ -121,6 +121,9 @@ export const bookingsApi = {
   
   markNoShow: (id: number) => 
     api.post<ApiResponse<Booking>>(`/bookings/${id}/no-show`),
+
+  markDriverNoShow: (id: number) =>
+    api.post<ApiResponse<Booking>>(`/bookings/${id}/driver-no-show`),
   
   getDepartureStatus: (id: number) => 
     api.get<ApiResponse<{
@@ -189,6 +192,18 @@ export const walletApi = {
   
   withdraw: (data: { amount: number; provider: string; phone_number: string }) => 
     api.post<ApiResponse<{ success: boolean; transaction: WalletTransaction; message: string }>>('/wallet/withdraw', data),
+}
+
+// ============= ANALYTICS API =============
+export const analyticsApi = {
+  driverFinancial: (params?: { from?: string; to?: string; group?: AnalyticsGroup }) =>
+    api.get<ApiResponse<DriverFinancialStats>>('/analytics/driver/financial', { params }),
+
+  companyFinancial: (params?: { from?: string; to?: string; group?: AnalyticsGroup; payment_method?: string; status?: string; escrow_status?: string }) =>
+    api.get<ApiResponse<CompanyFinancialStats>>('/admin/analytics/company/financial', { params }),
+
+  companyFinancialReport: (params?: { from?: string; to?: string; group?: AnalyticsGroup; payment_method?: string; status?: string; escrow_status?: string }) =>
+    api.get('/admin/analytics/company/financial.pdf', { params, responseType: 'blob' }),
 }
 
 // ============= RATINGS API =============

@@ -1,171 +1,353 @@
 classDiagram
-  class User {
+
+class Utilisateur {
     +int id
-    +string name
+    +string nom
     +string email
-    +string role
-    +bool is_verified
-    +decimal rating
-    +getStats()
-    +updateRating()
-    +isAdmin()
-  }
+    +string telephone
+    +string mot_de_passe
+    +string role ()
+    +decimal note_moyenne
+    +string biographie
+    +string adresse
+    +string photo_profil
+    +boolean est_conducteur
+    +boolean email_verifie
+    +datetime email_verifie_le
+    +datetime cree_le
+    +datetime modifie_le
+    ---
+    +obtenirTrajets()
+    +obtenirReservationsPassager()
+    +obtenirReservationsConducteur()
+    +obtenirVehicules()
+    +obtenirPortefeuille()
+    +obtenirEvaluationsDonnees()
+    +obtenirEvaluationsRecues()
+    +obtenirNotifications()
+    +obtenirConversations()
+    +obtenirMessagesEnvoyes()
+    +mettreAJourNote()
+    +calculerNoteMoyenne()
+}
 
-  class Trip {
-    +int id
-    +int driver_id
-    +int vehicle_id
-    +string departure_city
-    +string arrival_city
-    +date departure_date
-    +time departure_time
-    +int available_seats
-    +int total_seats
-    +int price_per_seat
-    +string status
-    +updateAvailableSeats()
-    +canBeBooked(seats)
-    +cancel(reason)
-  }
 
-  class Booking {
+class Trajet {
     +int id
-    +int trip_id
-    +int passenger_id
-    +int seats_booked
-    +int total_price
-    +string status
-    +bool driver_confirmed_departure
-    +bool passenger_confirmed_departure
-    +bool trip_started
-    +bool passenger_no_show
-    +confirm(response)
-    +reject(reason)
-    +cancel(reason)
-    +cancelWithRefund(reason, cancelledBy)
-    +driverConfirmsDeparture()
-    +passengerConfirmsDeparture()
-    +markAsNoShow()
-    +isPaid()
-    +hasEscrowPayment()
-  }
+    +int conducteur_id FOREIGN_KEY
+    +int vehicule_id FOREIGN_KEY
+    +string ville_depart
+    +string adresse_depart
+    +decimal latitude_depart
+    +decimal longitude_depart
+    +string ville_arrivee
+    +string adresse_arrivee
+    +decimal latitude_arrivee
+    +decimal longitude_arrivee
+    +date date_depart
+    +time heure_depart
+    +time heure_arrivee_estimee
+    +int places_disponibles
+    +int places_totales
+    +int prix_par_place
+    +string description
+    +boolean bagages_autorises
+    +boolean animaux_autorises
+    +boolean fumeur_autorise
+    +boolean musique_autorisee
+    +boolean climatisation
+    +enum statut
+    +string raison_annulation
+    +datetime cree_le
+    +datetime modifie_le
+    ---
+    +obtenirConducteur()
+    +obtenirVehicule()
+    +obtenirReservations()
+    +obtenirEvaluations()
+    +mettreAJourPlacesDisponibles()
+    +peutEtreReserve()
+    +annuler()
+}
 
-  class Payment {
-    +int id
-    +int booking_id
-    +int payer_id
-    +int amount
-    +string payment_method
-    +string status
-    +string escrow_status
-    +int commission_amount
-    +int driver_amount
-    +int refund_amount
-    +markAsCompletedAndHold()
-    +releaseToDriver()
-    +refund(applyPenalty)
-    +refundNoShow()
-    +canBeRefunded()
-    +isLateCancellation()
-  }
 
-  class Wallet {
+class Reservation {
     +int id
-    +int user_id
-    +int balance
-    +int pending_balance
-    +credit(amount,type)
-    +debit(amount,type)
-    +holdInEscrow(amount)
-    +releaseFromEscrow(amount)
-    +refundFromEscrow(amount)
-    +getTotalBalanceAttribute()
-  }
+    +int trajet_id FOREIGN_KEY
+    +int passager_id FOREIGN_KEY
+    +int places_reservees
+    +int prix_total
+    +enum statut ()
+    +string raison_annulation
+    +string annule_par
+    +datetime annule_le
+    +boolean conducteur_confirme_depart
+    +datetime conducteur_confirme_le
+    +boolean passager_confirme_depart
+    +datetime passager_confirme_le
+    +boolean passager_absent
+    +datetime passager_absent_le
+    +boolean conducteur_absent
+    +datetime conducteur_absent_le
+    +datetime cree_le
+    +datetime modifie_le
+    ---
+    +obtenirTrajet()
+    +obtenirPassager()
+    +obtenirPaiement()
+    +confirmer()
+    +rejeter()
+    +annuler()
+    +annulerAvecRemboursement()
+    +conducteurConfirmeDepart()
+    +passagerConfirmeDepart()
+    +marquerPassagerAbsent()
+    +marquerConducteurAbsent()
+    +estPaye()
+    +aPaiementEscrow()
+}
 
-  class WalletTransaction {
+
+
+class Paiement {
     +int id
-    +int wallet_id
-    +int amount
-    +string type
+    +int reservation_id FOREIGN_KEY
+    +int payeur_id FOREIGN_KEY
+    +int montant
+    +string devise ()
+    +enum methode_paiement ()
+    +enum statut ()
+    +enum statut_escrow ()
+    +int montant_escrow
+    +int montant_penalite
+    +int montant_rembourse
+    +int montant_conducteur
+    +int montant_commission
+    +string identifiant_transaction
+    +string reference_externe
+    +string numero_telephone
+    +json reponse_paiement
+    +datetime paye_le
+    +datetime escrow_bloque_le
+    +datetime escrow_libere_le
+    +datetime rembourse_le
+    +datetime cree_le
+    +datetime modifie_le
+    ---
+    +obtenirReservation()
+    +obtenirPayeur()
+    +obtenirTransactionsPortefeuille()
+    +estEnEscrow()
+    +peutEtreRembourse()
+    +estAnnulationTardive()
+    +calculerPenalite()
+    +calculerCommission()
+    +calculerMontantConducteur()
+    +marquerTermineEtBloquer()
+    +libererAuConducteur()
+    +rembourser()
+    +rembourserNoShow()
+}
+
+
+
+class Portefeuille {
+    +int id
+    +int utilisateur_id FOREIGN_KEY
+    +int solde
+    +int solde_en_attente
+    +string devise
+    +datetime cree_le
+    +datetime modifie_le
+    ---
+    +obtenirUtilisateur() 
+    +obtenirTransactions()
+    +crediter()
+    +debiter()
+    +bloquerEnEscrow()
+    +libererDepuisEscrow()
+    +rembourserDepuisEscrow()
+    +aSoldeSuffisant()
+    +obtenirSoldeTotal()
+}
+
+class TransactionPortefeuille {
+    +int id
+    +int portefeuille_id FOREIGN_KEY
+    +int paiement_id FOREIGN_KEY
+    +int reservation_id FOREIGN_KEY
+    +enum type
+    +int montant
+    +int solde_apres
+    +string description
+    +json metadonnees
     +string reference
-  }
+    +datetime cree_le
+    +datetime modifie_le
+    ---
+    +obtenirPortefeuille()
+    +obtenirPaiement()
+    +obtenirReservation()
+    +obtenirLibelleType()
+    +obtenirIconeType()
+    +estCredit()
+    +estDebit()
+}
 
-  class Notification {
+
+
+class VehiculeUtilisateur {
     +int id
-    +int user_id
+    +int utilisateur_id FOREIGN_KEY
+    +string numero_immatriculation
+    +string marque
+    +string modele
+    +string couleur
+    +int annee
+    +int nombre_places
+    +boolean est_defaut
+    +datetime cree_le
+    +datetime modifie_le
+    ---
+    +obtenirUtilisateur()
+    +obtenirTrajets()
+    +obtenirPhotos()
+    +obtenirPhotoPrincipale()
+}
+
+class PhotoVehiculeUtilisateur {
+    +int id
+    +int vehicule_id FOREIGN_KEY
+    +string chemin_photo
+    +boolean est_principale
+    +int ordre_tri
+    +datetime cree_le
+    +datetime modifie_le
+    ---
+    +obtenirVehicule()
+}
+
+
+
+class Evaluation {
+    +int id
+    +int trajet_id FOREIGN_KEY
+    +int evaluateur_id FOREIGN_KEY
+    +int utilisateur_evalue_id FOREIGN_KEY
+    +int note
+    +string commentaire
+    +enum type_evaluation
+    +int ponctualite
+    +int communication
+    +int confort
+    +datetime cree_le
+    +datetime modifie_le
+    ---
+    +obtenirTrajet()
+    +obtenirEvaluateur()
+    +obtenirUtilisateurEvalue()
+}
+
+
+
+class Notification {
+    +int id
+    +int utilisateur_id FOREIGN_KEY
     +string type
-    +string title
+    +string titre
     +string message
-    +bool read
-    +markAsRead()
-  }
+    +json donnees
+    +boolean lu
+    +datetime lu_le
+    +datetime cree_le
+    +datetime modifie_le
+    ---
+    +obtenirUtilisateur()
+    +marquerCommeLu()
+    +estLu()
+}
 
-  class Conversation {
+
+
+class Conversation {
     +int id
-    +int trip_id
-    +string type
-    +string subject
-    +datetime last_message_at
-    +unreadCountForUser(userId)
-    +markAsReadForUser(userId)
-  }
+    +int trajet_id FOREIGN_KEY
+    +enum type
+    +string sujet
+    +datetime dernier_message_le
+    +datetime cree_le
+    +datetime modifie_le
+    ---
+    +obtenirTrajet()
+    +obtenirParticipants()
+    +obtenirMessages()
+    +obtenirDernierMessage()
+    +compterNonLusPourUtilisateur()
+    +marquerCommeLuPourUtilisateur()
+}
 
-  class Message {
+class Message {
     +int id
-    +int conversation_id
-    +int sender_id
-    +string type
-    +string content
-    +bool is_read
-  }
-
-  class Rating {
-    +int id
-    +int trip_id
-    +int rater_id
-    +int rated_user_id
-    +int rating
-    +string rating_type
-  }
-
-  class UserVehicle {
-    +int id
-    +int user_id
-    +string registration_number
-    +string brand
-    +string color
-    +int seats
-    +bool is_default
-  }
-
-  class UserVehiclePhoto {
-    +int id
-    +int vehicle_id
-    +string path
-    +bool is_primary
-    +int sort_order
-    +string url
-  }
+    +int conversation_id FOREIGN_KEY
+    +int expediteur_id FOREIGN_KEY
+    +string contenu
+    +enum type
+    +string url_piece_jointe
+    +boolean est_lu
+    +datetime lu_le
+    +datetime cree_le
+    +datetime modifie_le
+    ---
+    +obtenirConversation()
+    +obtenirExpediteur()
+    +marquerCommeLu()
+    +obtenirUrlImage()
+}
 
 
-  User "1" --> "0..*" Trip
-  User "1" --> "0..*" Booking
-  Trip "1" --> "0..*" Booking
-  Booking "1" --> "0..*" Payment
-  User "1" --> "0..*" Payment
 
-  User "1" --> "0..1" Wallet
-  Wallet "1" --> "0..*" WalletTransaction
-  Payment "1" --> "0..*" WalletTransaction
 
-  User "1" --> "0..*" Notification
+Utilisateur "1" --> "0..*" Trajet : conduit
+Utilisateur "1" --> "0..*" Reservation : reserve
+Utilisateur "1" --> "0..*" VehiculeUtilisateur : possede
+Utilisateur "1" --> "1" Portefeuille : a_un_portefeuille
+Utilisateur "1" --> "0..*" Evaluation : donne_ou_recoit
+Utilisateur "1" --> "0..*" Notification : recoit
+Utilisateur "0..*" --> "0..*" Conversation : participe
+Utilisateur "1" --> "0..*" Message : envoie
 
-  Conversation "1" --> "0..*" Message
-  User "0..*" --> "0..*" Conversation
+Trajet "1" --> "0..*" Reservation : contient
+Trajet "1" --> "0..*" Evaluation : recoit
+Trajet "0..*" --> "1" VehiculeUtilisateur : utilise
+Trajet "0..*" --> "1" Utilisateur : conduit_par
+Trajet "1" --> "0..*" Conversation : genere
 
-  Trip "1" --> "0..*" Rating
-  User "1" --> "0..*" Rating
+Reservation "0..*" --> "1" Trajet : pour
+Reservation "0..*" --> "1" Utilisateur : par
+Reservation "1" --> "0..1" Paiement : paye_par
 
-  User "1" --> "0..*" UserVehicle
-  UserVehicle "1" --> "0..*" UserVehiclePhoto
-  Trip "1" --> "1" UserVehicle
+Paiement "0..*" --> "1" Reservation : pour
+Paiement "0..*" --> "1" Utilisateur : payeur
+Paiement "1" --> "0..*" TransactionPortefeuille : genere
+
+Portefeuille "1" --> "0..*" TransactionPortefeuille : contient
+Portefeuille "1" --> "1" Utilisateur : appartient_a
+
+TransactionPortefeuille "0..*" --> "1" Portefeuille : dans
+TransactionPortefeuille "0..*" --> "0..1" Paiement : lie_a
+TransactionPortefeuille "0..*" --> "0..1" Reservation : lie_a
+
+VehiculeUtilisateur "0..*" --> "1" Utilisateur : appartient_a
+VehiculeUtilisateur "1" --> "0..*" PhotoVehiculeUtilisateur : a_des_photos
+VehiculeUtilisateur "1" --> "0..*" Trajet : utilise_dans
+
+Evaluation "0..*" --> "1" Trajet : pour
+Evaluation "0..*" --> "1" Utilisateur : donne_par
+Evaluation "0..*" --> "1" Utilisateur : recu_par
+
+Notification "0..*" --> "1" Utilisateur : destinataire
+
+Conversation "1" --> "0..*" Message : contient
+Conversation "0..*" --> "0..1" Trajet : a_propos_de
+Message "0..*" --> "1" Conversation : dans
+Message "0..*" --> "1" Utilisateur : envoye_par

@@ -23,6 +23,7 @@ interface DepartureConfirmationProps {
 export default function DepartureConfirmation({ booking, userRole, onUpdate }: DepartureConfirmationProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [showNoShowModal, setShowNoShowModal] = useState(false)
+  const [showDriverNoShowModal, setShowDriverNoShowModal] = useState(false)
 
   const isDriver = userRole === 'driver'
 
@@ -70,6 +71,21 @@ export default function DepartureConfirmation({ booking, userRole, onUpdate }: D
     }
   }
 
+  const handleMarkDriverNoShow = async () => {
+    setIsLoading(true)
+    try {
+      const response = await bookingsApi.markDriverNoShow(booking.id)
+      onUpdate(response.data.data)
+      toast.success('Absence du chauffeur signalée')
+      setShowDriverNoShowModal(false)
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { message?: string } } }
+      toast.error(err.response?.data?.message || 'Erreur lors du signalement')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   // Si le voyage a commencé
   if (tripStarted) {
     return (
@@ -84,6 +100,27 @@ export default function DepartureConfirmation({ booking, userRole, onUpdate }: D
             </p>
             <p className="text-sm text-emerald-600 dark:text-emerald-400">
               Les deux parties ont confirmé le départ. Bon voyage !
+            </p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Si le chauffeur est absent (driver no-show)
+  if (booking.driver_no_show) {
+    return (
+      <div className="card p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/50 flex items-center justify-center">
+            <XCircle className="w-5 h-5 text-red-600 dark:text-red-400" />
+          </div>
+          <div>
+            <p className="font-semibold text-red-800 dark:text-red-200">
+              Chauffeur absent
+            </p>
+            <p className="text-sm text-red-600 dark:text-red-400">
+              Le chauffeur a été signalé absent. Un remboursement complet a été effectué.
             </p>
           </div>
         </div>
@@ -244,6 +281,17 @@ export default function DepartureConfirmation({ booking, userRole, onUpdate }: D
             Signaler l'absence du passager
           </button>
         )}
+
+        {/* Option no-show chauffeur pour le passager */}
+        {!isDriver && !hasDriverConfirmed && (
+          <button
+            onClick={() => setShowDriverNoShowModal(true)}
+            className="w-full text-center text-sm text-red-600 hover:text-red-700 dark:text-red-400 py-2"
+          >
+            <AlertTriangle className="w-4 h-4 inline mr-1" />
+            Signaler l'absence du chauffeur
+          </button>
+        )}
       </div>
 
       {/* Modal No-Show */}
@@ -285,6 +333,52 @@ export default function DepartureConfirmation({ booking, userRole, onUpdate }: D
                   <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (
                   'Confirmer l\'absence'
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Chauffeur absent */}
+      {showDriverNoShowModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="card w-full max-w-md p-6 animate-fadeIn">
+            <div className="text-center mb-6">
+              <div className="w-16 h-16 rounded-full bg-red-100 dark:bg-red-900/30 mx-auto mb-4 flex items-center justify-center">
+                <AlertTriangle className="w-8 h-8 text-red-600 dark:text-red-400" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                Signaler l'absence du chauffeur
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                Êtes-vous sûr que le chauffeur est absent ? Cette action déclenche un remboursement complet.
+              </p>
+            </div>
+
+            <div className="bg-amber-50 dark:bg-amber-900/20 rounded-xl p-4 mb-6">
+              <p className="text-sm text-amber-700 dark:text-amber-300">
+                <strong>Note :</strong> Le passager est remboursé en totalité. Le chauffeur perd en crédibilité (-1 étoile).
+              </p>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowDriverNoShowModal(false)}
+                className="btn-outline flex-1"
+                disabled={isLoading}
+              >
+                Annuler
+              </button>
+              <button
+                onClick={handleMarkDriverNoShow}
+                className="btn-primary bg-red-600 hover:bg-red-700 flex-1"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  'Confirmer'
                 )}
               </button>
             </div>

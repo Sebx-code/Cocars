@@ -19,7 +19,11 @@ class TripController extends Controller
         
         // Cache de 5 minutes pour les listes de trajets
         return cache()->remember($cacheKey, 300, function () use ($request) {
-            $query = Trip::with(['driver:id,name,avatar,rating', 'vehicle:id,user_id,brand,model,color,registration_number'])
+            $query = Trip::with([
+                    'driver:id,name,avatar,rating',
+                    'vehicle:id,user_id,brand,model,color,registration_number',
+                    'vehicle.photos:id,vehicle_id,path,is_primary,sort_order,created_at',
+                ])
                 ->available()
                 ->orderBy('departure_date')
                 ->orderBy('departure_time');
@@ -112,6 +116,7 @@ class TripController extends Controller
             return $trip->load([
                 'driver:id,name,avatar,rating,total_trips_as_driver',
                 'vehicle:id,user_id,brand,model,color,registration_number,seats',
+                'vehicle.photos:id,vehicle_id,path,is_primary,sort_order,created_at',
                 'bookings' => function ($query) {
                     $query->whereIn('status', ['confirmed', 'completed'])
                           ->with('passenger:id,name,avatar,rating');
@@ -352,6 +357,7 @@ class TripController extends Controller
             ->tripsAsDriver()
             ->with([
                 'vehicle:id,user_id,brand,model,color,registration_number',
+                'vehicle.photos:id,vehicle_id,path,is_primary,sort_order,created_at',
                 'bookings' => function ($query) {
                     $query->select('id', 'trip_id', 'passenger_id', 'status', 'seats_booked', 'total_price')
                           ->with('passenger:id,name,avatar,rating');

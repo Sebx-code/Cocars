@@ -39,6 +39,9 @@ class Booking extends Model
         'trip_started_at',
         'passenger_no_show',
         'marked_no_show_at',
+        // No-show chauffeur
+        'driver_no_show',
+        'marked_driver_no_show_at',
     ];
 
     protected $casts = [
@@ -52,6 +55,8 @@ class Booking extends Model
         'trip_started_at' => 'datetime',
         'passenger_no_show' => 'boolean',
         'marked_no_show_at' => 'datetime',
+        'driver_no_show' => 'boolean',
+        'marked_driver_no_show_at' => 'datetime',
     ];
 
     /**
@@ -275,7 +280,7 @@ class Booking extends Model
      * Marquer le passager comme absent (no-show)
      */
     public function markAsNoShow(): void
-    {
+    { 
         $this->update([
             'passenger_no_show' => true,
             'marked_no_show_at' => now(),
@@ -299,6 +304,58 @@ class Booking extends Model
             "Vous avez été marqué absent pour le trajet {$this->trip->departure_city} → {$this->trip->arrival_city}. Une pénalité de " . Payment::LATE_CANCELLATION_PENALTY . " FCFA a été appliquée.",
             ['booking_id' => $this->id]
         );
+    }
+
+    /**
+     * Annuler avec gestion du remboursement
+     */
+    /**
+     * Marquer le chauffeur comme absent (no-show chauffeur)
+     *
+     * - Remboursement total du passager (sans pénalité)
+     * - Pénalité de crédibilité côté conducteur: -1 étoile
+     */
+    public function markDriverAsNoShow(): void
+    {
+        $this->update([
+            'driver_no_show' => true,
+            'marked_driver_no_show_at' => now(),
+            'status' => self::STATUS_CANCELLED,
+            'cancellation_reason' => 'Chauffeur absent (driver no-show)',
+        ]);
+
+        // Remboursement complet
+        if ($this->hasEscrowPayment()) {
+            $this->payment->refund(false);
+        }
+
+        // Libérer les places
+        $this->trip->updateAvailableSeats();
+
+        // Notifier le passager
+        $this->getNotificationService()->send(
+            $this->passenger_id,
+            'driver_no_show',
+            'Chauffeur absent',
+            "Le chauffeur a été signalé absent pour le trajet {$this->trip->departure_city} → {$this->trip->arrival_city}. Un remboursement complet a été effectué.",
+            ['booking_id' => $this->id]
+        );
+
+        // Notifier le conducteur
+        $this->getNotificationService()->send(
+            $this->trip->driver_id,
+            'driver_no_show',
+            'Absence signalée',
+            "Vous avez été signalé absent pour le trajet {$this->trip->departure_city} → {$this->trip->arrival_city}. Une pénalité de crédibilité a été appliquée.",
+            ['booking_id' => $this->id]
+        );
+
+        // Appliquer une pénalité de crédibilité (-1 étoile)
+        $driver = $this->trip->driver;
+        $current = $driver->rating ?? 5.0;
+        $driver->update([
+            'rating' => max(0, round($current - 1, 2)),
+        ]);
     }
 
     /**

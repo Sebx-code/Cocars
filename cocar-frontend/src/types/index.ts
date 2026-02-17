@@ -8,6 +8,7 @@ export interface User {
   role: 'user' | 'admin'
   is_verified: boolean
   rating?: number
+  total_trips_as_driver?: number
   created_at: string
   updated_at: string
 }
@@ -29,7 +30,7 @@ export interface Trip {
   available_seats: number
   price_per_seat: number
   description?: string
-  status: 'active' | 'completed' | 'cancelled'
+  status: 'pending' | 'confirmed' | 'in_progress' | 'completed' | 'cancelled'
   preferences: TripPreferences
   created_at: string
   updated_at: string
@@ -65,6 +66,8 @@ export interface Booking {
   trip_started_at?: string
   passenger_no_show: boolean
   marked_no_show_at?: string
+  driver_no_show?: boolean
+  marked_driver_no_show_at?: string
   payment?: Payment
   created_at: string
   updated_at: string
@@ -182,6 +185,62 @@ export interface EscrowInfo {
   penalty_amount: number
   penalty_description: string
   commission_percent: number
+}
+
+// ============= ANALYTICS TYPES =============
+export type AnalyticsGroup = 'day' | 'week' | 'month'
+
+export interface DriverFinancialSeriesPoint {
+  date: string
+  earned: number
+  pending: number
+}
+
+export interface DriverFinancialStats {
+  from: string
+  to: string
+  group: AnalyticsGroup
+  totals: { earned: number; pending: number }
+  series: DriverFinancialSeriesPoint[]
+}
+
+export interface CompanyFinancialSeriesPoint {
+  date: string
+  gross_revenue: number
+  commission_revenue: number
+  driver_payouts: number
+  refunds: number
+}
+
+export interface CompanyFinancialStats {
+  from: string
+  to: string
+  group: AnalyticsGroup
+  filters?: {
+    payment_method?: string | null
+    status?: string | null
+    escrow_status?: string | null
+  }
+  totals: {
+    gross_revenue: number
+    commission_revenue: number
+    driver_payouts: number
+    refunds: number
+    penalties?: number
+    bookings: number
+    payments: number
+  }
+  series: CompanyFinancialSeriesPoint[]
+  breakdowns?: {
+    escrow?: Record<string, { count: number; amount: number }>
+    payment_status?: Record<string, number>
+  }
+  top?: {
+    drivers?: Array<{ driver_id: number; driver_name: string; driver_payouts: number; commission: number; trips_count: number }>
+    departure_cities?: Array<{ city: string; bookings: number }>
+    arrival_cities?: Array<{ city: string; bookings: number }>
+    routes?: Array<{ departure_city: string; arrival_city: string; bookings: number }>
+  }
 }
 
 // ============= RATING TYPES =============
