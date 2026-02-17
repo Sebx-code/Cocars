@@ -53,6 +53,14 @@ export const authApi = {
   
   changePassword: (data: { current_password: string; new_password: string; new_password_confirmation: string }) => 
     api.put('/auth/profile/password', data),
+  
+  uploadAvatar: (formData: FormData) => 
+    api.post<ApiResponse<{ avatar_url: string; avatar: string }>>('/auth/profile/avatar', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    }),
+  
+  deleteAvatar: () => 
+    api.delete<ApiResponse<null>>('/auth/profile/avatar'),
 }
 
 // ============= FEED API =============
@@ -138,6 +146,26 @@ export const bookingsApi = {
       payment_status?: string
       escrow_status?: string
     }>>(`/bookings/${id}/departure-status`),
+  
+  // Validation globale du départ (nouvelle fonctionnalité)
+  validateDeparture: (tripId: number, data: { total_passengers: number; passenger_codes: number[] }) =>
+    api.post<ApiResponse<{
+      trip: Trip
+      present_count: number
+      absent_count: number
+      present_passengers: Array<{
+        booking_id: number
+        passenger_code: number
+        passenger_name: string
+        trip_started: boolean
+      }>
+      absent_passengers: Array<{
+        booking_id: number
+        passenger_code: number
+        passenger_name: string
+        refund_amount: number
+      }>
+    }>>(`/trips/${tripId}/validate-departure`, data),
 }
 
 // ============= VEHICLES API =============
@@ -204,6 +232,10 @@ export const analyticsApi = {
 
   companyFinancialReport: (params?: { from?: string; to?: string; group?: AnalyticsGroup; payment_method?: string; status?: string; escrow_status?: string }) =>
     api.get('/admin/analytics/company/financial.pdf', { params, responseType: 'blob' }),
+  
+  // Statistiques de crédibilité (admin)
+  credibilityStats: () =>
+    api.get<ApiResponse<import('../types').CredibilityStats>>('/admin/analytics/credibility'),
 }
 
 // ============= RATINGS API =============
@@ -322,6 +354,10 @@ export const adminApi = {
   
   rejectVerification: (userId: number, reason: string) => 
     api.post<ApiResponse<unknown>>(`/admin/verification/${userId}/reject`, { reason }),
+  
+  // Financial report PDF
+  generateFinancialReport: (params?: { start_date?: string; end_date?: string }) =>
+    api.get('/admin/reports/financial', { params, responseType: 'blob' }),
 }
 
 export default api

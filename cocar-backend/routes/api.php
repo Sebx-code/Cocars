@@ -61,6 +61,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user', [AuthController::class, 'user']);
         Route::put('/profile', [AuthController::class, 'updateProfile']);
         Route::put('/profile/password', [AuthController::class, 'changePassword']);
+        Route::post('/profile/avatar', [AuthController::class, 'uploadAvatar']);
+        Route::delete('/profile/avatar', [AuthController::class, 'deleteAvatar']);
     });
     
     // --- Statistiques utilisateur ---
@@ -106,6 +108,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/bookings/{booking}/no-show', [BookingController::class, 'markNoShow']);
     Route::post('/bookings/{booking}/driver-no-show', [BookingController::class, 'markDriverNoShow']);
     Route::get('/bookings/{booking}/departure-status', [BookingController::class, 'departureStatus']);
+    
+    // Validation du départ par le chauffeur (avec codes passagers)
+    Route::post('/trips/{trip}/validate-departure', [BookingController::class, 'validateDeparture']);
     
     // --- Paiements ---
     Route::get('/payments/methods', [PaymentController::class, 'methods']);
@@ -186,5 +191,11 @@ Route::middleware('auth:sanctum')->group(function () {
         // Analytics entreprise + rapport imprimable
         Route::get('/analytics/company/financial', [AnalyticsController::class, 'companyFinancial']);
         Route::get('/analytics/company/financial.pdf', [AnalyticsController::class, 'companyFinancialPdf']);
+        
+        // Statistiques de crédibilité
+        Route::get('/analytics/credibility', [AdminController::class, 'credibilityStats']);
+        
+        // Rapport financier PDF
+        Route::get('/reports/financial', [AdminController::class, 'generateFinancialReport']);
     });
 });

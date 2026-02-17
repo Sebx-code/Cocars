@@ -1,258 +1,93 @@
-1. Contexte et justification
+# Contexte et justification
 
-Dans la vie quotidienne, la mobilité représente une préoccupation majeure pour une partie importante de la population, en raison des difficultés d’accès à un transport régulier, du coût croissant des déplacements et des contraintes liées à l’attente. Il est fréquent que certains usagers, faute d’options immédiates, soient amenés à patienter longuement au bord des routes dans l’espoir de trouver un véhicule acceptant de les prendre,`` ce qui rend le déplacement incertain et pénible``. De plus, dans les agences de transport, l’acquisition d’un ticket peut exiger de rester en rang pendant une durée importante, notamment lors des périodes de forte affluence, ce qui constitue un cout en temps eleve et une contrainte supplémentaire. ``Dans ce contexte, le covoiturage apparaît comme une alternative potentiellement intéressante, car il peut répondre à des besoins de coût, de confort et de flexibilité, tout en offrant aux conducteurs une opportunité de rentabiliser leurs trajets``. Cependant, cette pratique reste difficile à réaliser, car elle repose sur une coordination entre des inconnus, et elle est marquée par plusieurs incertitudes, notamment sur la disponibilité des véhicules, la ponctualité, la fiabilité des engagements, la sécurité et les conditions financières du trajet. Ainsi, l’étude de cette problématique se justifie par la nécessité de comprendre et d’encadrer un mode de déplacement qui peut améliorer l’expérience de transport, tout en réduisant les risques et les désagréments associés à son organisation informelle.
+Dans le contexte actuel de forte urbanisation et d’intensification des déplacements quotidiens, notamment dans les grandes agglomérations des pays en développement comme celles observées au Cameroun tout en restant applicable à d’autres environnements similaires, la mobilité représente une préoccupation majeure pour une part importante de la population. L’Afrique connaît l’une des urbanisations les plus rapides au monde, avec une croissance urbaine d’environ 4,5 % par an, ce qui devrait entraîner une augmentation significative du nombre d’habitants urbains dans les prochaines décennies. Plus de 60 % de la population africaine vivra dans des zones urbaines d’ici 2050 et 80 % des habitants n’ont pas de véhicule individuel, rendant la mobilité dépendante des systèmes de transport collectif ou informel.
 
-2. Analyse fonctionnelle détaillée
-   2.1 Présentation générale du besoin
+Cette croissance urbaine rapide s’accompagne toutefois de systèmes de transport souvent insuffisants ou inadaptés. Dans plusieurs villes africaines, jusqu’à 90 % du transport en commun est assuré par des opérateurs informels, tels que des taxis collectifs et des minibuses non régulés, qui opèrent sans horaires fixes ni mécanismes de coordination fiables. Les infrastructures publiques restent marginales, comme à Yaoundé où le transport en bus représente moins de 1 % des déplacements urbains, obligeant une grande majorité de la population à recourir à des moyens alternatifs ou informels.
 
-Les déplacements urbains et interurbains sont souvent difficiles à cause de la congestion, du coût du transport et du manque d’organisation dans le covoiturage. Dans certaines zones. De plus, dans les agences de transport, l’achat d’un ticket nécessite parfois de rester longtemps en rang, ce qui fait perdre du temps et crée une expérience peu confortable. Dans ce contexte, la mise en place d’une application de covoiturage vise à améliorer l’organisation des déplacements en proposant une solution numérique permettant de rechercher un trajet, réserver une place et payer de manière sécurisée. Le projet CoCar répond à ce besoin en structurant la relation entre conducteurs et passagers, en améliorant la confiance et en créant aussi une opportunité économique, car les conducteurs peuvent rentabiliser leurs trajets en générant un revenu supplémentaire.
+Face à ces contraintes, de nombreux usagers sont confrontés à l’irrégularité des transports, à l’augmentation du coût des trajets et aux temps d’attente prolongés, perturbant ainsi l’organisation des activités quotidiennes. La dépendance à des solutions non structurées se traduit par une insécurité accrue, une incertitude sur la disponibilité des trajets et des conditions variables de confort et de sécurité, en particulier pour les populations vulnérables. De plus, une large proportion de la population urbaine reste limitée dans son accès aux services de transport formel ; dans environ 138 grandes villes africaines, seulement 32 % des habitants peuvent accéder à un service de transport collectif à moins de 500 m ou 1 000 m de leur domicile, bien en dessous de la moyenne mondiale.
 
-2.2 Acteurs du système
+Par ailleurs, l’essor des technologies numériques et des applications web offre de nouvelles possibilités pour améliorer l’organisation des services et la gestion des interactions entre les usagers. L’exploitation de ces outils dans le domaine de la mobilité apparaît comme une opportunité pour répondre à certaines difficultés observées, en facilitant la communication, la planification et la coordination des déplacements. L’étude de cette problématique se justifie ainsi par la nécessité de comprendre les enjeux liés à l’organisation des déplacements entre particuliers, d’identifier les limites des pratiques existantes et d’explorer des approches susceptibles d’améliorer l’expérience de transport, tout en réduisant les risques et les contraintes associés à leur caractère informel.
 
-Le fonctionnement de l’application repose sur plusieurs acteurs qui interagissent avec la plateforme selon leurs besoins.
+## Problématique
 
-2.2.1 Visiteur
+Dans un contexte marqué par des difficultés persistantes d’accès à un transport fiable, abordable et organisé, ainsi que par le développement de pratiques informelles de déplacement entre particuliers, comment organiser et optimiser la coordination des trajets de manière à améliorer l’accessibilité, la fiabilité et la sécurité des déplacements ?
 
-Le visiteur est un utilisateur non connecté. Il peut :
+## Problème
 
-accéder à la page d’accueil (landing page) ;
+L’organisation actuelle des déplacements reposant en partie sur des pratiques informelles et peu structurées entraîne des incertitudes en matière de disponibilité, de sécurité et de gestion du temps, ce qui limite l’efficacité et la qualité de l’expérience de mobilité pour les usagers.
 
-consulter la liste des trajets disponibles ;
 
-effectuer une recherche de trajets selon des critères ;
 
-voir les détails d’un trajet ;
+L’analyse des difficultés liées à la mobilité met en évidence la nécessité de disposer de mécanismes capables d’améliorer la coordination des déplacements entre les usagers. Les contraintes observées, notamment les temps d’attente élevés, le manque de fiabilité des arrangements informels et l’absence d’outils de mise en relation efficaces, révèlent l’existence d’un besoin d’organisation plus structuré. Dans un environnement où les technologies numériques occupent une place croissante dans la gestion des services et des interactions sociales, il devient pertinent d’examiner comment ces outils peuvent être mobilisés pour répondre aux enjeux identifiés.
 
-consulter le profil public d’un conducteur.
+En effet, les solutions numériques offrent des possibilités importantes en matière de centralisation de l’information, de communication instantanée et de gestion des données. Leur utilisation dans le domaine de la mobilité permettrait d’envisager une meilleure planification des trajets, une coordination plus efficace entre les acteurs concernés et une amélioration globale de l’expérience des usagers. Une telle approche contribuerait à réduire les incertitudes liées aux pratiques actuelles tout en favorisant une organisation plus fiable et transparente des déplacements.
 
-2.2.2 Utilisateur authentifié (rôle user)
+C’est dans cette perspective que s’inscrit le présent travail de stage, qui vise à étudier, concevoir et mettre en œuvre un système numérique destiné à faciliter la gestion et la coordination des déplacements entre particuliers. Cette démarche s’appuie sur une analyse des besoins des utilisateurs, sur des méthodes de conception adaptées et sur l’utilisation de technologies web modernes, dans l’objectif de proposer une solution fonctionnelle capable de répondre aux problématiques identifiées.
 
-Un utilisateur authentifié dispose d’un compte et peut agir de deux manières :
+# Objectif général
 
-Conducteur : il peut proposer des trajets et gérer les réservations reçues``préciser``.
+L’objectif général de ce projet est de concevoir et de réaliser une application web de covoiturage permettant de faciliter, sécuriser et optimiser le partage de trajets entre conducteurs et passagers.
 
-Passager : il peut réserver une place, payer, confirmer le départ et laisser une note.
+## Objectifs spécifiques
 
-Un passager peut etre conduction a un moment donnee mais ne peut plus etre passager a ce meme moment.
+De manière spécifique, l’application devra :
 
-2.2.3 Administrateur (rôle admin)
+• permettre l’inscription et l’authentification sécurisée des utilisateurs ;
 
-L’administrateur est responsable de la supervision du système. Il peut :
+• offrir la possibilité aux conducteurs de publier des trajets ;
 
-contrôler les activités sur la plateforme ;
+• permettre aux passagers de rechercher et réserver des trajets ;
 
-modérer les trajets et réservations ;
+• assurer la gestion des paiements et des participations financières ;
 
-gérer les utilisateurs``preciser`` ;
+• intégrer un système d’évaluation des utilisateurs ;
 
-Traiter la vérification d’identité.
+• garantir la sécurité et la confidentialité des données ;
 
-`` passager, chauffeur, gestionnaire ``
+• proposer une interface intuitive et responsive.
 
-2.3 Parcours fonctionnels clés
-2.3.1 Parcours « Fil d’actualité » (visiteur / passager)
+• proposer un moyen de communication entre le chauffeur et les passagers
 
-Ce parcours permet de faciliter l’accès rapide aux trajets récents, ce qui est utile dans un contexte où les passagers cherchent une solution immédiate au lieu d’attendre en autostop.
+Cette structuration des objectifs garantit que l’application sera à la fois fonctionnelle, fiable, et adaptée aux besoins locaux tout en respectant les standards modernes de mobilité urbaine.
 
-L’utilisateur ouvre le fil d’actualité via l’API.
+# Besoins fonctionnels
 
-La plateforme retourne les trajets récemment publiés.
+Les besoins fonctionnels décrivent les fonctionnalités essentielles que l’application doit fournir pour répondre aux attentes des utilisateurs, sans entrer dans la modélisation technique.
 
-Chaque trajet contient les informations principales :
+- Authentification : Inscription, connexion, gestion des rôles  
 
-conducteur,
+- Gestion des profils : Création, modification et consultation des profils  
 
-informations du véhicule,
+- Gestion des trajets : Publication, modification, suppression des trajets  
 
-photos du véhicule,
+- Recherche : Recherche de trajets par lieu, date, prix
 
-informations du trajet (départ, destination, date, prix).
+- Réservation : Demande et confirmation de réservation
 
-L’utilisateur peut ouvrir le détail du trajet puis démarrer une réservation.
+- Paiement : Gestion des contributions financières
 
-2.3.2 Parcours « Rechercher & réserver »
-Ce parcours correspond au scénario le plus fréquent : un passager souhaite voyager sans attendre longtemps en bord de route.
+- Notation : Évaluation des conducteurs et passagers
 
-Le visiteur effectue une recherche de trajets .
+- Notifications : Alertes et confirmations automatiques
 
-Il consulte le détail d’un trajet.
+## Besoins non fonctionnels
 
-S’il n’est pas connecté, il s’inscrit ou se connecte.
+Les besoins non fonctionnels définissent les critères de qualité, les contraintes techniques et les attentes liées à l’expérience utilisateur. Ils ne concernent pas directement les fonctionnalités, mais sont essentiels pour garantir un système fiable, performant et sécurisé. Pour l’application de covoiturage, ils incluent :
+- Sécurité : L’application doit protéger les données personnelles des utilisateurs et des chauffeurs grâce à des mécanismes de chiffrement, d’authentification
+sécurisée et de contrôle d’accès. Les transactions financières doivent être cryptées et conformes aux standards internationaux pour prévenir toute fraude.
 
-Il crée une réservation avec un statut initial pending.
+- Performance : Le système doit garantir des temps de réponse rapides, même en cas de forte utilisation, pour assurer une expérience fluide. Les requêtes de réservation, géolocalisation et suivi en temps réel doivent être traitées efficacement sans ralentissement.
 
-Le conducteur reçoit la demande et décide :
+- Disponibilité : L’application doit être accessible 24h/24 et 7j/7. Des mécanismes de tolérance aux pannes, de sauvegarde automatique et de récupération rapide des données doivent être mis en place pour limiter toute indisponibilité.
 
-confirmation ;
+- Compatibilité mobile et multiplateforme : L’interface doit être responsive et fonctionner correctement sur smartphones, tablettes et navigateurs web, offrant une expérience cohérente sur différents appareils et systèmes d’exploitation.
 
-rejet.
+- Scalabilité : L’application doit pouvoir évoluer pour gérer un nombre croissant d’utilisateurs et de chauffeurs, ainsi que l’augmentation du volume de courses sans nécessiter de refonte majeure.
 
-Après confirmation, le passager peut payer :
+- Interface utilisateur (UI/UX) : L’interface doit être moderne, intuitive et ergonomique, utilisant TailwindCSS pour une navigation fluide. Les informations essentielles (disponibilité des taxis, suivi du trajet, paiement) doivent être faciles à accéder et clairement présentées.
 
-via mobile money (orange_money, mtn_money, etc.).
+- Fiabilité et robustesse : Le système doit minimiser les erreurs, gérer correctement les cas imprévus et assurer la continuité du service même en conditions critiques (problème réseau, forte charge, erreurs de saisie).
 
-En cas de paiement mobile money, le paiement est validé et placé en escrow ,
+- Évolutivité et maintenance : La solution doit être conçue de manière modulaire, permettant l’ajout de nouvelles fonctionnalités (nouvelles méthodes de paiement, intégration d’autres services de mobilité) sans perturber les fonctionnalités existantes.
 
-Le jour du voyage, les deux parties confirment le départ :
-
-passager
-
-conducteur
-
-Une fois la confirmation faite par les deux :
-
-le trajet est marqué comme démarré ,
-
-l’argent est libéré vers le wallet du conducteur.
-
-2.3.3 Parcours « Proposer un trajet »
-
-Ce parcours répond à l’objectif économique du covoiturage, car le conducteur peut gagner de l’argent en partageant les frais.
-
-L’utilisateur authentifié ouvre l’écran de création de trajet.
-
-Il saisit les informations :
-
-départ et destination,
-
-date et heure,
-
-nombre de places,
-
-prix,
-
-préférences (ex : bagages, musique, etc.),
-
-informations du véhicule.
-
-Il publie le trajet.
-
-Le système enregistre aussi les informations du véhicule .
-
-2.3.4 Parcours « Gérer les réservations reçues »
-
-Ce parcours permet au conducteur de contrôler les places disponibles et de réduire la gestion manuelle.
-
-Le conducteur consulte les réservations reçues .
-
-Pour une réservation pending, il peut :
-
-confirmer ;
-
-rejeter.
-
-Lorsque la réservation est confirmée et payée :
-
-le conducteur peut confirmer le départ ;
-
-il peut aussi signaler un no-show (absence du passager).
-
-2.3.5 Parcours « Annulation / remboursement / pénalités »
-
-Ce parcours permet de limiter les conflits entre passagers et conducteurs.
-
-Le passager peut annuler une réservation pending ou confirmed.
-
-Si un paiement est en escrow :
-
-remboursement total si l’annulation est faite avant le jour du voyage ;
-
-remboursement partiel si l’annulation est tardive avec pénalité fixe de 500 FCFA.
-
-Le conducteur peut signaler un no-show :
-
-remboursement partiel du passager,
-
-application de la pénalité.
-
-2.3.6 Parcours « Wallet / Retrait »
-
-Ce parcours est important car il permet au conducteur de récupérer son argent facilement, ce qui est adapté au contexte camerounais où les paiements mobiles sont très utilisés.
-
-Consultation du solde wallet .
-
-Retrait des fonds :
-
-montant minimum : 500 FCFA,
-
-choix du provider,
-
-saisie du numéro.
-
-2.3.7 Parcours « Messagerie temps réel »
-
-La messagerie est utile pour éviter les incompréhensions sur le lieu de rendez-vous ou l’heure, surtout dans les zones où les repères ne sont pas toujours précis.
-
-Création ou récupération de conversation.
-
-Lecture des messages.
-
-Envoi d’un message .
-
-Indicateur de saisie .
-
-Communication temps réel via WebSocket :
-
-canal privé.
-
-2.3.8 Parcours « Notifications temps réel »
-
-Les notifications améliorent le suivi des actions importantes (confirmation, annulation, rappel).
-
-Stockage en base via table notifications.
-
-Temps réel via WebSocket sur canal privé
-
-2.3.9 Parcours « Vérification d’identité »
-
-Ce module vise à renforcer la confiance et réduire les risques d’arnaques.
-
-Envoi de documents :
-
-carte d’identité,
-
-selfie,
-
-permis (optionnel).
-
-Vérification du numéro de téléphone :
-
-envoi code
-
-validation
-
-Traitement par l’administrateur :
-
-approbation
-
-rejet
-
-2.4 Règles métier
-
-Les règles métier garantissent la cohérence du système et évitent les abus.
-
-Un chauffeur ne peut pas réserver son propre trajet.
-
-Un utilisateur ne peut pas avoir deux réservations actives sur le même trajet.
-
-Une réservation doit être confirmée avant de pouvoir être payée.
-
-En cas de paiement mobile money, l’argent reste en escrow jusqu’à confirmation du départ par les deux parties.
-
-Une annulation le jour du voyage ou après entraîne une pénalité fixe de 500 FCFA.
-
-2.5 Rôle et responsabilités de l’administrateur
-
-L’administrateur dispose d’un accès protégé par AdminMiddleware. Il a pour rôle principal de garantir le bon fonctionnement de la plateforme.
-
-Ses fonctions principales sont :
-
-consulter les statistiques et l’activité générale ;
-
-gérer la liste des utilisateurs et vérifier leurs informations ;
-
-supprimer un utilisateur si nécessaire (avec annulation des trajets/réservations actives) ;
-
-modérer les trajets et réservations ;
-
-traiter les demandes de vérification d’identité.
+- Conformité et respect des normes : L’application doit respecter les réglementations locales et internationales relatives à la protection des données personnelles, aux transactions financières et aux services de transport.

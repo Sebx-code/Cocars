@@ -244,6 +244,83 @@ class BookingController extends Controller
 
         return $this->success($booking->fresh(['trip', 'passenger', 'payment']), $message);
     }
+    
+    /**
+     * Conducteur valide le départ du véhicule avec la liste des passagers présents
+     * Permet de confirmer plusieurs passagers à la fois avec leurs codes
+     */
+    public function validateDeparture(Request $request, Trip $trip)
+    {
+        $user = $request->user();
+
+        // Vérifier que l'utilisateur est le conducteur
+        if ($trip->driver_id !== $user->id) {
+            return $this->error('Vous n\'êtes pas autorisé à valider ce départ', 403);
+        }
+
+        // Valider les données
+        $validated = $request->validate([
+            'passenger_codes' => 'required|array|min:1',
+            'passenger_codes.*' => 'required|integer|min:1',
+            'total_passengers' => 'required|integer|min:1',
+        ]);
+
+        // Récupérer toutes les réservations confirmées et payées pour ce trajet
+        $allBookings = $trip->bookings()
+            ->where('status', Booking::STATUS_CONFIRMED)
+            ->whereHas('payment', function($q) {
+                $q->where('status', Payment::STATUS_COMPLETED);
+            })
+            ->with(['passenger', 'payment'])
+            ->get();
+
+        if ($allBookings->isEmpty()) {
+            return $this->error('Aucune réservation confirmée et payée trouvée pour ce trajet', 400);
+        }
+
+        // Vérifier que le total correspond
+        if ($validated['total_passengers'] != count($validated['passenger_codes'])) {
+            return $this->error('Le nombre de passagers ne correspond pas au nombre de codes fournis', 400);
+        }
+
+        $presentBookings = [];
+        $absentBookings = [];
+
+        // Traiter chaque réservation
+        foreach ($allBookings as $booking) {
+            if (in_array($booking->passenger_code, $validated['passenger_codes'])) {
+                // Passager présent - confirmer le départ
+                if (!$booking->driver_confirmed_departure) {
+                    $booking->driverConfirmsDeparture();
+                }
+                $presentBookings[] = $booking;
+            } else {
+                // Passager absent - marquer comme no-show
+                if (!$booking->passenger_no_show && !$booking->driver_confirmed_departure) {
+                    $booking->markAsNoShow();
+                }
+                $absentBookings[] = $booking;
+            }
+        }
+
+        return $this->success([
+            'trip' => $trip->fresh(['bookings.passenger', 'bookings.payment']),
+            'present_count' => count($presentBookings),
+            'absent_count' => count($absentBookings),
+            'present_passengers' => collect($presentBookings)->map(fn($b) => [
+                'booking_id' => $b->id,
+                'passenger_code' => $b->passenger_code,
+                'passenger_name' => $b->passenger->name,
+                'trip_started' => $b->trip_started,
+            ]),
+            'absent_passengers' => collect($absentBookings)->map(fn($b) => [
+                'booking_id' => $b->id,
+                'passenger_code' => $b->passenger_code,
+                'passenger_name' => $b->passenger->name,
+                'refund_amount' => $b->payment->refund_amount ?? 0,
+            ]),
+        ], 'Départ validé avec succès');
+    }
 
     /**
      * Passager confirme le départ

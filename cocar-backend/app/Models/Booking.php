@@ -29,6 +29,7 @@ class Booking extends Model
         'driver_response',
         'pickup_point',
         'dropoff_point',
+        'passenger_code',
         'cancellation_reason',
         // Confirmation de départ
         'driver_confirmed_departure',
@@ -47,6 +48,7 @@ class Booking extends Model
     protected $casts = [
         'seats_booked' => 'integer',
         'total_price' => 'integer',
+        'passenger_code' => 'integer',
         'driver_confirmed_departure' => 'boolean',
         'passenger_confirmed_departure' => 'boolean',
         'driver_departure_confirmed_at' => 'datetime',
@@ -134,15 +136,32 @@ class Booking extends Model
     {
         $oldStatus = $this->status;
         
+        // Générer le code passager (auto-incrémenté par trajet)
+        $passengerCode = $this->generatePassengerCode();
+        
         $this->update([
             'status' => 'confirmed',
             'driver_response' => $response,
+            'passenger_code' => $passengerCode,
         ]);
 
         $this->trip->updateAvailableSeats();
 
         // Envoyer notification en temps réel
         $this->getNotificationService()->notifyBookingConfirmed($this);
+    }
+    
+    /**
+     * Générer un code passager unique pour ce trajet (1, 2, 3, ...)
+     */
+    protected function generatePassengerCode(): int
+    {
+        // Trouver le dernier code attribué pour ce trajet
+        $lastCode = Booking::where('trip_id', $this->trip_id)
+            ->whereNotNull('passenger_code')
+            ->max('passenger_code');
+        
+        return ($lastCode ?? 0) + 1;
     }
 
     /**
@@ -190,6 +209,18 @@ class Booking extends Model
 
         // Mettre à jour les stats
         $this->passenger->increment('total_trips_as_passenger');
+        $this->trip->driver->increment('total_trips_as_driver');
+
+        // Bonus de crédibilité pour trajet complété
+        $this->trip->driver->addCredibilityPoints(
+            User::CREDIBILITY_REASONS['trip_completed'], 
+            "Trajet complété: {$this->trip->departure_city} → {$this->trip->arrival_city}"
+        );
+        
+        $this->passenger->addCredibilityPoints(
+            User::CREDIBILITY_REASONS['trip_completed'], 
+            "Trajet complété: {$this->trip->departure_city} → {$this->trip->arrival_city}"
+        );
     }
 
     /**
@@ -296,6 +327,12 @@ class Booking extends Model
         // Libérer les places
         $this->trip->updateAvailableSeats();
 
+        // Appliquer une pénalité de crédibilité au passager
+        $this->passenger->removeCredibilityPoints(
+            abs(User::CREDIBILITY_REASONS['passenger_no_show']), 
+            "Absence pour le trajet {$this->trip->departure_city} → {$this->trip->arrival_city}"
+        );
+
         // Notifier le passager
         $this->getNotificationService()->send(
             $this->passenger_id,
@@ -350,12 +387,12 @@ class Booking extends Model
             ['booking_id' => $this->id]
         );
 
-        // Appliquer une pénalité de crédibilité (-1 étoile)
+        // Appliquer une pénalité de crédibilité (équivalent -1 étoile)
         $driver = $this->trip->driver;
-        $current = $driver->rating ?? 5.0;
-        $driver->update([
-            'rating' => max(0, round($current - 1, 2)),
-        ]);
+        $driver->removeCredibilityPoints(
+            abs(User::CREDIBILITY_REASONS['driver_no_show']), 
+            "Absence signalée pour le trajet {$this->trip->departure_city} → {$this->trip->arrival_city}"
+        );
     }
 
     /**

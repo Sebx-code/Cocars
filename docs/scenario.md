@@ -8,9 +8,10 @@ Le passager doit pouvoir mettre, modifier, supprimer sa photo de profil, sa bio,
 # Le chauffeur
 
 Celui-ci publie un trajet, après la publication de son trajet, il devra accepter les réservations des passagers. Le jour du départ, le chauffeur dois valider le depart du véhicule en entrant le nombre de passager et cocher qui sont les passagers present dans le vehicule au moment du depart(code passager par trajet incrementer auto 1,2,3, ... en fonction du nombre auto de passager); le chauffeur encaisse l'argent des passagers qui ont valider le depart du vehicule avec -10% du total qui va a l'entreprise.Si le chauffeur est absent le jour du voyage celui ci perd 100 point de crédibilite et si le depart a lieu et gagne 50 points de credibilite et plus 10 points si les passagers lui donne bonne note ou plus 5 points si seulement une partie lui donne une bonne note. la position du trajet publier par un chauffeur depend de son nombre de points, plus il a de point plus il est en haut de la liste et a l'inverse moins il a des points plus il est en bas de la liste.
-Le chauffeur dois pouvoir mettre, modifier, supprimer sa photo de profil, sa bio, son contact, son adresse mail, son mot de passe( selon les mesures de securites ); voire ses statistiques financieres avec filtre sur le temps, diagramme et chart moderne; Le chauffeur peut aussi résever un trajets mais d'un autre chauffeur, pas de lui meme(peut faire le meme chose qu'un passager).
+Le chauffeur dois pouvoir mettre, modifier, supprimer sa photo de profil, sa bio, son contact, son adresse mail, son mot de passe( selon les mesures de securites ); voire ses statistiques financieres avec filtre sur le temps, diagramme et chart moderne; Le chauffeur peut aussi résever un trajets mais d'un autre chauffeur, pas de lui meme(peut faire la meme chose qu'un passager).
+La position d'un trajet dans dans le fil des trajets depends du niveau de credibilite d'un chauffeur, plus on a de point, plus on a d'etoile et plus on est en haut de la liste. Le nombre de point de credibilite influence le nombre d'étoile que chaque chauffeur reçois; et le nombre d'etoile influence la position des trajets publier par un chauffeur sur le fil des trajets
 
-# Gestionnaire
+# Gestionnaire(Administrateur)
 
 Celui-ci dois pour pouvoir :
 
@@ -20,3 +21,4 @@ Celui-ci dois pour pouvoir :
 - liste des reservations dansun tableau
 - liste des trajet dans un tableau 
 - Statistique global de l'entreprise
+l'entreprise perçois 10% du revenu par trajet des chauffeurs; c'est 10% vont a l'entreprise et 90% restant sont pour le chauffeur concernés

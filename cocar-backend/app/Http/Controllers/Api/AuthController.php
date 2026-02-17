@@ -226,4 +226,58 @@ class AuthController extends Controller
 
         return $this->success(null, 'Mot de passe modifié avec succès');
     }
+
+    /**
+     * Télécharger/mettre à jour l'avatar de l'utilisateur
+     */
+    public function uploadAvatar(Request $request)
+    {
+        $validated = $request->validate([
+            'avatar' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // 2MB max
+        ]);
+
+        $user = $request->user();
+
+        // Supprimer l'ancien avatar s'il existe
+        if ($user->avatar && \Storage::exists($user->avatar)) {
+            \Storage::delete($user->avatar);
+        }
+
+        // Stocker le nouveau fichier
+        $path = $request->file('avatar')->store('avatars', 'public');
+
+        // Mettre à jour le profil utilisateur
+        $user->update([
+            'avatar' => $path,
+        ]);
+
+        return $this->success([
+            'avatar_url' => \Storage::url($path),
+            'avatar' => $path,
+        ], 'Avatar mis à jour avec succès');
+    }
+
+    /**
+     * Supprimer l'avatar de l'utilisateur
+     */
+    public function deleteAvatar(Request $request)
+    {
+        $user = $request->user();
+
+        if (!$user->avatar) {
+            return $this->error('Aucun avatar à supprimer', 404);
+        }
+
+        // Supprimer le fichier du stockage
+        if (\Storage::exists($user->avatar)) {
+            \Storage::delete($user->avatar);
+        }
+
+        // Mettre à jour le profil utilisateur
+        $user->update([
+            'avatar' => null,
+        ]);
+
+        return $this->success(null, 'Avatar supprimé avec succès');
+    }
 }

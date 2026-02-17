@@ -62,6 +62,9 @@ class Rating extends Model
         static::created(function (Rating $rating) {
             $rating->ratedUser->updateRating();
 
+            // Ajuster les points de crédibilité selon la note
+            $rating->adjustCredibilityPoints();
+
             // Notifier l'utilisateur noté
             Notification::create([
                 'user_id' => $rating->rated_user_id,
@@ -74,10 +77,43 @@ class Rating extends Model
 
         static::updated(function (Rating $rating) {
             $rating->ratedUser->updateRating();
+            // Recalculer la crédibilité si la note change
+            $rating->adjustCredibilityPoints();
         });
 
         static::deleted(function (Rating $rating) {
             $rating->ratedUser->updateRating();
         });
+    }
+
+    // ============ MÉTHODES DE CRÉDIBILITÉ ============
+
+    /**
+     * Ajuster les points de crédibilité selon la note reçue
+     */
+    public function adjustCredibilityPoints(): void
+    {
+        $user = $this->ratedUser;
+
+        if ($this->rating >= 5) {
+            // Excellente note : +20 points
+            $user->addCredibilityPoints(
+                User::CREDIBILITY_REASONS['excellent_rating'],
+                "Note excellente (5/5) de {$this->rater->name}"
+            );
+        } elseif ($this->rating >= 4) {
+            // Bonne note : +10 points
+            $user->addCredibilityPoints(
+                User::CREDIBILITY_REASONS['good_rating'],
+                "Bonne note (4/5) de {$this->rater->name}"
+            );
+        } elseif ($this->rating <= 2) {
+            // Mauvaise note : -15 points
+            $user->removeCredibilityPoints(
+                abs(User::CREDIBILITY_REASONS['bad_rating']),
+                "Mauvaise note ({$this->rating}/5) de {$this->rater->name}"
+            );
+        }
+        // Note 3/5 : neutre, pas de changement de crédibilité
     }
 }

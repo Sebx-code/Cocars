@@ -3,6 +3,8 @@ import { Trip } from '../../types'
 import { Calendar, Clock, Users, Star, ArrowRight } from 'lucide-react'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
+import { CredibilityStars } from '../credibility/CredibilityStars'
+import { CredibilityBadge } from '../credibility/CredibilityBadge'
 
 interface TripCardProps {
   trip: Trip
@@ -77,10 +79,32 @@ export default function TripCard({ trip }: TripCardProps) {
               <p className="font-semibold text-gray-900 dark:text-white">
                 {trip.driver?.name}
               </p>
-              <div className="flex items-center gap-1 justify-end text-yellow-500">
-                <Star className="w-4 h-4 fill-current" />
-                <span className="text-sm">4.8</span>
-              </div>
+              
+              {/* Étoiles de crédibilité si disponibles */}
+              {trip.driver?.credibility_stars ? (
+                <div className="flex items-center gap-2 justify-end">
+                  <CredibilityStars 
+                    stars={trip.driver.credibility_stars} 
+                    points={trip.driver.credibility_points}
+                    size="sm"
+                    showPoints={false}
+                  />
+                  {trip.driver.credibility_stars >= 4 && (
+                    <CredibilityBadge 
+                      stars={trip.driver.credibility_stars}
+                      size="sm"
+                      showIcon
+                      showText={false}
+                    />
+                  )}
+                </div>
+              ) : (
+                // Ancienne note si crédibilité non disponible
+                <div className="flex items-center gap-1 justify-end text-yellow-500">
+                  <Star className="w-4 h-4 fill-current" />
+                  <span className="text-sm">{trip.driver?.rating?.toFixed(1) || '4.8'}</span>
+                </div>
+              )}
             </div>
             <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white font-bold">
               {trip.driver?.name?.charAt(0).toUpperCase()}

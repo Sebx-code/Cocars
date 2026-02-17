@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom'
 import { Booking } from '../../types'
 import { bookingsApi, paymentsApi } from '../../services/api'
 import DepartureConfirmation from './DepartureConfirmation'
+import { PassengerCodeCard } from './PassengerCodeCard'
+import { PassengerDepartureConfirmation } from './PassengerDepartureConfirmation'
+import { PaymentDetails } from '../payment/PaymentDetails'
 import { 
   MapPin, 
   Calendar, 
@@ -222,8 +225,34 @@ export default function BookingCard({ booking, userRole, onUpdate, onCancel }: B
             </div>
           )}
 
-          {/* Confirmation de départ */}
-          {booking.status === 'confirmed' && isPaid && (
+          {/* Code passager (pour le passager uniquement) */}
+          {!isDriver && booking.passenger_code && booking.status === 'confirmed' && (
+            <PassengerCodeCard booking={booking} />
+          )}
+
+          {/* Confirmation de départ pour le passager */}
+          {!isDriver && booking.status === 'confirmed' && isPaid && (
+            <PassengerDepartureConfirmation 
+              booking={booking} 
+              onConfirmed={() => {
+                // Recharger les données de la réservation
+                bookingsApi.getById(booking.id).then(res => {
+                  onUpdate(res.data.data)
+                })
+              }}
+            />
+          )}
+
+          {/* Détails du paiement */}
+          {booking.payment && (
+            <PaymentDetails 
+              payment={booking.payment} 
+              userRole={userRole}
+            />
+          )}
+
+          {/* Confirmation de départ (ancienne version pour le chauffeur) */}
+          {isDriver && booking.status === 'confirmed' && isPaid && (
             <DepartureConfirmation 
               booking={booking} 
               userRole={userRole} 

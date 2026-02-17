@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { bookingsApi } from '../../services/api'
-import { Booking } from '../../types'
+import { bookingsApi, tripsApi } from '../../services/api'
+import { Booking, Trip } from '../../types'
 import { 
   Calendar, Loader2, Filter, Car, Clock, CheckCircle, 
   Users, CreditCard, MapPin, MessageSquare, ChevronDown, ChevronUp,
-  XCircle
+  XCircle, PlayCircle
 } from 'lucide-react'
 import DepartureConfirmation from '../../components/booking/DepartureConfirmation'
+import { DepartureValidation } from '../../components/booking/DepartureValidation'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
 import toast from 'react-hot-toast'
@@ -27,6 +28,8 @@ export default function DriverBookings() {
   const [isLoading, setIsLoading] = useState(true)
   const [filter, setFilter] = useState<FilterType>('all')
   const [expandedBooking, setExpandedBooking] = useState<number | null>(null)
+  const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null)
+  const [showValidationModal, setShowValidationModal] = useState(false)
 
   useEffect(() => { 
     loadBookings() 
@@ -71,6 +74,23 @@ export default function DriverBookings() {
       const err = error as { response?: { data?: { message?: string } } }
       toast.error(err.response?.data?.message || 'Erreur lors du refus')
     }
+  }
+
+  const handleValidateDeparture = async (tripId: number) => {
+    try {
+      const tripResponse = await tripsApi.getById(tripId)
+      setSelectedTrip(tripResponse.data.data)
+      setShowValidationModal(true)
+    } catch (error) {
+      toast.error('Erreur lors du chargement du trajet')
+    }
+  }
+
+  const handleValidationComplete = () => {
+    setShowValidationModal(false)
+    setSelectedTrip(null)
+    loadBookings()
+    toast.success('Départ validé avec succès !')
   }
 
   const filteredBookings = bookings.filter(b => {
@@ -372,8 +392,24 @@ export default function DriverBookings() {
                     </div>
                   )}
 
-                  {/* Confirmation de départ */}
-                  {booking.status === 'confirmed' && booking.payment?.status === 'completed' && (
+                  {/* Bouton de validation groupée du départ */}
+                  {booking.status === 'confirmed' && 
+                   booking.payment?.status === 'completed' && 
+                   !booking.driver_confirmed_departure &&
+                   booking.passenger_code && (
+                    <button
+                      onClick={() => handleValidateDeparture(booking.trip_id)}
+                      className="w-full btn-primary bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
+                    >
+                      <PlayCircle className="w-5 h-5" />
+                      Valider le départ (tous les passagers)
+                    </button>
+                  )}
+
+                  {/* Confirmation de départ individuelle (ancienne méthode) */}
+                  {booking.status === 'confirmed' && 
+                   booking.payment?.status === 'completed' && 
+                   !booking.passenger_code && (
                     <DepartureConfirmation 
                       booking={booking} 
                       userRole="driver" 
@@ -427,6 +463,21 @@ export default function DriverBookings() {
               Voir toutes les réservations
             </button>
           )}
+        </div>
+      )}
+
+      {/* Modal de validation du départ */}
+      {showValidationModal && selectedTrip && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+          <DepartureValidation
+            trip={selectedTrip}
+            bookings={bookings.filter(b => b.trip_id === selectedTrip.id)}
+            onValidated={handleValidationComplete}
+            onClose={() => {
+              setShowValidationModal(false)
+              setSelectedTrip(null)
+            }}
+          />
         </div>
       )}
     </div>

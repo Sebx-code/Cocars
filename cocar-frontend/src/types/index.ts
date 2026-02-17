@@ -8,6 +8,10 @@ export interface User {
   role: 'user' | 'admin'
   is_verified: boolean
   rating?: number
+  credibility_points?: number
+  credibility_stars?: number
+  total_positive_points?: number
+  total_negative_points?: number
   total_trips_as_driver?: number
   created_at: string
   updated_at: string
@@ -53,6 +57,7 @@ export interface Booking {
   seats: number
   total_price: number
   status: BookingStatus
+  passenger_code?: number // Code passager par trajet (1, 2, 3...)
   driver_response?: string
   pickup_point?: string
   dropoff_point?: string
@@ -278,6 +283,9 @@ export type NotificationType =
   | 'booking_confirmed'
   | 'booking_cancelled'
   | 'booking_completed'
+  | 'booking_no_show'
+  | 'departure_confirmed'
+  | 'trip_started'
   | 'trip_reminder'
   | 'trip_cancelled'
   | 'trip_updated'
@@ -285,6 +293,12 @@ export type NotificationType =
   | 'rating_received'
   | 'payment_received'
   | 'payment_refund'
+  | 'payment_secured'
+  | 'payment_pending'
+  | 'driver_no_show'
+  | 'credibility_increased'
+  | 'credibility_decreased'
+  | 'star_lost'
   | 'verification_approved'
   | 'verification_rejected'
   | 'system'
@@ -359,4 +373,40 @@ export interface UserStats {
   total_earnings: number
   average_rating: number
   co2_saved: number
+  // Crédibilité
+  credibility_points?: number
+  credibility_stars?: number
+  credibility_progress?: CredibilityProgress
+  total_positive_points?: number
+  total_negative_points?: number
+}
+
+// ============= CREDIBILITY TYPES =============
+export interface CredibilityProgress {
+  current_stars: number
+  next_stars: number
+  current_points: number
+  points_needed: number
+  progress_percent: number
+  max_level: boolean
+}
+
+export interface CredibilityStats {
+  total_users: number
+  average_points: number
+  distribution: {
+    stars_1: number
+    stars_2: number
+    stars_3: number
+    stars_4: number
+    stars_5: number
+  }
+  top_users: Array<{
+    id: number
+    name: string
+    avatar?: string
+    credibility_points: number
+    credibility_stars: number
+    total_trips_as_driver: number
+  }>
 }

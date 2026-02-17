@@ -20,13 +20,11 @@ class TripController extends Controller
         // Cache de 5 minutes pour les listes de trajets
         return cache()->remember($cacheKey, 300, function () use ($request) {
             $query = Trip::with([
-                    'driver:id,name,avatar,rating',
+                    'driver:id,name,avatar,rating,credibility_points',
                     'vehicle:id,user_id,brand,model,color,registration_number',
                     'vehicle.photos:id,vehicle_id,path,is_primary,sort_order,created_at',
                 ])
-                ->available()
-                ->orderBy('departure_date')
-                ->orderBy('departure_time');
+                ->available();
             
             return $this->applyFiltersAndPaginate($query, $request);
         });
@@ -75,11 +73,25 @@ class TripController extends Controller
                           ->reorder('users.rating', $sortOrder)
                           ->select('trips.*');
                     break;
+                case 'credibility':
+                    // Tri par points de crédibilité (étoiles)
+                    $query->join('users', 'trips.driver_id', '=', 'users.id')
+                          ->reorder('users.credibility_points', $sortOrder)
+                          ->select('trips.*');
+                    break;
                 case 'date':
                 default:
                     $query->reorder('departure_date', $sortOrder)
                           ->orderBy('departure_time', $sortOrder);
             }
+        } else {
+            // Par défaut, trier par crédibilité (descendant) puis par date
+            // Les chauffeurs avec plus de crédibilité apparaissent en haut
+            $query->join('users', 'trips.driver_id', '=', 'users.id')
+                  ->orderBy('users.credibility_points', 'desc')
+                  ->orderBy('trips.departure_date', 'asc')
+                  ->orderBy('trips.departure_time', 'asc')
+                  ->select('trips.*');
         }
 
         $trips = $query->paginate($request->input('per_page', 10));
@@ -113,8 +125,8 @@ class TripController extends Controller
         $cacheKey = 'trip_detail_' . $trip->id;
         
         $tripData = cache()->remember($cacheKey, 120, function () use ($trip) {
-            return $trip->load([
-                'driver:id,name,avatar,rating,total_trips_as_driver',
+            $tripData = $trip->load([
+                'driver:id,name,avatar,rating,total_trips_as_driver,credibility_points',
                 'vehicle:id,user_id,brand,model,color,registration_number,seats',
                 'vehicle.photos:id,vehicle_id,path,is_primary,sort_order,created_at',
                 'bookings' => function ($query) {
@@ -122,6 +134,11 @@ class TripController extends Controller
                           ->with('passenger:id,name,avatar,rating');
                 }
             ]);
+            
+            // Ajouter les étoiles de crédibilité
+            $tripData->driver->credibility_stars = $tripData->driver->getCredibilityStars();
+            
+            return $tripData;
         });
 
         return $this->success($tripData);

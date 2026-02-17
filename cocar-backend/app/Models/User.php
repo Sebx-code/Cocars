@@ -21,6 +21,9 @@ class User extends Authenticatable
         'bio',
         'is_verified',
         'rating',
+        'credibility_points',
+        'total_positive_points',
+        'total_negative_points',
         'total_rides',
         'total_trips_as_driver',
         'total_trips_as_passenger',
@@ -50,6 +53,9 @@ class User extends Authenticatable
         'password' => 'hashed',
         'is_verified' => 'boolean',
         'rating' => 'decimal:2',
+        'credibility_points' => 'integer',
+        'total_positive_points' => 'integer',
+        'total_negative_points' => 'integer',
         'refresh_token_expires_at' => 'datetime',
         'phone_verified' => 'boolean',
         'phone_verification_expires_at' => 'datetime',
@@ -186,11 +192,176 @@ class User extends Authenticatable
         $this->update(['rating' => $average]);
     }
 
+    // ============ SYSTÈME DE CRÉDIBILITÉ ============
+
+    /**
+     * Points de crédibilité requis pour chaque niveau d'étoiles
+     */
+    public const CREDIBILITY_LEVELS = [
+        1 => 0,      // 0-49 points = 1 étoile
+        2 => 50,     // 50-99 points = 2 étoiles
+        3 => 100,    // 100-199 points = 3 étoiles
+        4 => 200,    // 200-399 points = 4 étoiles
+        5 => 400,    // 400+ points = 5 étoiles
+    ];
+
+    /**
+     * Raisons d'ajout/retrait de points
+     */
+    public const CREDIBILITY_REASONS = [
+        'trip_completed' => 10,           // Trajet complété avec succès
+        'excellent_rating' => 20,         // Note 5/5 reçue
+        'good_rating' => 10,              // Note 4/5 reçue
+        'on_time_departure' => 5,         // Départ à l'heure
+        'driver_no_show' => -50,          // Chauffeur absent (pénalité -1 étoile)
+        'passenger_no_show' => -10,       // Passager absent
+        'trip_cancelled' => -5,           // Trajet annulé par le chauffeur
+        'bad_rating' => -15,              // Note 1-2/5 reçue
+        'multiple_complaints' => -30,     // Plusieurs plaintes
+    ];
+
+    /**
+     * Calculer le nombre d'étoiles basé sur les points de crédibilité
+     */
+    public function getCredibilityStars(): int
+    {
+        $points = $this->credibility_points ?? 100;
+
+        if ($points >= self::CREDIBILITY_LEVELS[5]) return 5;
+        if ($points >= self::CREDIBILITY_LEVELS[4]) return 4;
+        if ($points >= self::CREDIBILITY_LEVELS[3]) return 3;
+        if ($points >= self::CREDIBILITY_LEVELS[2]) return 2;
+        return 1;
+    }
+
+    /**
+     * Ajouter des points de crédibilité
+     */
+    public function addCredibilityPoints(int $points, string $reason = null): void
+    {
+        $this->increment('credibility_points', $points);
+        $this->increment('total_positive_points', $points);
+
+        // Log de l'action
+        \Log::info("Crédibilité ajoutée", [
+            'user_id' => $this->id,
+            'points' => $points,
+            'reason' => $reason,
+            'new_total' => $this->fresh()->credibility_points,
+            'stars' => $this->getCredibilityStars(),
+        ]);
+
+        // Notification optionnelle
+        if ($points >= 10) {
+            Notification::create([
+                'user_id' => $this->id,
+                'type' => 'credibility_increased',
+                'title' => 'Points de crédibilité gagnés !',
+                'message' => "Vous avez gagné +{$points} points de crédibilité. " . ($reason ?? ''),
+                'data' => ['points' => $points, 'reason' => $reason],
+            ]);
+        }
+    }
+
+    /**
+     * Retirer des points de crédibilité
+     */
+    public function removeCredibilityPoints(int $points, string $reason = null): void
+    {
+        $oldStars = $this->getCredibilityStars();
+        
+        $this->decrement('credibility_points', $points);
+        $this->increment('total_negative_points', $points);
+
+        // Ne pas descendre en dessous de 0
+        if ($this->credibility_points < 0) {
+            $this->update(['credibility_points' => 0]);
+        }
+
+        $newStars = $this->fresh()->getCredibilityStars();
+
+        // Log de l'action
+        \Log::warning("Crédibilité retirée", [
+            'user_id' => $this->id,
+            'points' => -$points,
+            'reason' => $reason,
+            'new_total' => $this->fresh()->credibility_points,
+            'old_stars' => $oldStars,
+            'new_stars' => $newStars,
+        ]);
+
+        // Notification de perte de crédibilité
+        Notification::create([
+            'user_id' => $this->id,
+            'type' => 'credibility_decreased',
+            'title' => 'Perte de crédibilité',
+            'message' => "Vous avez perdu -{$points} points de crédibilité. " . ($reason ?? ''),
+            'data' => [
+                'points' => -$points,
+                'reason' => $reason,
+                'old_stars' => $oldStars,
+                'new_stars' => $newStars,
+            ],
+        ]);
+
+        // Notification spéciale si perte d'étoile(s)
+        if ($newStars < $oldStars) {
+            Notification::create([
+                'user_id' => $this->id,
+                'type' => 'star_lost',
+                'title' => '⭐ Étoile perdue',
+                'message' => "Votre niveau de crédibilité est passé de {$oldStars} à {$newStars} étoile(s).",
+                'data' => [
+                    'old_stars' => $oldStars,
+                    'new_stars' => $newStars,
+                ],
+            ]);
+        }
+    }
+
+    /**
+     * Obtenir le pourcentage de progression vers l'étoile suivante
+     */
+    public function getCredibilityProgress(): array
+    {
+        $currentStars = $this->getCredibilityStars();
+        $currentPoints = $this->credibility_points ?? 100;
+
+        if ($currentStars >= 5) {
+            return [
+                'current_stars' => 5,
+                'next_stars' => 5,
+                'current_points' => $currentPoints,
+                'points_needed' => 0,
+                'progress_percent' => 100,
+                'max_level' => true,
+            ];
+        }
+
+        $nextStars = $currentStars + 1;
+        $currentLevelThreshold = self::CREDIBILITY_LEVELS[$currentStars];
+        $nextLevelThreshold = self::CREDIBILITY_LEVELS[$nextStars];
+        $pointsInCurrentLevel = $currentPoints - $currentLevelThreshold;
+        $pointsNeededForNextLevel = $nextLevelThreshold - $currentLevelThreshold;
+        $progressPercent = ($pointsInCurrentLevel / $pointsNeededForNextLevel) * 100;
+
+        return [
+            'current_stars' => $currentStars,
+            'next_stars' => $nextStars,
+            'current_points' => $currentPoints,
+            'points_needed' => $nextLevelThreshold - $currentPoints,
+            'progress_percent' => min(100, max(0, $progressPercent)),
+            'max_level' => false,
+        ];
+    }
+
     /**
      * Obtenir les statistiques de l'utilisateur
      */
     public function getStats(): array
     {
+        $credibilityProgress = $this->getCredibilityProgress();
+        
         return [
             'total_trips_as_driver' => $this->total_trips_as_driver,
             'total_trips_as_passenger' => $this->total_trips_as_passenger,
@@ -209,6 +380,12 @@ class User extends Authenticatable
                 ->whereHas('trip', fn($q) => $q->where('departure_date', '>=', now()))
                 ->count(),
             'completed_trips' => $this->total_trips_as_driver + $this->total_trips_as_passenger,
+            // Crédibilité
+            'credibility_points' => $this->credibility_points ?? 100,
+            'credibility_stars' => $this->getCredibilityStars(),
+            'credibility_progress' => $credibilityProgress,
+            'total_positive_points' => $this->total_positive_points ?? 0,
+            'total_negative_points' => $this->total_negative_points ?? 0,
         ];
     }
 }

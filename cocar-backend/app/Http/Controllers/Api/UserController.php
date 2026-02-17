@@ -26,6 +26,8 @@ class UserController extends Controller
             'bio' => $user->bio,
             'is_verified' => $user->is_verified,
             'rating' => $user->rating,
+            'credibility_stars' => $user->getCredibilityStars(),
+            'credibility_points' => $user->credibility_points ?? 100,
             'ratings_received_count' => $user->ratings_received_count,
             'trips_as_driver_count' => $user->trips_as_driver_count,
             'member_since' => $user->created_at->format('F Y'),
