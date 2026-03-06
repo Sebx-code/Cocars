@@ -203,14 +203,23 @@ class PaymentController extends Controller
      */
     public function withdraw(Request $request)
     {
-        $validated = $request->validate([
-            'amount' => 'required|integer|min:500',
-            'provider' => 'required|in:orange_money,mtn_money,mobile_money',
-            'phone_number' => 'required|string',
-        ]);
-
-        $user = $request->user();
+        $user   = $request->user();
         $wallet = Wallet::getOrCreate($user->id);
+
+        $validated = $request->validate([
+            'amount'       => [
+                'required',
+                'integer',
+                'min:500',
+                function ($attribute, $value, $fail) use ($wallet) {
+                    if ($value > $wallet->balance) {
+                        $fail('Le montant demandé dépasse votre solde disponible (' . $wallet->balance . ' FCFA).');
+                    }
+                },
+            ],
+            'provider'      => 'required|in:orange_money,mtn_money,mobile_money',
+            'phone_number'  => 'required|string|min:8|max:20',
+        ]);
 
         try {
             $result = $this->paymentService->withdrawToMobileMoney(

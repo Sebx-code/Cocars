@@ -48,12 +48,12 @@ export default function BookingCard({ booking, userRole, onUpdate, onCancel }: B
 
   const getStatusBadge = () => {
     const statusConfig: Record<string, { color: string; label: string; icon: JSX.Element }> = {
-      pending: { color: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400', label: 'En attente', icon: <Clock className="w-4 h-4" /> },
-      confirmed: { color: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400', label: 'Confirmée', icon: <CheckCircle className="w-4 h-4" /> },
-      in_progress: { color: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400', label: 'En cours', icon: <Clock className="w-4 h-4" /> },
-      completed: { color: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400', label: 'Terminée', icon: <CheckCircle className="w-4 h-4" /> },
-      cancelled: { color: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400', label: 'Annulée', icon: <XCircle className="w-4 h-4" /> },
-      rejected: { color: 'bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-400', label: 'Refusée', icon: <XCircle className="w-4 h-4" /> },
+      pending: { color: 'bg-amber-500/20 text-amber-400 border border-amber-500/30', label: 'En attente', icon: <Clock className="w-4 h-4" /> },
+      confirmed: { color: 'bg-blue-500/20 text-blue-400 border border-blue-500/30', label: 'Confirmée', icon: <CheckCircle className="w-4 h-4" /> },
+      in_progress: { color: 'bg-purple-500/20 text-purple-400 border border-purple-500/30', label: 'En cours', icon: <Clock className="w-4 h-4" /> },
+      completed: { color: 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30', label: 'Terminée', icon: <CheckCircle className="w-4 h-4" /> },
+      cancelled: { color: 'bg-red-500/20 text-red-400 border border-red-500/30', label: 'Annulée', icon: <XCircle className="w-4 h-4" /> },
+      rejected: { color: 'bg-gray-100 dark:bg-white/10 text-gray-500 dark:text-white/60 border border-gray-300 dark:border-white/20', label: 'Refusée', icon: <XCircle className="w-4 h-4" /> },
     }
     const config = statusConfig[booking.status] || statusConfig.pending
     return (
@@ -134,7 +134,7 @@ export default function BookingCard({ booking, userRole, onUpdate, onCancel }: B
   return (
     <div className="card overflow-hidden">
       {/* En-tête */}
-      <div className="p-4 border-b border-gray-200 dark:border-slate-700">
+      <div className="p-4 border-b border-gray-200 dark:border-gray-200 dark:border-white/[0.07]">
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2">
@@ -143,7 +143,7 @@ export default function BookingCard({ booking, userRole, onUpdate, onCancel }: B
             </div>
             <Link 
               to={`/trips/${booking.trip.id}`}
-              className="text-lg font-semibold text-gray-900 dark:text-white hover:text-primary-600"
+              className="text-lg font-semibold text-white hover:text-primary-600"
             >
               {booking.trip.departure_city} → {booking.trip.arrival_city}
             </Link>
@@ -154,7 +154,7 @@ export default function BookingCard({ booking, userRole, onUpdate, onCancel }: B
         </div>
 
         {/* Infos trajet */}
-        <div className="flex flex-wrap gap-4 mt-3 text-sm text-gray-600 dark:text-gray-400">
+        <div className="flex flex-wrap gap-4 mt-3 text-sm text-gray-500 dark:text-gray-500 dark:text-white/55">
           <span className="flex items-center gap-1">
             <Calendar className="w-4 h-4" />
             {format(new Date(booking.trip.departure_date), 'dd MMM yyyy', { locale: fr })}
@@ -173,7 +173,7 @@ export default function BookingCard({ booking, userRole, onUpdate, onCancel }: B
       {/* Section expandable */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full p-3 flex items-center justify-center gap-2 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-800/50"
+        className="w-full p-3 flex items-center justify-center gap-2 text-sm text-gray-500 dark:text-gray-500 dark:text-white/55 hover:bg-gray-50"
       >
         {isExpanded ? (
           <>
@@ -189,10 +189,10 @@ export default function BookingCard({ booking, userRole, onUpdate, onCancel }: B
       </button>
 
       {isExpanded && (
-        <div className="p-4 border-t border-gray-200 dark:border-slate-700 space-y-4">
+        <div className="p-4 border-t border-gray-200 dark:border-gray-200 dark:border-white/[0.07] space-y-4">
           {/* Infos utilisateur */}
-          <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-slate-800 rounded-xl">
-            <div className="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center">
+          <div className="flex items-center gap-3 p-3 bg-white dark:bg-white/[0.03] rounded-xl">
+            <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center">
               <Users className="w-5 h-5 text-primary-600" />
             </div>
             <div>
@@ -211,14 +211,14 @@ export default function BookingCard({ booking, userRole, onUpdate, onCancel }: B
               {booking.pickup_point && (
                 <div className="flex items-center gap-2 text-sm">
                   <MapPin className="w-4 h-4 text-emerald-500" />
-                  <span className="text-gray-600 dark:text-gray-400">Prise en charge:</span>
+                  <span className="text-gray-500 dark:text-gray-500 dark:text-white/55">Prise en charge:</span>
                   <span className="text-gray-900 dark:text-white">{booking.pickup_point}</span>
                 </div>
               )}
               {booking.dropoff_point && (
                 <div className="flex items-center gap-2 text-sm">
                   <MapPin className="w-4 h-4 text-red-500" />
-                  <span className="text-gray-600 dark:text-gray-400">Dépose:</span>
+                  <span className="text-gray-500 dark:text-gray-500 dark:text-white/55">Dépose:</span>
                   <span className="text-gray-900 dark:text-white">{booking.dropoff_point}</span>
                 </div>
               )}
@@ -293,7 +293,7 @@ export default function BookingCard({ booking, userRole, onUpdate, onCancel }: B
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="card w-full max-w-md p-6 animate-fadeIn">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center">
                 <Shield className="w-6 h-6 text-primary-600" />
               </div>
               <div>
@@ -307,8 +307,8 @@ export default function BookingCard({ booking, userRole, onUpdate, onCancel }: B
             </div>
 
             {/* Info escrow */}
-            <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-4 mb-6">
-              <p className="text-sm text-blue-700 dark:text-blue-300">
+            <div className="bg-blue-50 rounded-xl p-4 mb-6">
+              <p className="text-sm text-blue-700">
                 <Lock className="w-4 h-4 inline mr-1" />
                 L'argent sera conservé en sécurité et transféré au conducteur uniquement 
                 lorsque vous aurez tous les deux confirmé le départ.
@@ -317,7 +317,7 @@ export default function BookingCard({ booking, userRole, onUpdate, onCancel }: B
 
             <form onSubmit={handlePayment} className="space-y-4">
               {/* Montant */}
-              <div className="p-4 bg-gray-50 dark:bg-slate-800 rounded-xl text-center">
+              <div className="p-4 bg-white dark:bg-white/[0.03] rounded-xl text-center">
                 <p className="text-sm text-gray-500 mb-1">Montant à payer</p>
                 <p className="text-3xl font-bold text-gray-900 dark:text-white">
                   {booking.total_price.toLocaleString('fr-FR')} <span className="text-lg">FCFA</span>
@@ -326,7 +326,7 @@ export default function BookingCard({ booking, userRole, onUpdate, onCancel }: B
 
               {/* Opérateur */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700  mb-2">
                   Choisir l'opérateur
                 </label>
                 <div className="grid grid-cols-2 gap-3">
@@ -335,8 +335,8 @@ export default function BookingCard({ booking, userRole, onUpdate, onCancel }: B
                     onClick={() => setPaymentForm({ ...paymentForm, method: 'orange_money' })}
                     className={`p-4 rounded-xl border-2 transition-all ${
                       paymentForm.method === 'orange_money'
-                        ? 'border-orange-500 bg-orange-50 dark:bg-orange-900/20'
-                        : 'border-gray-200 dark:border-slate-700'
+                        ? 'border-orange-500 bg-orange-50'
+                        : 'border-gray-200 dark:border-gray-200 dark:border-white/[0.07]'
                     }`}
                   >
                     <p className="font-medium text-gray-900 dark:text-white">Orange Money</p>
@@ -346,8 +346,8 @@ export default function BookingCard({ booking, userRole, onUpdate, onCancel }: B
                     onClick={() => setPaymentForm({ ...paymentForm, method: 'mtn_money' })}
                     className={`p-4 rounded-xl border-2 transition-all ${
                       paymentForm.method === 'mtn_money'
-                        ? 'border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20'
-                        : 'border-gray-200 dark:border-slate-700'
+                        ? 'border-yellow-500 bg-yellow-50'
+                        : 'border-gray-200 dark:border-gray-200 dark:border-white/[0.07]'
                     }`}
                   >
                     <p className="font-medium text-gray-900 dark:text-white">MTN MoMo</p>
@@ -357,7 +357,7 @@ export default function BookingCard({ booking, userRole, onUpdate, onCancel }: B
 
               {/* Numéro de téléphone */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-gray-700  mb-1">
                   Numéro de téléphone
                 </label>
                 <div className="relative">
@@ -408,3 +408,8 @@ export default function BookingCard({ booking, userRole, onUpdate, onCancel }: B
     </div>
   )
 }
+
+
+
+
+

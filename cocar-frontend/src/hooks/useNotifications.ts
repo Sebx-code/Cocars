@@ -2,18 +2,8 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { initEcho, disconnectEcho, getEcho } from '../services/echo'
 import { notificationsApi } from '../services/api'
+import { Notification } from '../types'
 import toast from 'react-hot-toast'
-
-export interface Notification {
-  id: number
-  type: string
-  title: string
-  message: string
-  data: Record<string, unknown>
-  is_read: boolean
-  read?: boolean // Support pour les deux formats
-  created_at: string
-}
 
 // Normaliser la notification pour s'assurer que is_read est toujours présent
 const normalizeNotification = (notification: Notification): Notification => ({
@@ -42,6 +32,7 @@ export function useNotifications(): UseNotificationsReturn {
   // Utiliser des refs pour éviter les dépendances circulaires dans useEffect
   const isAuthenticatedRef = useRef(isAuthenticated)
   const userRef = useRef(user)
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   
   // Mettre à jour les refs quand les valeurs changent
   useEffect(() => {
@@ -180,10 +171,12 @@ export function useNotifications(): UseNotificationsReturn {
         channel.listen('.booking.status_changed', (data: unknown) => {
           console.log('Booking status changed:', data)
           // Rafraîchir les notifications après un court délai
-          setTimeout(() => {
+          const refreshTimeout = setTimeout(() => {
             loadNotifications()
             loadUnreadCount()
           }, 500)
+          // Stocker le timeout pour cleanup
+          timeoutRef.current = refreshTimeout
         })
 
         // Écouter les rappels de trajet
@@ -209,6 +202,11 @@ export function useNotifications(): UseNotificationsReturn {
     setupEcho()
 
     return () => {
+      // Nettoyer le timeout en attente pour éviter les memory leaks
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+        timeoutRef.current = null
+      }
       if (channel) {
         channel.stopListening('.notification.new')
         channel.stopListening('.booking.status_changed')

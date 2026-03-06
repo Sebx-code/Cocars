@@ -1,54 +1,73 @@
+import { lazy, Suspense } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import { AuthProvider } from './contexts/AuthContext'
 import { ThemeProvider } from './contexts/ThemeContext'
 
-// Layouts
+// Layouts (statiques - chargés immédiatement)
 import MainLayout from './layouts/MainLayout'
 import DashboardLayout from './layouts/DashboardLayout'
 import AuthLayout from './layouts/AuthLayout'
 import AdminLayout from './layouts/AdminLayout'
 
-// Pages publiques
-import Landing from './pages/Landing'
-import Login from './pages/auth/Login'
-import Register from './pages/auth/Register'
-import Feed from './pages/trips/Feed'
-import SearchTrips from './pages/trips/SearchTrips'
-import TripDetail from './pages/trips/TripDetail'
-
-// Pages protégées - Dashboard
-import Dashboard from './pages/dashboard/Dashboard'
-import MyTrips from './pages/dashboard/MyTrips'
-import CreateTrip from './pages/dashboard/CreateTrip'
-import MyBookings from './pages/dashboard/MyBookings'
-import DriverBookings from './pages/dashboard/DriverBookings'
-import Messages from './pages/dashboard/Messages'
-import Notifications from './pages/dashboard/Notifications'
-import Profile from './pages/dashboard/Profile'
-import Vehicles from './pages/dashboard/Vehicles'
-import Settings from './pages/dashboard/Settings'
-import Wallet from './pages/dashboard/Wallet'
-
-// Pages Admin
-import AdminDashboard from './pages/admin/AdminDashboard'
-import AdminUsers from './pages/admin/AdminUsers'
-import AdminTrips from './pages/admin/AdminTrips'
-import AdminBookings from './pages/admin/AdminBookings'
-
-// Protected Route Components
+// Protected Route Components (statiques)
 import ProtectedRoute from './components/auth/ProtectedRoute'
 import AdminRoute from './components/auth/AdminRoute'
+
+// Pages publiques (lazy)
+const Landing = lazy(() => import('./pages/Landing'))
+const Login = lazy(() => import('./pages/auth/Login'))
+const Register = lazy(() => import('./pages/auth/Register'))
+const Feed = lazy(() => import('./pages/trips/Feed'))
+const SearchTrips = lazy(() => import('./pages/trips/SearchTrips'))
+const TripDetail = lazy(() => import('./pages/trips/TripDetail'))
+
+// Pages protégées - Dashboard (lazy)
+const Dashboard = lazy(() => import('./pages/dashboard/Dashboard'))
+const MyTrips = lazy(() => import('./pages/dashboard/MyTrips'))
+const CreateTrip = lazy(() => import('./pages/dashboard/CreateTrip'))
+const MyBookings = lazy(() => import('./pages/dashboard/MyBookings'))
+const DriverBookings = lazy(() => import('./pages/dashboard/DriverBookings'))
+const Messages = lazy(() => import('./pages/dashboard/Messages'))
+const Notifications = lazy(() => import('./pages/dashboard/Notifications'))
+const Profile = lazy(() => import('./pages/dashboard/Profile'))
+const Vehicles = lazy(() => import('./pages/dashboard/Vehicles'))
+const Settings = lazy(() => import('./pages/dashboard/Settings'))
+const Wallet = lazy(() => import('./pages/dashboard/Wallet'))
+
+// Pages Admin (lazy)
+const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'))
+const AdminUsers = lazy(() => import('./pages/admin/AdminUsers'))
+const AdminTrips = lazy(() => import('./pages/admin/AdminTrips'))
+const AdminBookings = lazy(() => import('./pages/admin/AdminBookings'))
+const AdminPayments = lazy(() => import('./pages/admin/AdminPayments'))
+const AdminReports = lazy(() => import('./pages/admin/AdminReports'))
+const AdminSettings = lazy(() => import('./pages/admin/AdminSettings'))
+
+// Spinner de chargement pour Suspense
+function PageSpinner() {
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-white dark:bg-neutral-950">
+      <div className="flex flex-col items-center gap-4">
+        <div className="w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+        <span className="text-sm text-gray-500 dark:text-white/50">Chargement...</span>
+      </div>
+    </div>
+  )
+}
 
 function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
         <Router>
+          <Suspense fallback={<PageSpinner />}>
           <Routes>
+            {/* Landing page (sans layout) */}
+            <Route path="/" element={<Landing />} />
+
             {/* Pages publiques avec MainLayout */}
             <Route element={<MainLayout />}>
-              <Route path="/" element={<Landing />} />
               <Route path="/feed" element={<Feed />} />
               <Route path="/search" element={<SearchTrips />} />
               <Route path="/trips/:id" element={<TripDetail />} />
@@ -82,11 +101,15 @@ function App() {
               <Route path="/admin/users" element={<AdminUsers />} />
               <Route path="/admin/trips" element={<AdminTrips />} />
               <Route path="/admin/bookings" element={<AdminBookings />} />
+              <Route path="/admin/payments" element={<AdminPayments />} />
+              <Route path="/admin/reports" element={<AdminReports />} />
+              <Route path="/admin/settings" element={<AdminSettings />} />
             </Route>
 
             {/* Redirection par défaut */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
+          </Suspense>
         </Router>
         
         <Toaster

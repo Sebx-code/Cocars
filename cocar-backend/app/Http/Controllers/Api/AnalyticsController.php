@@ -90,6 +90,10 @@ class AnalyticsController extends Controller
 
         [$selectDate, $groupBy] = $this->dateGrouping($group);
 
+        $paymentMethod = $validated['payment_method'] ?? null;
+        $status        = $validated['status'] ?? null;
+        $escrowStatus  = $validated['escrow_status'] ?? null;
+
         $base = Payment::query()
             ->whereBetween(DB::raw('DATE(payments.created_at)'), [$from, $to]);
 

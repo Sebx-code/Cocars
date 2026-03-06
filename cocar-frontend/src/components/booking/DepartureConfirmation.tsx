@@ -89,16 +89,16 @@ export default function DepartureConfirmation({ booking, userRole, onUpdate }: D
   // Si le voyage a commencé
   if (tripStarted) {
     return (
-      <div className="card p-4 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800">
+      <div className="card p-4 bg-emerald-50 border border-emerald-200">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center">
-            <Car className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+          <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center">
+            <Car className="w-5 h-5 text-emerald-600" />
           </div>
           <div>
-            <p className="font-semibold text-emerald-800 dark:text-emerald-200">
+            <p className="font-semibold text-emerald-800">
               Voyage en cours !
             </p>
-            <p className="text-sm text-emerald-600 dark:text-emerald-400">
+            <p className="text-sm text-emerald-600">
               Les deux parties ont confirmé le départ. Bon voyage !
             </p>
           </div>
@@ -110,16 +110,16 @@ export default function DepartureConfirmation({ booking, userRole, onUpdate }: D
   // Si le chauffeur est absent (driver no-show)
   if (booking.driver_no_show) {
     return (
-      <div className="card p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
+      <div className="card p-4 bg-red-50 border border-red-200">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/50 flex items-center justify-center">
-            <XCircle className="w-5 h-5 text-red-600 dark:text-red-400" />
+          <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+            <XCircle className="w-5 h-5 text-red-600" />
           </div>
           <div>
-            <p className="font-semibold text-red-800 dark:text-red-200">
+            <p className="font-semibold text-red-800">
               Chauffeur absent
             </p>
-            <p className="text-sm text-red-600 dark:text-red-400">
+            <p className="text-sm text-red-600">
               Le chauffeur a été signalé absent. Un remboursement complet a été effectué.
             </p>
           </div>
@@ -131,16 +131,16 @@ export default function DepartureConfirmation({ booking, userRole, onUpdate }: D
   // Si le passager est absent (no-show)
   if (booking.passenger_no_show) {
     return (
-      <div className="card p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
+      <div className="card p-4 bg-red-50 border border-red-200">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/50 flex items-center justify-center">
-            <XCircle className="w-5 h-5 text-red-600 dark:text-red-400" />
+          <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+            <XCircle className="w-5 h-5 text-red-600" />
           </div>
           <div>
-            <p className="font-semibold text-red-800 dark:text-red-200">
+            <p className="font-semibold text-red-800">
               Passager absent
             </p>
-            <p className="text-sm text-red-600 dark:text-red-400">
+            <p className="text-sm text-red-600">
               Le passager a été marqué absent. Un remboursement avec pénalité a été effectué.
             </p>
           </div>
@@ -152,16 +152,16 @@ export default function DepartureConfirmation({ booking, userRole, onUpdate }: D
   // Si la réservation n'est pas dans un état permettant la confirmation
   if (!canConfirmDeparture) {
     return (
-      <div className="card p-4 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700">
+      <div className="card p-4 bg-white dark:bg-white/[0.03] bg-white dark:bg-neutral-900 border border-gray-200 dark:border-white/[0.07] border-gray-200 dark:border-white/[0.07]">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-gray-100 dark:bg-slate-700 flex items-center justify-center">
-            <Info className="w-5 h-5 text-gray-500" />
+          <div className="w-10 h-10 rounded-full bg-gray-100 bg-white dark:bg-neutral-900/[0.03] flex items-center justify-center">
+            <Info className="w-5 h-5 text-gray-500 dark:text-white/55" />
           </div>
           <div>
-            <p className="font-semibold text-gray-700 dark:text-gray-300">
+            <p className="font-semibold text-gray-700 text-gray-600 dark:text-white/70">
               Confirmation de départ non disponible
             </p>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-500 dark:text-white/55">
               {booking.status !== 'confirmed' 
                 ? 'La réservation doit être confirmée'
                 : 'Le paiement doit être effectué avant de confirmer le départ'
@@ -176,7 +176,7 @@ export default function DepartureConfirmation({ booking, userRole, onUpdate }: D
   return (
     <div className="card overflow-hidden">
       {/* En-tête */}
-      <div className="p-4 bg-gradient-to-r from-primary-500 to-primary-600 text-white">
+      <div className="p-4 bg-gradient-to-r from-primary-500 to-primary-600 text-gray-900 dark:text-white">
         <div className="flex items-center gap-3">
           <Shield className="w-6 h-6" />
           <div>
@@ -191,8 +191,8 @@ export default function DepartureConfirmation({ booking, userRole, onUpdate }: D
       {/* Statut des confirmations */}
       <div className="p-4 space-y-4">
         {/* Explication */}
-        <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-3">
-          <p className="text-sm text-blue-700 dark:text-blue-300">
+        <div className="bg-blue-50 rounded-xl p-3">
+          <p className="text-sm text-blue-700">
             <strong>Comment ça marche :</strong> L'argent du passager est sécurisé. 
             Lorsque les deux parties confirment le départ, le paiement est automatiquement 
             transféré au conducteur.
@@ -204,8 +204,8 @@ export default function DepartureConfirmation({ booking, userRole, onUpdate }: D
           {/* Conducteur */}
           <div className={`p-4 rounded-xl border-2 transition-all ${
             hasDriverConfirmed 
-              ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20' 
-              : 'border-gray-200 dark:border-slate-700'
+              ? 'border-emerald-500 bg-emerald-50' 
+              : 'border-gray-200 dark:border-white/[0.07] border-gray-200 dark:border-white/[0.07]'
           }`}>
             <div className="flex items-center gap-2 mb-2">
               {hasDriverConfirmed ? (
@@ -213,9 +213,9 @@ export default function DepartureConfirmation({ booking, userRole, onUpdate }: D
               ) : (
                 <Clock className="w-5 h-5 text-gray-400" />
               )}
-              <span className="font-medium text-gray-900 dark:text-white">Conducteur</span>
+              <span className="font-medium text-white text-gray-900 dark:text-white">Conducteur</span>
             </div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-sm text-gray-500 dark:text-white/55 text-gray-500 dark:text-white/55">
               {hasDriverConfirmed ? 'A confirmé le départ' : 'En attente...'}
             </p>
           </div>
@@ -223,8 +223,8 @@ export default function DepartureConfirmation({ booking, userRole, onUpdate }: D
           {/* Passager */}
           <div className={`p-4 rounded-xl border-2 transition-all ${
             hasPassengerConfirmed 
-              ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20' 
-              : 'border-gray-200 dark:border-slate-700'
+              ? 'border-emerald-500 bg-emerald-50' 
+              : 'border-gray-200 dark:border-white/[0.07] border-gray-200 dark:border-white/[0.07]'
           }`}>
             <div className="flex items-center gap-2 mb-2">
               {hasPassengerConfirmed ? (
@@ -232,9 +232,9 @@ export default function DepartureConfirmation({ booking, userRole, onUpdate }: D
               ) : (
                 <Clock className="w-5 h-5 text-gray-400" />
               )}
-              <span className="font-medium text-gray-900 dark:text-white">Passager</span>
+              <span className="font-medium text-white text-gray-900 dark:text-white">Passager</span>
             </div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-sm text-gray-500 dark:text-white/55 text-gray-500 dark:text-white/55">
               {hasPassengerConfirmed ? 'A confirmé le départ' : 'En attente...'}
             </p>
           </div>
@@ -263,9 +263,9 @@ export default function DepartureConfirmation({ booking, userRole, onUpdate }: D
 
         {/* Message si déjà confirmé */}
         {myConfirmation && !otherConfirmation && (
-          <div className="flex items-center gap-2 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-xl">
+          <div className="flex items-center gap-2 p-3 bg-amber-50 rounded-xl">
             <Clock className="w-5 h-5 text-amber-500" />
-            <p className="text-sm text-amber-700 dark:text-amber-300">
+            <p className="text-sm text-amber-700">
               Vous avez confirmé. En attente de {isDriver ? 'passager' : 'conducteur'}...
             </p>
           </div>
@@ -275,7 +275,7 @@ export default function DepartureConfirmation({ booking, userRole, onUpdate }: D
         {isDriver && !hasPassengerConfirmed && (
           <button
             onClick={() => setShowNoShowModal(true)}
-            className="w-full text-center text-sm text-red-600 hover:text-red-700 dark:text-red-400 py-2"
+            className="w-full text-center text-sm text-red-600 hover:text-red-700 py-2"
           >
             <AlertTriangle className="w-4 h-4 inline mr-1" />
             Signaler l'absence du passager
@@ -286,7 +286,7 @@ export default function DepartureConfirmation({ booking, userRole, onUpdate }: D
         {!isDriver && !hasDriverConfirmed && (
           <button
             onClick={() => setShowDriverNoShowModal(true)}
-            className="w-full text-center text-sm text-red-600 hover:text-red-700 dark:text-red-400 py-2"
+            className="w-full text-center text-sm text-red-600 hover:text-red-700 py-2"
           >
             <AlertTriangle className="w-4 h-4 inline mr-1" />
             Signaler l'absence du chauffeur
@@ -299,19 +299,19 @@ export default function DepartureConfirmation({ booking, userRole, onUpdate }: D
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="card w-full max-w-md p-6 animate-fadeIn">
             <div className="text-center mb-6">
-              <div className="w-16 h-16 rounded-full bg-red-100 dark:bg-red-900/30 mx-auto mb-4 flex items-center justify-center">
-                <AlertTriangle className="w-8 h-8 text-red-600 dark:text-red-400" />
+              <div className="w-16 h-16 rounded-full bg-red-100 mx-auto mb-4 flex items-center justify-center">
+                <AlertTriangle className="w-8 h-8 text-red-600" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+              <h3 className="text-xl font-bold text-white text-white mb-2">
                 Signaler une absence
               </h3>
-              <p className="text-gray-600 dark:text-gray-400">
+              <p className="text-gray-500 dark:text-white/55 text-gray-500 dark:text-white/55">
                 Êtes-vous sûr que le passager est absent ? Cette action ne peut pas être annulée.
               </p>
             </div>
 
-            <div className="bg-amber-50 dark:bg-amber-900/20 rounded-xl p-4 mb-6">
-              <p className="text-sm text-amber-700 dark:text-amber-300">
+            <div className="bg-amber-50 rounded-xl p-4 mb-6">
+              <p className="text-sm text-amber-700">
                 <strong>Note :</strong> Le passager sera remboursé avec une pénalité de 500 FCFA pour son absence.
               </p>
             </div>
@@ -345,19 +345,19 @@ export default function DepartureConfirmation({ booking, userRole, onUpdate }: D
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="card w-full max-w-md p-6 animate-fadeIn">
             <div className="text-center mb-6">
-              <div className="w-16 h-16 rounded-full bg-red-100 dark:bg-red-900/30 mx-auto mb-4 flex items-center justify-center">
-                <AlertTriangle className="w-8 h-8 text-red-600 dark:text-red-400" />
+              <div className="w-16 h-16 rounded-full bg-red-100 mx-auto mb-4 flex items-center justify-center">
+                <AlertTriangle className="w-8 h-8 text-red-600" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+              <h3 className="text-xl font-bold text-white text-white mb-2">
                 Signaler l'absence du chauffeur
               </h3>
-              <p className="text-gray-600 dark:text-gray-400">
+              <p className="text-gray-500 dark:text-white/55 text-gray-500 dark:text-white/55">
                 Êtes-vous sûr que le chauffeur est absent ? Cette action déclenche un remboursement complet.
               </p>
             </div>
 
-            <div className="bg-amber-50 dark:bg-amber-900/20 rounded-xl p-4 mb-6">
-              <p className="text-sm text-amber-700 dark:text-amber-300">
+            <div className="bg-amber-50 rounded-xl p-4 mb-6">
+              <p className="text-sm text-amber-700">
                 <strong>Note :</strong> Le passager est remboursé en totalité. Le chauffeur perd en crédibilité (-1 étoile).
               </p>
             </div>
@@ -388,3 +388,6 @@ export default function DepartureConfirmation({ booking, userRole, onUpdate }: D
     </div>
   )
 }
+
+
+

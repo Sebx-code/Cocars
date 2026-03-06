@@ -1,564 +1,603 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { 
-  Car, Users, Shield, Star, MapPin, Calendar, Search,
-  Sparkles, ArrowRight, Check, Award, Clock, DollarSign,
-  Menu, X, ChevronDown, ChevronRight
+import {
+  Search, MapPin, Calendar, Users, ArrowRight,
+  ChevronDown, Star, Shield, Leaf, Lock,
+  CheckCircle, TrendingUp, Car,
 } from 'lucide-react'
 
+/* ─── Only non-Tailwind things: custom font import + 3 animation keyframes ─── */
+const GLOBAL_CSS = `
+  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;600;800&family=DM+Sans:wght@300;400;500&display=swap');
+  .font-sora { font-family: 'Sora', sans-serif; }
+  .font-dm   { font-family: 'DM Sans', sans-serif; }
+  @keyframes fadeUp  { from { opacity:0; transform:translateY(24px) } to { opacity:1; transform:none } }
+  @keyframes floatY  { 0%,100% { transform:translateY(0) } 50% { transform:translateY(-6px) } }
+  @keyframes ticker  { from { transform:translateX(0) } to { transform:translateX(-50%) } }
+  .anim-up-1 { animation: fadeUp .65s ease .1s  both }
+  .anim-up-2 { animation: fadeUp .65s ease .22s both }
+  .anim-up-3 { animation: fadeUp .65s ease .36s both }
+  .anim-up-4 { animation: fadeUp .65s ease .50s both }
+  .anim-float{ animation: floatY 3.5s ease-in-out infinite }
+  .ticker-track { display:inline-flex; gap:3rem; animation:ticker 26s linear infinite; white-space:nowrap }
+  .ticker-track:hover { animation-play-state:paused }
+  .outline-text { -webkit-text-stroke: 1px rgba(255,255,255,.45); color:transparent }
+`
+
+/* ─── Types ─── */
+interface SearchForm { departure: string; arrival: string; date: string; seats: string }
+
 export default function Landing() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [searchData, setSearchData] = useState({
-    departure: '',
-    destination: '',
-    date: '',
-    seats: 1
-  })
   const navigate = useNavigate()
+  const statsRef = useRef<HTMLDivElement>(null)
+
+  const [scrolled,         setScrolled]         = useState(false)
+  const [statsVisible,     setStatsVisible]     = useState(false)
+  const [counters,         setCounters]         = useState({ users: 0, trips: 0, co2: 0, rating: 0 })
+  const [activeTestimonial,setActiveTestimonial]= useState(0)
+  const [form, setForm] = useState<SearchForm>({ departure:'', arrival:'', date:'', seats:'1' })
+
+  /* Scroll → darken navbar */
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 48)
+    window.addEventListener('scroll', onScroll)
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  /* Stats counter animation on scroll-enter */
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting || statsVisible) return
+      setStatsVisible(true)
+      const STEPS = 60, DURATION = 1800
+      let step = 0
+      const timer = setInterval(() => {
+        step++
+        const p = 1 - Math.pow(1 - step / STEPS, 3)
+        setCounters({
+          users:  Math.floor(50000 * p),
+          trips:  Math.floor(100000 * p),
+          co2:    Math.floor(200 * p),
+          rating: parseFloat((4.8 * p).toFixed(1)),
+        })
+        if (step >= STEPS) clearInterval(timer)
+      }, DURATION / STEPS)
+    }, { threshold: 0.3 })
+    if (statsRef.current) observer.observe(statsRef.current)
+    return () => observer.disconnect()
+  }, [statsVisible])
+
+  /* Auto-rotate testimonials */
+  useEffect(() => {
+    const id = setInterval(() => setActiveTestimonial(p => (p + 1) % 3), 5000)
+    return () => clearInterval(id)
+  }, [])
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
-    navigate(`/search?from=${searchData.departure}&to=${searchData.destination}&date=${searchData.date}&seats=${searchData.seats}`)
+    const params = new URLSearchParams()
+    if (form.departure) params.set('departure', form.departure)
+    if (form.arrival)   params.set('arrival',   form.arrival)
+    if (form.date)      params.set('date',       form.date)
+    if (form.seats)     params.set('seats',      form.seats)
+    navigate(`/search?${params.toString()}`)
   }
 
-  const popularRoutes = [
-    'Yaoundé → Douala',
-    'Douala → Bafoussam',
-    'Yaoundé → Kribi',
-    'Douala → Limbé'
+  /* ─── Data ─── */
+  const ROUTES = [
+    { from:'Douala',  to:'Yaoundé',    price:'4 000',  dur:'3h',    freq:'24 / jour' },
+    { from:'Yaoundé', to:'Bafoussam',  price:'5 000',  dur:'4h',    freq:'12 / jour' },
+    { from:'Douala',  to:'Limbe',      price:'2 000',  dur:'1h30',  freq:'18 / jour' },
+    { from:'Douala',  to:'Buea',       price:'3 000',  dur:'2h',    freq:'15 / jour' },
+    { from:'Yaoundé', to:'Bertoua',    price:'8 000',  dur:'6h',    freq:'8 / jour'  },
+    { from:'Douala',  to:'Kribi',      price:'4 500',  dur:'3h',    freq:'10 / jour' },
   ]
 
-  const features = [
-    {
-      icon: <Shield className="w-8 h-8" />,
-      title: 'Sécurisé',
-      description: 'Système de vérification et notation des conducteurs'
-    },
-    {
-      icon: <DollarSign className="w-8 h-8" />,
-      title: 'Économique',
-      description: 'Économisez jusqu\'à 60% sur vos trajets'
-    },
-    {
-      icon: <Clock className="w-8 h-8" />,
-      title: 'Flexible',
-      description: 'Voyagez quand vous voulez, où vous voulez'
-    },
-    {
-      icon: <Award className="w-8 h-8" />,
-      title: 'Crédibilité',
-      description: 'Système de points pour conducteurs fiables'
-    }
+  const TESTIMONIALS = [
+    { name:'Amadou K.',    city:'Douala',    trips:12, text:'CoCar m\'a permis d\'économiser plus de 30 000 FCFA ce mois. Le système de paiement sécurisé est vraiment rassurant.' },
+    { name:'Fatima N.',    city:'Yaoundé',   trips:28, text:'J\'utilise CoCar chaque semaine pour mes trajets professionnels. Les conducteurs sont toujours ponctuels et courtois.' },
+    { name:'Jean-Paul M.', city:'Bafoussam', trips:45, text:'Grâce à CoCar je partage mes frais d\'essence et rencontre des gens formidables. Une belle communauté camerounaise.' },
   ]
 
-  const stats = [
-    { value: '50K+', label: 'Utilisateurs' },
-    { value: '100K+', label: 'Trajets' },
-    { value: '4.8/5', label: 'Note moyenne' },
-    { value: '98%', label: 'Satisfaction' }
+  const TRUST = [
+    { icon:<Shield      size={20}/>, title:'Profils vérifiés',  desc:'Permis et pièce d\'identité vérifiés pour chaque conducteur.' },
+    { icon:<Lock        size={20}/>, title:'Paiement sécurisé', desc:'Argent en escrow, libéré uniquement à la confirmation du voyage.' },
+    { icon:<Star        size={20}/>, title:'Avis authentiques', desc:'Conducteurs et passagers se notent mutuellement après chaque trajet.' },
+    { icon:<Leaf        size={20}/>, title:'Impact écologique', desc:'Chaque covoiturage réduit les émissions de CO₂. Voyagez responsable.' },
+    { icon:<CheckCircle size={20}/>, title:'Support 7j/7',      desc:'Une équipe disponible pour vous aider à tout moment.' },
+    { icon:<TrendingUp  size={20}/>, title:'Prix transparents', desc:'Aucun frais caché. Vous voyez le prix total avant de confirmer.' },
   ]
 
+  const TICKER = ['Douala → Yaoundé','Yaoundé → Bafoussam','Douala → Limbe','Douala → Kribi','Bafoussam → Douala','Yaoundé → Bertoua','Limbe → Douala','Kribi → Yaoundé']
+
+  /* ─── Render ─── */
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full bg-slate-900/80 backdrop-blur-lg border-b border-white/10 z-50">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-16">
-            <Link to="/" className="flex items-center gap-2">
-              <div className="w-10 h-10 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full flex items-center justify-center">
-                <Car className="w-6 h-6 text-white" />
+    <>
+      <style>{GLOBAL_CSS}</style>
+
+      <div className="font-dm bg-neutral-950 text-white min-h-screen overflow-x-hidden">
+
+        {/* ════════════════ NAVBAR ════════════════ */}
+        <nav className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 border-b ${
+          scrolled ? 'bg-neutral-950/90 backdrop-blur-xl border-white/10' : 'bg-transparent border-transparent'
+        }`}>
+          <div className="max-w-7xl mx-auto px-6 lg:px-10 flex items-center justify-between h-16">
+
+            <Link to="/" className="flex items-center gap-2.5 no-underline">
+              <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
+                <span className="font-sora font-black text-neutral-950 text-base leading-none">C</span>
               </div>
-              <span className="text-2xl font-bold text-white">Cocar</span>
+              <span className="font-sora font-bold text-white text-lg tracking-tight">CoCar</span>
             </Link>
 
-            {/* Desktop Menu */}
-            <div className="hidden md:flex items-center gap-6">
-              <Link to="/search" className="text-white/80 hover:text-white transition">
-                Rechercher
-              </Link>
-              <Link to="/register" className="text-white/80 hover:text-white transition">
-                Proposer
-              </Link>
-              <Link to="/login" className="text-white/80 hover:text-white transition">
+            <div className="hidden md:flex items-center gap-1">
+              {[['Trajets','/feed'],['Rechercher','/search']].map(([label,href])=>(
+                <Link key={href} to={href} className="text-white/55 hover:text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-white/5 transition-colors no-underline">
+                  {label}
+                </Link>
+              ))}
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Link to="/login" className="hidden sm:block text-white/55 hover:text-white text-sm font-medium px-4 py-2 transition-colors no-underline">
                 Connexion
               </Link>
-              <Link 
-                to="/register" 
-                className="px-6 py-2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-full hover:shadow-lg hover:shadow-emerald-500/50 transition"
-              >
-                Inscription
+              <Link to="/register" className="bg-white hover:bg-neutral-100 text-neutral-950 text-sm font-semibold px-5 py-2 rounded-full transition-colors no-underline shadow-sm">
+                S'inscrire
+              </Link>
+            </div>
+          </div>
+        </nav>
+
+        {/* ════════════════ HERO ════════════════ */}
+        <section className="relative min-h-screen flex flex-col justify-center pt-24 pb-24 px-6 lg:px-10">
+
+          {/* Background glow */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] rounded-full bg-white/[0.035] blur-3xl" />
+          </div>
+
+          <div className="relative max-w-7xl mx-auto w-full">
+
+            {/* Badge */}
+            <div className="anim-up-1 mb-8">
+              <span className="inline-flex items-center gap-2 bg-white/[0.06] border border-white/10 rounded-full px-4 py-1.5 text-sm text-white/65 font-medium">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 flex-shrink-0" />
+                50 000+ utilisateurs actifs au Cameroun
+              </span>
+            </div>
+
+            {/* Headline */}
+            <h1 className="anim-up-2 font-sora font-extrabold leading-[.94] tracking-[-0.04em] text-[clamp(48px,9vw,100px)] mb-8 max-w-4xl">
+              Voyagez malin,{' '}
+              <span className="outline-text">partagez.</span>
+            </h1>
+
+            <p className="anim-up-3 text-white/40 text-lg leading-relaxed font-light max-w-lg mb-14">
+              La plateforme de covoiturage qui connecte conducteurs et passagers au Cameroun. Paiements sécurisés, trajets vérifiés.
+            </p>
+
+            {/* ── Search card ── */}
+            <div className="anim-up-4 max-w-4xl">
+              <form onSubmit={handleSearch}
+                className="bg-white rounded-2xl p-2 flex flex-col md:flex-row shadow-[0_32px_80px_rgba(0,0,0,.55)]">
+
+                {/* Departure */}
+                <div className="flex-1 px-5 py-3 border-b border-neutral-200 md:border-b-0 md:border-r">
+                  <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-[.15em] mb-1">Départ</label>
+                  <div className="flex items-center gap-2">
+                    <MapPin size={13} className="text-neutral-400 flex-shrink-0" />
+                    <input type="text" placeholder="Ex: Douala"
+                      value={form.departure}
+                      onChange={e => setForm(f=>({...f, departure:e.target.value}))}
+                      className="w-full bg-transparent text-neutral-900 text-sm font-medium placeholder:text-neutral-400 outline-none"
+                    />
+                  </div>
+                </div>
+
+                {/* Arrival */}
+                <div className="flex-1 px-5 py-3 border-b border-neutral-200 md:border-b-0 md:border-r">
+                  <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-[.15em] mb-1">Arrivée</label>
+                  <div className="flex items-center gap-2">
+                    <MapPin size={13} className="text-neutral-400 flex-shrink-0" />
+                    <input type="text" placeholder="Ex: Yaoundé"
+                      value={form.arrival}
+                      onChange={e => setForm(f=>({...f, arrival:e.target.value}))}
+                      className="w-full bg-transparent text-neutral-900 text-sm font-medium placeholder:text-neutral-400 outline-none"
+                    />
+                  </div>
+                </div>
+
+                {/* Date */}
+                <div className="flex-1 px-5 py-3 border-b border-neutral-200 md:border-b-0 md:border-r">
+                  <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-[.15em] mb-1">Date</label>
+                  <div className="flex items-center gap-2">
+                    <Calendar size={13} className="text-neutral-400 flex-shrink-0" />
+                    <input type="date"
+                      value={form.date}
+                      onChange={e => setForm(f=>({...f, date:e.target.value}))}
+                      className="w-full bg-transparent text-neutral-900 text-sm font-medium outline-none"
+                    />
+                  </div>
+                </div>
+
+                {/* Seats */}
+                <div className="px-5 py-3 border-b border-neutral-200 md:border-b-0 md:border-r min-w-[140px]">
+                  <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-[.15em] mb-1">Passagers</label>
+                  <div className="flex items-center gap-2">
+                    <Users size={13} className="text-neutral-400 flex-shrink-0" />
+                    <select value={form.seats} onChange={e => setForm(f=>({...f, seats:e.target.value}))}
+                      className="w-full bg-transparent text-neutral-900 text-sm font-medium outline-none cursor-pointer">
+                      {[1,2,3,4].map(n=><option key={n} value={n}>{n} passager{n>1?'s':''}</option>)}
+                    </select>
+                  </div>
+                </div>
+
+                {/* CTA */}
+                <div className="p-1.5 flex-shrink-0">
+                  <button type="submit"
+                    className="w-full md:w-auto h-full bg-neutral-950 hover:bg-neutral-800 active:scale-95 text-white text-sm font-semibold px-7 py-3 rounded-xl flex items-center justify-center gap-2 transition-all">
+                    <Search size={14}/> Rechercher
+                  </button>
+                </div>
+              </form>
+
+              {/* Quick-pick chips */}
+              <div className="mt-4 flex flex-wrap items-center gap-2">
+                <span className="text-white/30 text-xs">Populaires :</span>
+                {['Douala → Yaoundé','Yaoundé → Bafoussam','Douala → Limbe'].map(r => {
+                  const [dep,arr] = r.split(' → ')
+                  return (
+                    <button key={r}
+                      onClick={()=>setForm(f=>({...f, departure:dep, arrival:arr}))}
+                      className="bg-white/[0.05] hover:bg-white/10 border border-white/10 hover:border-white/25 text-white/50 hover:text-white/80 text-xs rounded-full px-3 py-1.5 transition-all cursor-pointer">
+                      {r}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Scroll indicator */}
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/25">
+            <span className="text-[10px] uppercase tracking-[.2em]">Défiler</span>
+            <ChevronDown size={13} className="anim-float" />
+          </div>
+        </section>
+
+        {/* ════════════════ TICKER ════════════════ */}
+        <div className="border-y border-white/[0.07] py-4 bg-white/[0.02] overflow-hidden whitespace-nowrap">
+          <div className="ticker-track">
+            {[...TICKER,...TICKER].map((item,i)=>(
+              <span key={i} className="text-sm text-white/35 font-medium flex-shrink-0 inline-flex items-center gap-2.5">
+                <Car size={12} className="text-white/20"/> {item}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* ════════════════ STATS ════════════════ */}
+        <section ref={statsRef} className="py-24 px-6 lg:px-10">
+          <div className="max-w-7xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-4">
+            {[
+              { emoji:'👥', value: counters.users.toLocaleString('fr-FR'),  suffix:'+', label:'Utilisateurs actifs' },
+              { emoji:'🚗', value: counters.trips.toLocaleString('fr-FR'),  suffix:'+', label:'Trajets effectués'   },
+              { emoji:'🌿', value: counters.co2,                             suffix:' T', label:'CO₂ économisé'     },
+              { emoji:'⭐', value: counters.rating.toFixed(1),               suffix:'/5', label:'Note moyenne'      },
+            ].map((s,i)=>(
+              <div key={i}
+                className="group bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.07] hover:border-white/20 rounded-2xl p-8 text-center transition-all duration-300 hover:-translate-y-1 cursor-default">
+                <div className="text-3xl mb-3">{s.emoji}</div>
+                <div className="font-sora font-extrabold text-[clamp(30px,5vw,46px)] leading-none tracking-tight">
+                  {s.value}
+                  <span className="text-white/30 font-light text-xl">{s.suffix}</span>
+                </div>
+                <div className="mt-2 text-sm text-white/40 font-light">{s.label}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <div className="border-t border-white/[0.07]" />
+
+        {/* ════════════════ POPULAR ROUTES ════════════════ */}
+        <section className="py-24 px-6 lg:px-10">
+          <div className="max-w-7xl mx-auto">
+
+            <div className="mb-14">
+              <span className="inline-flex items-center bg-white/[0.05] border border-white/10 rounded-full px-3.5 py-1.5 text-xs text-white/55 font-medium mb-5">
+                Destinations
+              </span>
+              <h2 className="font-sora font-extrabold text-[clamp(30px,5vw,54px)] leading-[1.05] tracking-[-0.03em]">
+                Trajets les plus<br/>
+                <span className="text-white/25">populaires</span>
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {ROUTES.map((r,i)=>(
+                <Link key={i} to={`/search?departure=${r.from}&arrival=${r.to}`}
+                  className="group bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 hover:border-white/20 rounded-2xl px-6 py-5 flex items-center justify-between transition-all duration-200 hover:-translate-y-1 no-underline">
+                  <div>
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <span className="text-sm font-semibold">{r.from}</span>
+                      <ArrowRight size={11} className="text-white/25 group-hover:text-white/50 group-hover:translate-x-0.5 transition-all"/>
+                      <span className="text-sm font-semibold">{r.to}</span>
+                    </div>
+                    <div className="text-xs text-white/35">{r.dur} · {r.freq}</div>
+                  </div>
+                  <div className="text-right flex-shrink-0 ml-4">
+                    <div className="font-sora font-bold text-lg leading-none">
+                      {r.price} <span className="text-xs font-light text-white/35">FCFA</span>
+                    </div>
+                    <div className="text-[11px] text-white/30 mt-0.5">dès</div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            <div className="mt-8 text-center">
+              <Link to="/search"
+                className="inline-flex items-center gap-2 border border-white/15 hover:border-white/35 text-white/55 hover:text-white text-sm font-medium px-7 py-3 rounded-full transition-all no-underline">
+                Voir tous les trajets <ArrowRight size={13}/>
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        <div className="border-t border-white/[0.07]" />
+
+        {/* ════════════════ HOW IT WORKS ════════════════ */}
+        <section className="py-24 px-6 lg:px-10">
+          <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+
+            <div>
+              <span className="inline-flex items-center bg-white/[0.05] border border-white/10 rounded-full px-3.5 py-1.5 text-xs text-white/55 font-medium mb-6">
+                Simple & rapide
+              </span>
+              <h2 className="font-sora font-extrabold text-[clamp(30px,5vw,54px)] leading-[1.05] tracking-[-0.03em] mb-6">
+                Réservez en<br/>
+                <span className="text-white/25">3 étapes</span>
+              </h2>
+              <p className="text-white/40 font-light leading-relaxed text-base max-w-sm mb-10">
+                Trouver un covoiturage n'a jamais été aussi simple. Notre plateforme vous guide à chaque étape.
+              </p>
+              <Link to="/register"
+                className="inline-flex items-center gap-2 bg-white hover:bg-neutral-100 text-neutral-950 font-semibold text-sm px-7 py-3.5 rounded-full transition-all hover:shadow-[0_8px_32px_rgba(255,255,255,.15)] no-underline">
+                Commencer gratuitement <ArrowRight size={14}/>
               </Link>
             </div>
 
-            {/* Mobile Menu Button */}
-            <button 
-              className="md:hidden text-white"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              {isMenuOpen ? <X /> : <Menu />}
-            </button>
-          </div>
-
-          {/* Mobile Menu */}
-          {isMenuOpen && (
-            <div className="md:hidden py-4 border-t border-white/10">
-              <div className="flex flex-col gap-4">
-                <Link to="/search" className="text-white/80 hover:text-white transition">
-                  Rechercher
-                </Link>
-                <Link to="/register" className="text-white/80 hover:text-white transition">
-                  Proposer
-                </Link>
-                <Link to="/login" className="text-white/80 hover:text-white transition">
-                  Connexion
-                </Link>
-                <Link 
-                  to="/register" 
-                  className="px-6 py-2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-full text-center"
-                >
-                  Inscription
-                </Link>
-              </div>
-            </div>
-          )}
-        </div>
-      </nav>
-
-      {/* Hero Section */}
-      <section className="pt-32 pb-20 relative overflow-hidden">
-        {/* Animated Background Pattern */}
-        <div className="absolute inset-0 overflow-hidden">
-          {/* Grid Pattern */}
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute inset-0" style={{
-              backgroundImage: `
-                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px),
-                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px)
-              `,
-              backgroundSize: '50px 50px',
-              transform: 'perspective(500px) rotateX(60deg) scale(2)',
-              transformOrigin: 'center top'
-            }} />
-          </div>
-          
-          {/* Floating Shapes */}
-          <div className="absolute top-20 left-10 w-72 h-72 bg-emerald-500/10 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute top-40 right-20 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-          <div className="absolute bottom-20 left-1/3 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
-          
-          {/* Isometric Cars Animation */}
-          <div className="absolute inset-0 flex items-center justify-center opacity-5">
-            <Car className="w-64 h-64 text-emerald-400" />
-          </div>
-        </div>
-
-        <div className="container mx-auto px-4 relative z-10">
-          {/* Badge */}
-          <div className="flex justify-center mb-8">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500/20 border border-emerald-500/30 rounded-full">
-              <Sparkles className="w-4 h-4 text-emerald-400" />
-              <span className="text-emerald-300 text-sm font-medium">1000+ trajets ce mois</span>
+            <div>
+              {[
+                { n:'01', title:'Recherchez votre trajet',  desc:'Entrez ville de départ, arrivée et date. Trouvez le trajet qui vous convient parmi des dizaines d\'offres vérifiées.' },
+                { n:'02', title:'Réservez votre place',     desc:'Choisissez votre conducteur et payez via Orange Money ou MTN MoMo. Paiement sécurisé et protégé.' },
+                { n:'03', title:'Voyagez sereinement',      desc:'Retrouvez votre conducteur au point convenu. Le paiement est libéré automatiquement à la confirmation.' },
+              ].map((step,i)=>(
+                <div key={i} className={`flex gap-6 py-8 ${i<2?'border-b border-white/[0.07]':''}`}>
+                  <span className="font-sora text-xs font-bold text-white/20 mt-0.5 w-7 flex-shrink-0">{step.n}</span>
+                  <div>
+                    <h3 className="text-base font-semibold mb-2 leading-snug">{step.title}</h3>
+                    <p className="text-sm text-white/40 font-light leading-relaxed">{step.desc}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
+        </section>
 
-          {/* Title */}
-          <div className="text-center mb-12">
-            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6">
-              Voyagez malin,<br />
-              <span className="bg-gradient-to-r from-emerald-400 to-emerald-600 bg-clip-text text-transparent">
-                économisez plus
+        <div className="border-t border-white/[0.07]" />
+
+        {/* ════════════════ TRUST GRID ════════════════ */}
+        <section className="py-24 px-6 lg:px-10 bg-white/[0.015]">
+          <div className="max-w-7xl mx-auto">
+
+            <div className="text-center mb-16">
+              <span className="inline-flex items-center bg-white/[0.05] border border-white/10 rounded-full px-3.5 py-1.5 text-xs text-white/55 font-medium mb-5">
+                Confiance & Sécurité
               </span>
-            </h1>
-            <p className="text-xl text-white/70 max-w-2xl mx-auto">
-              Covoiturage simple et sécurisé partout au Cameroun
-            </p>
-          </div>
+              <h2 className="font-sora font-extrabold text-[clamp(30px,5vw,54px)] leading-[1.05] tracking-[-0.03em]">
+                Votre sécurité,<br/>
+                <span className="text-white/25">notre priorité</span>
+              </h2>
+            </div>
 
-          {/* Search Form */}
-          <div className="max-w-5xl mx-auto">
-            <form onSubmit={handleSearch} className="bg-white rounded-3xl shadow-2xl p-8 backdrop-blur-xl border border-gray-100">
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-                <div className="group">
-                  <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Départ</label>
-                  <div className="relative">
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center group-focus-within:bg-emerald-100 transition-colors">
-                      <MapPin className="w-5 h-5 text-gray-400 group-focus-within:text-emerald-500 transition-colors" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {TRUST.map((f,i)=>(
+                <div key={i}
+                  className="group bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.07] hover:border-white/20 rounded-2xl p-7 transition-all duration-300 hover:-translate-y-1">
+                  <div className="w-10 h-10 bg-white/[0.07] group-hover:bg-white/10 rounded-xl flex items-center justify-center text-white/65 mb-5 transition-colors">
+                    {f.icon}
+                  </div>
+                  <h3 className="font-semibold text-[15px] mb-2">{f.title}</h3>
+                  <p className="text-sm text-white/40 font-light leading-relaxed">{f.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <div className="border-t border-white/[0.07]" />
+
+        {/* ════════════════ TESTIMONIALS ════════════════ */}
+        <section className="py-24 px-6 lg:px-10">
+          <div className="max-w-7xl mx-auto">
+
+            <div className="mb-14">
+              <span className="inline-flex items-center bg-white/[0.05] border border-white/10 rounded-full px-3.5 py-1.5 text-xs text-white/55 font-medium mb-5">
+                Témoignages
+              </span>
+              <h2 className="font-sora font-extrabold text-[clamp(30px,5vw,54px)] leading-[1.05] tracking-[-0.03em]">
+                Ils voyagent avec<br/>
+                <span className="text-white/25">CoCar</span>
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {TESTIMONIALS.map((t,i)=>(
+                <div key={i} onClick={()=>setActiveTestimonial(i)}
+                  className={`bg-neutral-900 border rounded-2xl p-8 cursor-pointer transition-all duration-500 ${
+                    i===activeTestimonial
+                      ? 'border-white/25 scale-[1.02] shadow-[0_0_48px_rgba(255,255,255,.04)]'
+                      : 'border-neutral-800 opacity-45 hover:opacity-70'
+                  }`}>
+                  <div className="flex gap-0.5 mb-5">
+                    {[...Array(5)].map((_,j)=>
+                      <Star key={j} size={12} className="fill-white/75 text-transparent"/>
+                    )}
+                  </div>
+                  <p className="text-sm text-white/60 font-light leading-relaxed mb-6">"{t.text}"</p>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center font-bold text-sm">
+                        {t.name[0]}
+                      </div>
+                      <div>
+                        <div className="text-sm font-semibold">{t.name}</div>
+                        <div className="text-xs text-white/35">{t.city}</div>
+                      </div>
                     </div>
-                    <input
-                      type="text"
-                      value={searchData.departure}
-                      onChange={(e) => setSearchData({...searchData, departure: e.target.value})}
-                      placeholder="Yaoundé"
-                      className="w-full pl-16 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-gray-800 font-medium"
-                    />
+                    <span className="text-xs text-white/25">{t.trips} trajets</span>
                   </div>
                 </div>
+              ))}
+            </div>
 
-                <div className="group">
-                  <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Destination</label>
-                  <div className="relative">
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
-                      <MapPin className="w-5 h-5 text-emerald-500" />
-                    </div>
-                    <input
-                      type="text"
-                      value={searchData.destination}
-                      onChange={(e) => setSearchData({...searchData, destination: e.target.value})}
-                      placeholder="Douala"
-                      className="w-full pl-16 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-gray-800 font-medium"
-                    />
-                  </div>
-                </div>
-
-                <div className="group">
-                  <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Date</label>
-                  <div className="relative">
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center group-focus-within:bg-emerald-100 transition-colors">
-                      <Calendar className="w-5 h-5 text-gray-400 group-focus-within:text-emerald-500 transition-colors" />
-                    </div>
-                    <input
-                      type="date"
-                      value={searchData.date}
-                      onChange={(e) => setSearchData({...searchData, date: e.target.value})}
-                      className="w-full pl-16 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-gray-800 font-medium"
-                    />
-                  </div>
-                </div>
-
-                <div className="group">
-                  <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Places</label>
-                  <div className="relative">
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center group-focus-within:bg-emerald-100 transition-colors">
-                      <Users className="w-5 h-5 text-gray-400 group-focus-within:text-emerald-500 transition-colors" />
-                    </div>
-                    <input
-                      type="number"
-                      min="1"
-                      max="8"
-                      value={searchData.seats}
-                      onChange={(e) => setSearchData({...searchData, seats: parseInt(e.target.value)})}
-                      className="w-full pl-16 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-gray-800 font-medium"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <button
-                type="submit"
-                className="group w-full py-5 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-xl font-bold text-lg hover:shadow-2xl hover:shadow-emerald-500/50 hover:scale-[1.02] transition-all flex items-center justify-center gap-3"
-              >
-                <Search className="w-6 h-6" />
-                Rechercher un trajet
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </button>
-            </form>
-
-            {/* Popular Routes */}
-            <div className="mt-8 text-center">
-              <div className="inline-flex items-center gap-2 mb-4">
-                <div className="h-px w-12 bg-gradient-to-r from-transparent to-white/30" />
-                <p className="text-white/70 text-sm font-semibold uppercase tracking-wider">Trajets Populaires</p>
-                <div className="h-px w-12 bg-gradient-to-l from-transparent to-white/30" />
-              </div>
-              <div className="flex flex-wrap justify-center gap-3">
-                {popularRoutes.map((route, index) => (
-                  <button
-                    key={index}
-                    onClick={() => {
-                      const [from, to] = route.split(' → ')
-                      setSearchData({...searchData, departure: from, destination: to})
-                    }}
-                    className="group px-6 py-3 bg-white/10 backdrop-blur-md text-white rounded-full hover:bg-white hover:text-emerald-600 transition-all border border-white/30 hover:border-white hover:scale-105 hover:shadow-lg font-medium"
-                  >
-                    <span className="flex items-center gap-2">
-                      {route}
-                      <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
-                    </span>
-                  </button>
-                ))}
-              </div>
+            {/* Dot indicators */}
+            <div className="flex justify-center gap-2 mt-8">
+              {TESTIMONIALS.map((_,i)=>(
+                <button key={i} onClick={()=>setActiveTestimonial(i)}
+                  className={`h-1.5 rounded-full transition-all duration-300 border-none cursor-pointer ${
+                    i===activeTestimonial ? 'w-8 bg-white' : 'w-1.5 bg-white/25'
+                  }`}
+                />
+              ))}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Stats Section */}
-      <section className="py-16 bg-slate-900/50 relative overflow-hidden">
-        {/* Animated Background */}
-        <div className="absolute inset-0">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl" />
-        </div>
-        
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center group cursor-pointer">
-                <div className="mb-4 transform group-hover:scale-110 transition-transform duration-300">
-                  <div className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-emerald-400 via-emerald-500 to-emerald-600 bg-clip-text text-transparent mb-2">
-                    {stat.value}
-                  </div>
-                  <div className="h-1 w-16 mx-auto bg-gradient-to-r from-transparent via-emerald-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                </div>
-                <div className="text-white/60 group-hover:text-white transition-colors font-medium">
-                  {stat.label}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+        <div className="border-t border-white/[0.07]" />
 
-      {/* Features Section */}
-      <section className="py-20 relative">
-        {/* Background Decoration */}
-        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent" />
-        
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <div className="inline-block mb-4">
-              <div className="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-full">
-                <Sparkles className="w-4 h-4 text-emerald-400" />
-                <span className="text-emerald-300 text-sm font-medium">Nos Avantages</span>
-              </div>
-            </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              Pourquoi choisir <span className="bg-gradient-to-r from-emerald-400 to-emerald-600 bg-clip-text text-transparent">Cocar</span> ?
-            </h2>
-            <p className="text-xl text-white/70 max-w-2xl mx-auto">
-              La meilleure plateforme de covoiturage au Cameroun
-            </p>
-          </div>
+        {/* ════════════════ PASSENGER / DRIVER ════════════════ */}
+        <section className="py-24 px-6 lg:px-10">
+          <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-4">
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature, index) => (
-              <div 
-                key={index}
-                className="group relative p-8 bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10 hover:border-emerald-500/50 transition-all duration-300 hover:-translate-y-2"
-              >
-                {/* Glow Effect on Hover */}
-                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/0 to-emerald-500/0 group-hover:from-emerald-500/10 group-hover:to-transparent rounded-3xl transition-all duration-300" />
-                
-                <div className="relative">
-                  <div className="w-16 h-16 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg shadow-emerald-500/20">
-                    {feature.icon}
-                  </div>
-                  <h3 className="text-xl font-bold text-white mb-3 group-hover:text-emerald-400 transition-colors">
-                    {feature.title}
-                  </h3>
-                  <p className="text-white/60 group-hover:text-white/80 transition-colors">
-                    {feature.description}
-                  </p>
-                </div>
-                
-                {/* Corner Accent */}
-                <div className="absolute top-0 right-0 w-20 h-20 bg-emerald-500/5 rounded-bl-3xl rounded-tr-3xl opacity-0 group-hover:opacity-100 transition-opacity" />
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-24 relative overflow-hidden">
-        {/* Animated Gradient Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-emerald-500 via-emerald-600 to-teal-600">
-          <div className="absolute inset-0 opacity-30">
-            <div className="absolute top-0 left-0 w-full h-full" style={{
-              backgroundImage: `radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
-                               radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 0%, transparent 50%)`
-            }} />
-          </div>
-        </div>
-        
-        {/* Floating Elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-12 -left-12 w-64 h-64 bg-white/10 rounded-full blur-2xl animate-pulse" />
-          <div className="absolute -bottom-12 -right-12 w-96 h-96 bg-white/10 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '1s' }} />
-        </div>
-        
-        <div className="container mx-auto px-4 text-center relative z-10">
-          {/* Icon Row */}
-          <div className="flex justify-center gap-4 mb-8">
-            <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center transform hover:scale-110 transition">
-              <Car className="w-6 h-6 text-white" />
-            </div>
-            <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center transform hover:scale-110 transition" style={{ animationDelay: '0.1s' }}>
-              <Users className="w-6 h-6 text-white" />
-            </div>
-            <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center transform hover:scale-110 transition" style={{ animationDelay: '0.2s' }}>
-              <Shield className="w-6 h-6 text-white" />
-            </div>
-          </div>
-          
-          <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
-            Prêt à démarrer votre <br className="hidden md:block" />
-            <span className="relative inline-block">
-              voyage ?
-              <div className="absolute -bottom-2 left-0 right-0 h-3 bg-white/30 -skew-x-12" />
-            </span>
-          </h2>
-          
-          <p className="text-xl md:text-2xl text-white/90 mb-10 max-w-3xl mx-auto leading-relaxed">
-            Rejoignez des milliers d'utilisateurs qui voyagent malin et économisent plus chaque jour
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-            <Link
-              to="/register"
-              className="group px-10 py-5 bg-white text-emerald-600 rounded-full font-bold text-lg hover:shadow-2xl hover:scale-105 transition-all inline-flex items-center justify-center gap-3"
-            >
-              Créer un compte gratuitement
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </Link>
-            <Link
-              to="/search"
-              className="px-10 py-5 bg-white/10 backdrop-blur-sm text-white rounded-full font-bold text-lg hover:bg-white/20 transition-all border-2 border-white inline-flex items-center justify-center gap-3"
-            >
-              <Search className="w-5 h-5" />
-              Rechercher un trajet
-            </Link>
-          </div>
-          
-          {/* Trust Indicators */}
-          <div className="flex flex-wrap items-center justify-center gap-6 text-white/80">
-            <div className="flex items-center gap-2">
-              <Check className="w-5 h-5" />
-              <span>Inscription gratuite</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Check className="w-5 h-5" />
-              <span>Sans engagement</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Check className="w-5 h-5" />
-              <span>Support 24/7</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="py-16 bg-slate-950 border-t border-white/10 relative overflow-hidden">
-        {/* Background Decoration */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-0 left-0 w-full h-full" style={{
-            backgroundImage: `radial-gradient(circle at 20% 20%, rgba(16,185,129,0.3) 0%, transparent 50%),
-                             radial-gradient(circle at 80% 80%, rgba(59,130,246,0.3) 0%, transparent 50%)`
-          }} />
-        </div>
-        
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="grid md:grid-cols-4 gap-12 mb-12">
-            <div className="md:col-span-1">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-500/30">
-                  <Car className="w-7 h-7 text-white" />
-                </div>
-                <span className="text-3xl font-bold text-white">Cocar</span>
-              </div>
-              <p className="text-white/60 mb-6 leading-relaxed">
-                Covoiturage simple et sécurisé partout au Cameroun. Voyagez malin, économisez plus.
+            {/* Passenger — white card */}
+            <div className="relative bg-white rounded-3xl p-12 lg:p-14 overflow-hidden">
+              <div className="absolute top-0 right-0 w-56 h-56 rounded-full bg-black/[0.03] -translate-y-1/4 translate-x-1/4 pointer-events-none" />
+              <span className="inline-block bg-black/[0.06] text-neutral-900 text-[11px] font-bold uppercase tracking-widest rounded-full px-3.5 py-1.5 mb-6">
+                Passager
+              </span>
+              <h3 className="font-sora font-extrabold text-neutral-950 text-[clamp(28px,4vw,38px)] leading-tight tracking-tight mb-4">
+                Trouvez votre trajet idéal
+              </h3>
+              <p className="text-neutral-500 text-[15px] font-light leading-relaxed mb-10 max-w-xs">
+                Des centaines de trajets disponibles chaque jour. Réservez en quelques secondes.
               </p>
-              <div className="flex gap-3">
-                <a href="#" className="w-10 h-10 bg-white/5 hover:bg-emerald-500 rounded-xl flex items-center justify-center transition group">
-                  <Star className="w-5 h-5 text-white/60 group-hover:text-white transition" />
-                </a>
-                <a href="#" className="w-10 h-10 bg-white/5 hover:bg-emerald-500 rounded-xl flex items-center justify-center transition group">
-                  <Users className="w-5 h-5 text-white/60 group-hover:text-white transition" />
-                </a>
-                <a href="#" className="w-10 h-10 bg-white/5 hover:bg-emerald-500 rounded-xl flex items-center justify-center transition group">
-                  <Shield className="w-5 h-5 text-white/60 group-hover:text-white transition" />
-                </a>
-              </div>
+              <Link to="/search"
+                className="inline-flex items-center gap-2 bg-neutral-950 hover:bg-neutral-800 text-white text-sm font-semibold px-7 py-3.5 rounded-full transition-all hover:shadow-lg no-underline">
+                Rechercher un trajet <ArrowRight size={14}/>
+              </Link>
             </div>
 
-            <div>
-              <h3 className="font-bold text-white mb-6 text-lg">Entreprise</h3>
-              <ul className="space-y-3">
-                <li><a href="#" className="text-white/60 hover:text-emerald-400 transition flex items-center gap-2 group">
-                  <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition" />
-                  À propos
-                </a></li>
-                <li><a href="#" className="text-white/60 hover:text-emerald-400 transition flex items-center gap-2 group">
-                  <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition" />
-                  Blog
-                </a></li>
-                <li><a href="#" className="text-white/60 hover:text-emerald-400 transition flex items-center gap-2 group">
-                  <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition" />
-                  Carrières
-                </a></li>
-                <li><a href="#" className="text-white/60 hover:text-emerald-400 transition flex items-center gap-2 group">
-                  <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition" />
-                  Presse
-                </a></li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="font-bold text-white mb-6 text-lg">Support</h3>
-              <ul className="space-y-3">
-                <li><a href="#" className="text-white/60 hover:text-emerald-400 transition flex items-center gap-2 group">
-                  <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition" />
-                  Centre d'aide
-                </a></li>
-                <li><a href="#" className="text-white/60 hover:text-emerald-400 transition flex items-center gap-2 group">
-                  <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition" />
-                  Sécurité
-                </a></li>
-                <li><a href="#" className="text-white/60 hover:text-emerald-400 transition flex items-center gap-2 group">
-                  <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition" />
-                  Contact
-                </a></li>
-                <li><a href="#" className="text-white/60 hover:text-emerald-400 transition flex items-center gap-2 group">
-                  <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition" />
-                  FAQ
-                </a></li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="font-bold text-white mb-6 text-lg">Légal</h3>
-              <ul className="space-y-3">
-                <li><a href="#" className="text-white/60 hover:text-emerald-400 transition flex items-center gap-2 group">
-                  <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition" />
-                  Conditions d'utilisation
-                </a></li>
-                <li><a href="#" className="text-white/60 hover:text-emerald-400 transition flex items-center gap-2 group">
-                  <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition" />
-                  Confidentialité
-                </a></li>
-                <li><a href="#" className="text-white/60 hover:text-emerald-400 transition flex items-center gap-2 group">
-                  <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition" />
-                  Cookies
-                </a></li>
-                <li><a href="#" className="text-white/60 hover:text-emerald-400 transition flex items-center gap-2 group">
-                  <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition" />
-                  Mentions légales
-                </a></li>
-              </ul>
+            {/* Driver — dark card */}
+            <div className="relative bg-neutral-900 border border-neutral-800 rounded-3xl p-12 lg:p-14 overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-white/[0.02] -translate-y-1/3 translate-x-1/3 pointer-events-none" />
+              <span className="inline-block bg-white/[0.07] border border-white/10 text-white/55 text-[11px] font-bold uppercase tracking-widest rounded-full px-3.5 py-1.5 mb-6">
+                Conducteur
+              </span>
+              <h3 className="font-sora font-extrabold text-white text-[clamp(28px,4vw,38px)] leading-tight tracking-tight mb-4">
+                Rentabilisez vos trajets
+              </h3>
+              <p className="text-white/40 text-[15px] font-light leading-relaxed mb-10 max-w-xs">
+                Proposez vos trajets et partagez vos frais. Publiez votre premier trajet en 2 minutes.
+              </p>
+              <Link to="/create-trip"
+                className="inline-flex items-center gap-2 bg-white hover:bg-neutral-100 text-neutral-950 text-sm font-semibold px-7 py-3.5 rounded-full transition-all hover:shadow-[0_8px_28px_rgba(255,255,255,.12)] no-underline">
+                Proposer un trajet <ArrowRight size={14}/>
+              </Link>
             </div>
           </div>
+        </section>
 
-          <div className="border-t border-white/10 pt-8">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-              <p className="text-white/60 text-sm">
-                &copy; 2024 Cocar. Tous droits réservés.
-              </p>
-              <div className="flex items-center gap-6 text-white/60 text-sm">
-                <a href="#" className="hover:text-emerald-400 transition">Français</a>
-                <span>•</span>
-                <a href="#" className="hover:text-emerald-400 transition">English</a>
-                <span>•</span>
-                <div className="flex items-center gap-2">
-                  <Award className="w-4 h-4 text-emerald-400" />
-                  <span className="text-emerald-400 font-medium">Certifié sécurisé</span>
+        <div className="border-t border-white/[0.07]" />
+
+        {/* ════════════════ FINAL CTA ════════════════ */}
+        <section className="py-24 px-6 lg:px-10">
+          <div className="max-w-7xl mx-auto">
+            <div className="relative bg-white rounded-3xl px-8 py-20 lg:py-28 text-center overflow-hidden">
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-black/[0.02] pointer-events-none" />
+              <div className="absolute bottom-0 right-0 translate-x-1/3 translate-y-1/3 w-64 h-64 rounded-full bg-black/[0.025] pointer-events-none" />
+              <div className="relative z-10">
+                <span className="inline-flex items-center gap-2 bg-black/[0.05] rounded-full px-4 py-1.5 text-xs font-medium text-neutral-500 mb-6">
+                  🚗 Rejoindre la communauté
+                </span>
+                <h2 className="font-sora font-extrabold text-neutral-950 text-[clamp(36px,7vw,76px)] leading-[.95] tracking-[-0.04em] mb-5">
+                  Prêt à covoiturer ?
+                </h2>
+                <p className="text-neutral-500 text-lg font-light max-w-sm mx-auto leading-relaxed mb-10">
+                  Rejoignez 50 000 utilisateurs qui économisent en partageant leurs trajets.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                  <Link to="/register"
+                    className="inline-flex items-center justify-center gap-2 bg-neutral-950 hover:bg-neutral-800 text-white font-semibold text-base px-8 py-4 rounded-full transition-all hover:shadow-xl no-underline">
+                    Créer mon compte gratuit <ArrowRight size={15}/>
+                  </Link>
+                  <Link to="/search"
+                    className="inline-flex items-center justify-center gap-2 border border-black/15 hover:border-black/30 text-neutral-700 hover:text-neutral-950 font-medium text-base px-8 py-4 rounded-full transition-all no-underline">
+                    Rechercher un trajet
+                  </Link>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </footer>
-    </div>
+        </section>
+
+        {/* ════════════════ FOOTER ════════════════ */}
+        <footer className="border-t border-white/[0.07] px-6 lg:px-10 pt-16 pb-10">
+          <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-14">
+
+              <div className="col-span-2 md:col-span-1">
+                <div className="flex items-center gap-2.5 mb-5">
+                  <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
+                    <span className="font-sora font-black text-neutral-950 text-base leading-none">C</span>
+                  </div>
+                  <span className="font-sora font-bold text-lg tracking-tight">CoCar</span>
+                </div>
+                <p className="text-sm text-white/35 font-light leading-relaxed">
+                  La plateforme de covoiturage de référence au Cameroun.
+                </p>
+              </div>
+
+              {[
+                { title:'Produit',  links:['Rechercher','Proposer un trajet','Comment ça marche','Tarifs'] },
+                { title:'Légal',   links:['CGU','Confidentialité','Cookies','Mentions légales']           },
+                { title:'Contact', links:['Support','Presse','Partenariats','Blog']                       },
+              ].map(col=>(
+                <div key={col.title}>
+                  <p className="text-[10px] font-bold uppercase tracking-[.14em] text-white/25 mb-5">{col.title}</p>
+                  <ul className="space-y-3 list-none p-0 m-0">
+                    {col.links.map(l=>(
+                      <li key={l}>
+                        <a href="#" className="text-sm text-white/40 hover:text-white/80 transition-colors no-underline">
+                          {l}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+
+            <div className="border-t border-white/[0.07] pt-6 flex flex-col sm:flex-row justify-between items-center gap-3">
+              <p className="text-xs text-white/25">© {new Date().getFullYear()} CoCar · Tous droits réservés</p>
+              <p className="text-xs text-white/25">Yaoundé, Cameroun 🇨🇲</p>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </>
   )
 }

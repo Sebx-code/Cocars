@@ -24,7 +24,7 @@ export const CredibilityBadge: React.FC<CredibilityBadgeProps> = ({
         return {
           icon: Crown,
           label: 'Elite',
-          colors: 'bg-gradient-to-r from-purple-500 to-pink-500 text-white',
+          colors: 'bg-gradient-to-r from-purple-500 to-pink-500 text-gray-900 dark:text-white',
           borderColor: 'border-purple-400',
           glowColor: 'shadow-purple-400/50'
         }
@@ -32,7 +32,7 @@ export const CredibilityBadge: React.FC<CredibilityBadgeProps> = ({
         return {
           icon: Award,
           label: 'Expert',
-          colors: 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white',
+          colors: 'bg-gradient-to-r from-blue-500 to-indigo-500 text-gray-900 dark:text-white',
           borderColor: 'border-blue-400',
           glowColor: 'shadow-blue-400/50'
         }
@@ -40,7 +40,7 @@ export const CredibilityBadge: React.FC<CredibilityBadgeProps> = ({
         return {
           icon: Shield,
           label: 'Confirmé',
-          colors: 'bg-gradient-to-r from-green-500 to-emerald-500 text-white',
+          colors: 'bg-gradient-to-r from-green-500 to-emerald-500 text-gray-900 dark:text-white',
           borderColor: 'border-green-400',
           glowColor: 'shadow-green-400/50'
         }
@@ -48,7 +48,7 @@ export const CredibilityBadge: React.FC<CredibilityBadgeProps> = ({
         return {
           icon: TrendingUp,
           label: 'Apprenti',
-          colors: 'bg-gradient-to-r from-orange-500 to-amber-500 text-white',
+          colors: 'bg-gradient-to-r from-orange-500 to-amber-500 text-gray-900 dark:text-white',
           borderColor: 'border-orange-400',
           glowColor: 'shadow-orange-400/50'
         }
@@ -57,7 +57,7 @@ export const CredibilityBadge: React.FC<CredibilityBadgeProps> = ({
         return {
           icon: Star,
           label: 'Débutant',
-          colors: 'bg-gradient-to-r from-gray-500 to-slate-500 text-white',
+          colors: 'bg-gradient-to-r from-gray-500 to-slate-500 text-gray-900 dark:text-white',
           borderColor: 'border-gray-400',
           glowColor: 'shadow-gray-400/50'
         }
@@ -109,3 +109,4 @@ export const CredibilityBadge: React.FC<CredibilityBadgeProps> = ({
     </div>
   )
 }
+

@@ -20,7 +20,7 @@ export default function StatCard({
   const changeColors = {
     positive: 'text-emerald-500',
     negative: 'text-red-500',
-    neutral: 'text-gray-500',
+    neutral: 'text-gray-500 dark:text-white/40',
   }
 
   const iconGradients: Record<string, string> = {
@@ -33,13 +33,13 @@ export default function StatCard({
   }
 
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-argon p-6 border border-gray-100 dark:border-slate-700 hover:shadow-argon-lg transition-all duration-300">
+    <div className="bg-white dark:bg-white/[0.03] hover:bg-gray-50 dark:hover:bg-white/[0.06] border border-gray-200 dark:border-white/[0.07] hover:border-gray-300 dark:hover:border-white/20 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1">
       <div className="flex items-center justify-between">
         <div className="flex-1">
-          <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">
+          <p className="text-xs font-semibold text-gray-500 dark:text-white/50 uppercase tracking-wider mb-1">
             {title}
           </p>
-          <p className="text-2xl font-bold text-gray-800 dark:text-white">
+          <p className="text-2xl font-bold text-gray-900 dark:text-white">
             {value}
           </p>
           {change && (

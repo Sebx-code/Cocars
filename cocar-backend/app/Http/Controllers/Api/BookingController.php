@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Models\Payment;
 use App\Models\Trip;
 use App\Models\Notification;
 use App\Services\NotificationService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class BookingController extends Controller
 {
@@ -22,7 +24,7 @@ class BookingController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Booking::with(['trip', 'passenger'])
+        $query = Booking::with(['trip', 'passenger', 'payment'])
             ->whereHas('trip', function ($q) use ($request) {
                 $q->where('driver_id', $request->user()->id);
             });
@@ -68,57 +70,71 @@ class BookingController extends Controller
     {
         $validated = $request->validate([
             'trip_id' => 'required|exists:trips,id',
-            'seats_booked' => 'required|integer|min:1',
+            'seats_booked' => 'required|integer|min:1|max:8',
             'message' => 'nullable|string|max:500',
             'pickup_point' => 'nullable|string|max:255',
             'dropoff_point' => 'nullable|string|max:255',
         ]);
 
-        $trip = Trip::findOrFail($validated['trip_id']);
         $user = $request->user();
 
-        // Vérifications
+        // Vérifications initiales hors transaction
+        $trip = Trip::findOrFail($validated['trip_id']);
+
         if ($trip->driver_id === $user->id) {
             return $this->error('Vous ne pouvez pas réserver votre propre trajet', 400);
         }
 
-        if (!$trip->canBeBooked($validated['seats_booked'])) {
-            return $this->error('Ce trajet n\'est plus disponible ou n\'a pas assez de places', 400);
+        try {
+            $booking = DB::transaction(function () use ($validated, $user) {
+                // Verrouiller le trajet pour éviter la race condition sur les places
+                $trip = Trip::lockForUpdate()->findOrFail($validated['trip_id']);
+
+                if (!$trip->canBeBooked($validated['seats_booked'])) {
+                    throw new \Exception('Ce trajet n\'est plus disponible ou n\'a pas assez de places', 400);
+                }
+
+                // Vérifier si l'utilisateur n'a pas déjà une réservation active
+                $existingBooking = Booking::where('trip_id', $trip->id)
+                    ->where('passenger_id', $user->id)
+                    ->whereIn('status', ['pending', 'confirmed'])
+                    ->first();
+
+                if ($existingBooking) {
+                    throw new \Exception('Vous avez déjà une réservation active pour ce trajet', 409);
+                }
+
+                // Supprimer les anciennes réservations annulées/rejetées pour éviter la contrainte unique
+                Booking::where('trip_id', $trip->id)
+                    ->where('passenger_id', $user->id)
+                    ->whereIn('status', ['rejected', 'cancelled'])
+                    ->delete();
+
+                $booking = Booking::create([
+                    'trip_id' => $trip->id,
+                    'passenger_id' => $user->id,
+                    'seats_booked' => $validated['seats_booked'],
+                    'total_price' => $trip->price_per_seat * $validated['seats_booked'],
+                    'message' => $validated['message'] ?? null,
+                    'pickup_point' => $validated['pickup_point'] ?? null,
+                    'dropoff_point' => $validated['dropoff_point'] ?? null,
+                    'status' => 'pending',
+                ]);
+
+                return $booking;
+            });
+
+            // Notifier le conducteur en temps réel (hors transaction)
+            $this->notificationService->notifyNewBooking($booking);
+
+            $booking->load(['trip.driver', 'passenger']);
+
+            return $this->success($booking, 'Demande de réservation envoyée', 201);
+
+        } catch (\Exception $e) {
+            $code = $e->getCode() >= 400 ? $e->getCode() : 400;
+            return $this->error($e->getMessage(), $code);
         }
-
-        // Vérifier si l'utilisateur n'a pas déjà une réservation active
-        $existingBooking = Booking::where('trip_id', $trip->id)
-            ->where('passenger_id', $user->id)
-            ->whereIn('status', ['pending', 'confirmed'])
-            ->first();
-
-        if ($existingBooking) {
-            return $this->error('Vous avez déjà une réservation active pour ce trajet', 400);
-        }
-        
-        // Supprimer les anciennes réservations annulées/rejetées pour éviter la contrainte unique
-        Booking::where('trip_id', $trip->id)
-            ->where('passenger_id', $user->id)
-            ->whereIn('status', ['rejected', 'cancelled'])
-            ->delete();
-
-        $booking = Booking::create([
-            'trip_id' => $trip->id,
-            'passenger_id' => $user->id,
-            'seats_booked' => $validated['seats_booked'],
-            'total_price' => $trip->price_per_seat * $validated['seats_booked'],
-            'message' => $validated['message'] ?? null,
-            'pickup_point' => $validated['pickup_point'] ?? null,
-            'dropoff_point' => $validated['dropoff_point'] ?? null,
-            'status' => 'pending',
-        ]);
-
-        // Notifier le conducteur en temps réel
-        $this->notificationService->notifyNewBooking($booking);
-
-        $booking->load(['trip.driver', 'passenger']);
-
-        return $this->success($booking, 'Demande de réservation envoyée', 201);
     }
 
     /**
@@ -155,7 +171,9 @@ class BookingController extends Controller
             'driver_response' => 'nullable|string|max:500',
         ]);
 
-        $booking->confirm($validated['driver_response'] ?? null);
+        DB::transaction(function () use ($booking, $validated) {
+            $booking->confirm($validated['driver_response'] ?? null);
+        });
 
         return $this->success($booking->fresh(['trip', 'passenger']), 'Réservation confirmée');
     }

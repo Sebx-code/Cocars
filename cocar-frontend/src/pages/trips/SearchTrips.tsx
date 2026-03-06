@@ -63,61 +63,61 @@ export default function SearchTrips() {
           Rechercher un trajet
         </h1>
 
-        <form onSubmit={handleSearch} className="card p-6">
+        <form onSubmit={handleSearch} className="bg-white dark:bg-white/[0.03] border border-gray-200 dark:border-gray-200 dark:border-white/[0.07] rounded-2xl p-6">
           <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-gray-600 dark:text-white/70 mb-2">
                 Départ
               </label>
               <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-white/40" />
                 <input
                   type="text"
                   value={filters.departure}
                   onChange={(e) => setFilters({ ...filters, departure: e.target.value })}
                   placeholder="Ville de départ"
-                  className="input pl-10"
+                  className="w-full bg-gray-100 dark:bg-white/[0.05] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 pl-10 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/40 focus:outline-none focus:border-emerald-500 transition-colors"
                 />
               </div>
             </div>
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-gray-600 dark:text-white/70 mb-2">
                 Arrivée
               </label>
               <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-white/40" />
                 <input
                   type="text"
                   value={filters.arrival}
                   onChange={(e) => setFilters({ ...filters, arrival: e.target.value })}
                   placeholder="Ville d'arrivée"
-                  className="input pl-10"
+                  className="w-full bg-gray-100 dark:bg-white/[0.05] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 pl-10 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/40 focus:outline-none focus:border-emerald-500 transition-colors"
                 />
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-gray-600 dark:text-white/70 mb-2">
                 Date
               </label>
               <div className="relative">
-                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-white/40" />
                 <input
                   type="date"
                   value={filters.date}
                   onChange={(e) => setFilters({ ...filters, date: e.target.value })}
-                  className="input pl-10"
+                  className="w-full bg-gray-100 dark:bg-white/[0.05] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 pl-10 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/40 focus:outline-none focus:border-emerald-500 transition-colors"
                 />
               </div>
             </div>
             <div className="flex items-end gap-2">
-              <button type="submit" className="btn-primary flex-1">
+              <button type="submit" className="flex-1 bg-white hover:bg-neutral-100 text-neutral-950 font-semibold px-6 py-3 rounded-full transition-all hover:shadow-lg flex items-center justify-center gap-2">
                 <Search className="w-5 h-5" />
                 Rechercher
               </button>
               <button
                 type="button"
                 onClick={() => setShowFilters(!showFilters)}
-                className="btn-outline p-3"
+                className="bg-gray-100 dark:bg-white/[0.05] hover:bg-gray-200 dark:hover:bg-white/10 border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/25 text-gray-700 dark:text-white p-3 rounded-full transition-all"
               >
                 <SlidersHorizontal className="w-5 h-5" />
               </button>
@@ -126,23 +126,23 @@ export default function SearchTrips() {
 
           {/* Advanced filters */}
           {showFilters && (
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4 pt-4 border-t border-gray-200 dark:border-slate-700">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4 pt-4 border-t border-gray-200 dark:border-white/10">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-600 dark:text-white/70 mb-2">
                   Passagers
                 </label>
                 <select
                   value={filters.seats}
                   onChange={(e) => setFilters({ ...filters, seats: e.target.value })}
-                  className="input"
+                  className="w-full bg-gray-100 dark:bg-white/[0.05] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-emerald-500 transition-colors"
                 >
                   {[1, 2, 3, 4].map((n) => (
-                    <option key={n} value={n}>{n} {n === 1 ? 'passager' : 'passagers'}</option>
+                    <option key={n} value={n} className="bg-white dark:bg-neutral-900">{n} {n === 1 ? 'passager' : 'passagers'}</option>
                   ))}
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-600 dark:text-white/70 mb-2">
                   Prix max (FCFA)
                 </label>
                 <input
@@ -150,21 +150,21 @@ export default function SearchTrips() {
                   value={filters.maxPrice}
                   onChange={(e) => setFilters({ ...filters, maxPrice: e.target.value })}
                   placeholder="10000"
-                  className="input"
+                  className="w-full bg-gray-100 dark:bg-white/[0.05] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/40 focus:outline-none focus:border-emerald-500 transition-colors"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-600 dark:text-white/70 mb-2">
                   Trier par
                 </label>
                 <select
                   value={filters.sortBy}
                   onChange={(e) => setFilters({ ...filters, sortBy: e.target.value })}
-                  className="input"
+                  className="w-full bg-gray-100 dark:bg-white/[0.05] border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-emerald-500 transition-colors"
                 >
-                  <option value="departure_date">Date de départ</option>
-                  <option value="price_per_seat">Prix</option>
-                  <option value="available_seats">Places disponibles</option>
+                  <option value="departure_date" className="bg-white dark:bg-neutral-900">Date de départ</option>
+                  <option value="price_per_seat" className="bg-white dark:bg-neutral-900">Prix</option>
+                  <option value="available_seats" className="bg-white dark:bg-neutral-900">Places disponibles</option>
                 </select>
               </div>
             </div>
@@ -176,11 +176,11 @@ export default function SearchTrips() {
       <div>
         {isLoading ? (
           <div className="flex justify-center py-12">
-            <Loader2 className="w-10 h-10 animate-spin text-primary-500" />
+            <Loader2 className="w-10 h-10 animate-spin text-emerald-500" />
           </div>
         ) : trips.length > 0 ? (
           <div className="space-y-4">
-            <p className="text-gray-600 dark:text-gray-400 mb-4">
+            <p className="text-gray-500 dark:text-white/60 mb-4">
               {trips.length} trajet{trips.length > 1 ? 's' : ''} trouvé{trips.length > 1 ? 's' : ''}
             </p>
             {trips.map((trip) => (
@@ -188,12 +188,12 @@ export default function SearchTrips() {
             ))}
           </div>
         ) : (
-          <div className="card p-12 text-center">
-            <Search className="w-16 h-16 mx-auto text-gray-300 dark:text-slate-600 mb-4" />
+          <div className="bg-white dark:bg-white/[0.03] border border-gray-200 dark:border-gray-200 dark:border-white/[0.07] rounded-2xl p-12 text-center">
+            <Search className="w-16 h-16 mx-auto text-white/20 mb-4" />
             <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
               Aucun trajet trouvé
             </h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
+            <p className="text-gray-500 dark:text-white/60 mb-6">
               Essayez de modifier vos critères de recherche
             </p>
           </div>
@@ -202,3 +202,4 @@ export default function SearchTrips() {
     </div>
   )
 }
+

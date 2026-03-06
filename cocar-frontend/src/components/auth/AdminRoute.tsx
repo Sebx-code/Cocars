@@ -11,10 +11,10 @@ export default function AdminRoute({ children }: AdminRouteProps) {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-slate-900">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-neutral-950">
         <div className="text-center">
           <div className="animate-spin w-12 h-12 border-4 border-red-500 border-t-transparent rounded-full mx-auto"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-400">Chargement...</p>
+          <p className="mt-4 text-white/55">Chargement...</p>
         </div>
       </div>
     )
@@ -30,3 +30,4 @@ export default function AdminRoute({ children }: AdminRouteProps) {
 
   return <>{children}</>
 }
+

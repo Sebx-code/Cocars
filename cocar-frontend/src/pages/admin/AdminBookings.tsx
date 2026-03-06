@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { adminApi } from '../../services/api'
-import { 
-  Search, Filter, Check, X, Eye, MapPin, Calendar, 
+import {
+  Search, Filter, Check, X, Eye, MapPin, Calendar,
   ChevronLeft, ChevronRight, CalendarCheck, AlertCircle, DollarSign
 } from 'lucide-react'
 import toast from 'react-hot-toast'
@@ -58,7 +58,7 @@ export default function AdminBookings() {
       const params: Record<string, string | number> = { page: currentPage }
       if (search) params.search = search
       if (statusFilter) params.status = statusFilter
-      
+
       const response = await adminApi.getBookings(params)
       const data = response.data as unknown as { data: BookingWithDetails[], meta: PaginationMeta }
       setBookings(data.data)
@@ -99,7 +99,7 @@ export default function AdminBookings() {
       setSelectedBooking(null)
       loadBookings()
     } catch (error) {
-      toast.error('Erreur lors de l\'annulation')
+      toast.error("Erreur lors de l'annulation")
     }
   }
 
@@ -123,22 +123,21 @@ export default function AdminBookings() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
             Gestion des réservations
           </h1>
-          <p className="text-gray-500 dark:text-gray-400">
+          <p className="text-gray-500 dark:text-white/55">
             {meta?.total || 0} réservations au total
           </p>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-argon p-4">
+      <div className="bg-white dark:bg-white/[0.03] border border-gray-200 dark:border-white/[0.07] rounded-2xl p-4">
         <div className="flex flex-col md:flex-row gap-4">
-          {/* Search */}
           <form onSubmit={handleSearch} className="flex-1">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-white/40" />
               <input
                 type="text"
                 value={search}
@@ -149,9 +148,8 @@ export default function AdminBookings() {
             </div>
           </form>
 
-          {/* Status Filter */}
           <div className="flex items-center gap-2">
-            <Filter className="w-5 h-5 text-gray-400" />
+            <Filter className="w-5 h-5 text-gray-400 dark:text-white/40" />
             <select
               value={statusFilter}
               onChange={(e) => { setStatusFilter(e.target.value); setCurrentPage(1); }}
@@ -168,33 +166,33 @@ export default function AdminBookings() {
       </div>
 
       {/* Bookings Table */}
-      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-argon overflow-hidden">
+      <div className="bg-white dark:bg-white/[0.03] border border-gray-200 dark:border-white/[0.07] rounded-2xl overflow-hidden">
         {isLoading ? (
           <div className="p-8 text-center">
             <div className="animate-spin w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full mx-auto"></div>
-            <p className="mt-4 text-gray-500">Chargement...</p>
+            <p className="mt-4 text-gray-500 dark:text-white/55">Chargement...</p>
           </div>
         ) : bookings.length > 0 ? (
           <>
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-gray-50 dark:bg-slate-700/50">
+                <thead className="bg-gray-50 dark:bg-white/[0.03]">
                   <tr>
-                    <th className="text-left py-4 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">ID</th>
-                    <th className="text-left py-4 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">Trajet</th>
-                    <th className="text-left py-4 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">Passager</th>
-                    <th className="text-left py-4 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">Date</th>
-                    <th className="text-left py-4 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">Places</th>
-                    <th className="text-left py-4 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">Montant</th>
-                    <th className="text-left py-4 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">Statut</th>
-                    <th className="text-right py-4 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</th>
+                    <th className="text-left py-4 px-6 text-xs font-semibold text-gray-500 dark:text-white/55 uppercase tracking-wider">ID</th>
+                    <th className="text-left py-4 px-6 text-xs font-semibold text-gray-500 dark:text-white/55 uppercase tracking-wider">Trajet</th>
+                    <th className="text-left py-4 px-6 text-xs font-semibold text-gray-500 dark:text-white/55 uppercase tracking-wider">Passager</th>
+                    <th className="text-left py-4 px-6 text-xs font-semibold text-gray-500 dark:text-white/55 uppercase tracking-wider">Date</th>
+                    <th className="text-left py-4 px-6 text-xs font-semibold text-gray-500 dark:text-white/55 uppercase tracking-wider">Places</th>
+                    <th className="text-left py-4 px-6 text-xs font-semibold text-gray-500 dark:text-white/55 uppercase tracking-wider">Montant</th>
+                    <th className="text-left py-4 px-6 text-xs font-semibold text-gray-500 dark:text-white/55 uppercase tracking-wider">Statut</th>
+                    <th className="text-right py-4 px-6 text-xs font-semibold text-gray-500 dark:text-white/55 uppercase tracking-wider">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100 dark:divide-slate-700">
+                <tbody className="divide-y divide-gray-100 dark:divide-white/[0.04]">
                   {bookings.map((booking) => (
-                    <tr key={booking.id} className="hover:bg-gray-50 dark:hover:bg-slate-700/30 transition-colors">
+                    <tr key={booking.id} className="hover:bg-gray-50 dark:hover:bg-white/[0.03] transition-colors">
                       <td className="py-4 px-6">
-                        <span className="font-mono text-sm text-gray-500">#{booking.id}</span>
+                        <span className="font-mono text-sm text-gray-500 dark:text-white/55">#{booking.id}</span>
                       </td>
                       <td className="py-4 px-6">
                         <div className="flex items-center gap-3">
@@ -202,10 +200,10 @@ export default function AdminBookings() {
                             <MapPin className="w-5 h-5 text-white" />
                           </div>
                           <div>
-                            <p className="font-semibold text-gray-800 dark:text-white text-sm">
+                            <p className="font-semibold text-gray-900 dark:text-white text-sm">
                               {booking.trip?.departure_city} → {booking.trip?.arrival_city}
                             </p>
-                            <p className="text-xs text-gray-500">
+                            <p className="text-xs text-gray-500 dark:text-white/55">
                               Conducteur: {booking.trip?.driver?.name}
                             </p>
                           </div>
@@ -217,22 +215,22 @@ export default function AdminBookings() {
                             {booking.passenger?.name?.charAt(0).toUpperCase()}
                           </div>
                           <div>
-                            <p className="font-medium text-gray-800 dark:text-white text-sm">{booking.passenger?.name}</p>
-                            <p className="text-xs text-gray-500">{booking.passenger?.email}</p>
+                            <p className="font-medium text-gray-900 dark:text-white text-sm">{booking.passenger?.name}</p>
+                            <p className="text-xs text-gray-500 dark:text-white/55">{booking.passenger?.email}</p>
                           </div>
                         </div>
                       </td>
                       <td className="py-4 px-6">
-                        <div className="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-400">
+                        <div className="flex items-center gap-1 text-sm text-gray-500 dark:text-white/55">
                           <Calendar className="w-3 h-3" />
                           {booking.trip?.departure_date}
                         </div>
                       </td>
                       <td className="py-4 px-6">
-                        <span className="text-gray-800 dark:text-white font-medium">{booking.seats_booked}</span>
+                        <span className="text-gray-900 dark:text-white font-medium">{booking.seats_booked}</span>
                       </td>
                       <td className="py-4 px-6">
-                        <p className="font-semibold text-emerald-600 flex items-center gap-1">
+                        <p className="font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
                           <DollarSign className="w-4 h-4" />
                           {booking.total_price?.toLocaleString()} FCFA
                         </p>
@@ -244,7 +242,7 @@ export default function AdminBookings() {
                         <div className="flex items-center justify-end gap-1">
                           <button
                             onClick={() => { setSelectedBooking(booking); setShowDetailModal(true); }}
-                            className="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
+                            className="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-500/10 rounded-lg transition-colors"
                             title="Voir détails"
                           >
                             <Eye className="w-4 h-4" />
@@ -253,14 +251,14 @@ export default function AdminBookings() {
                             <>
                               <button
                                 onClick={() => { setSelectedBooking(booking); setShowActionModal('confirm'); }}
-                                className="p-2 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-lg transition-colors"
+                                className="p-2 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-500/10 rounded-lg transition-colors"
                                 title="Confirmer"
                               >
                                 <Check className="w-4 h-4" />
                               </button>
                               <button
                                 onClick={() => { setSelectedBooking(booking); setShowActionModal('cancel'); }}
-                                className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                                className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors"
                                 title="Annuler"
                               >
                                 <X className="w-4 h-4" />
@@ -270,7 +268,7 @@ export default function AdminBookings() {
                           {booking.status === 'confirmed' && (
                             <button
                               onClick={() => { setSelectedBooking(booking); setShowActionModal('cancel'); }}
-                              className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                              className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors"
                               title="Annuler"
                             >
                               <X className="w-4 h-4" />
@@ -286,22 +284,22 @@ export default function AdminBookings() {
 
             {/* Pagination */}
             {meta && meta.last_page > 1 && (
-              <div className="flex items-center justify-between px-6 py-4 border-t border-gray-100 dark:border-slate-700">
-                <p className="text-sm text-gray-500">
+              <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 dark:border-white/[0.07]">
+                <p className="text-sm text-gray-500 dark:text-white/55">
                   Page {meta.current_page} sur {meta.last_page} ({meta.total} résultats)
                 </p>
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                     disabled={meta.current_page === 1}
-                    className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 disabled:opacity-50"
+                    className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/[0.06] disabled:opacity-50"
                   >
                     <ChevronLeft className="w-5 h-5" />
                   </button>
                   <button
                     onClick={() => setCurrentPage(p => Math.min(meta.last_page, p + 1))}
                     disabled={meta.current_page === meta.last_page}
-                    className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 disabled:opacity-50"
+                    className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/[0.06] disabled:opacity-50"
                   >
                     <ChevronRight className="w-5 h-5" />
                   </button>
@@ -311,8 +309,8 @@ export default function AdminBookings() {
           </>
         ) : (
           <div className="p-12 text-center">
-            <CalendarCheck className="w-12 h-12 mx-auto text-gray-300 dark:text-slate-600 mb-3" />
-            <p className="text-gray-500 dark:text-gray-400">Aucune réservation trouvée</p>
+            <CalendarCheck className="w-12 h-12 mx-auto text-gray-300 dark:text-white/20 mb-3" />
+            <p className="text-gray-500 dark:text-white/55">Aucune réservation trouvée</p>
           </div>
         )}
       </div>
@@ -320,47 +318,47 @@ export default function AdminBookings() {
       {/* Detail Modal */}
       {showDetailModal && selectedBooking && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl max-w-lg w-full p-6 animate-fadeIn">
+          <div className="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-white/[0.12] rounded-2xl shadow-xl max-w-lg w-full p-6 animate-fadeIn">
             <div className="flex items-center gap-4 mb-6">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center">
                 <CalendarCheck className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-gray-800 dark:text-white">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white">
                   Réservation #{selectedBooking.id}
                 </h3>
-                <p className="text-sm text-gray-500">{getStatusBadge(selectedBooking.status)}</p>
+                <p className="text-sm text-gray-500 dark:text-white/55">{getStatusBadge(selectedBooking.status)}</p>
               </div>
             </div>
-            
+
             <div className="space-y-4 mb-6">
-              <div className="p-4 bg-gray-50 dark:bg-slate-700/50 rounded-xl">
-                <p className="text-xs text-gray-500 mb-2">Trajet</p>
-                <p className="font-semibold text-gray-800 dark:text-white">
+              <div className="p-4 bg-gray-50 dark:bg-white/[0.03] rounded-xl">
+                <p className="text-xs text-gray-500 dark:text-white/55 mb-2">Trajet</p>
+                <p className="font-semibold text-gray-900 dark:text-white">
                   {selectedBooking.trip?.departure_city} → {selectedBooking.trip?.arrival_city}
                 </p>
-                <p className="text-sm text-gray-500 mt-1">
+                <p className="text-sm text-gray-500 dark:text-white/55 mt-1">
                   {selectedBooking.trip?.departure_date} à {selectedBooking.trip?.departure_time}
                 </p>
               </div>
-              
+
               <div className="grid grid-cols-2 gap-4">
-                <div className="p-3 bg-gray-50 dark:bg-slate-700/50 rounded-lg">
-                  <p className="text-xs text-gray-500 mb-1">Passager</p>
-                  <p className="font-medium text-gray-800 dark:text-white text-sm">{selectedBooking.passenger?.name}</p>
-                  <p className="text-xs text-gray-500">{selectedBooking.passenger?.email}</p>
+                <div className="p-3 bg-gray-50 dark:bg-white/[0.03] rounded-lg">
+                  <p className="text-xs text-gray-500 dark:text-white/55 mb-1">Passager</p>
+                  <p className="font-medium text-gray-900 dark:text-white text-sm">{selectedBooking.passenger?.name}</p>
+                  <p className="text-xs text-gray-500 dark:text-white/55">{selectedBooking.passenger?.email}</p>
                 </div>
-                <div className="p-3 bg-gray-50 dark:bg-slate-700/50 rounded-lg">
-                  <p className="text-xs text-gray-500 mb-1">Conducteur</p>
-                  <p className="font-medium text-gray-800 dark:text-white text-sm">{selectedBooking.trip?.driver?.name}</p>
+                <div className="p-3 bg-gray-50 dark:bg-white/[0.03] rounded-lg">
+                  <p className="text-xs text-gray-500 dark:text-white/55 mb-1">Conducteur</p>
+                  <p className="font-medium text-gray-900 dark:text-white text-sm">{selectedBooking.trip?.driver?.name}</p>
                 </div>
-                <div className="p-3 bg-gray-50 dark:bg-slate-700/50 rounded-lg">
-                  <p className="text-xs text-gray-500 mb-1">Places réservées</p>
-                  <p className="font-medium text-gray-800 dark:text-white">{selectedBooking.seats_booked}</p>
+                <div className="p-3 bg-gray-50 dark:bg-white/[0.03] rounded-lg">
+                  <p className="text-xs text-gray-500 dark:text-white/55 mb-1">Places réservées</p>
+                  <p className="font-medium text-gray-900 dark:text-white">{selectedBooking.seats_booked}</p>
                 </div>
-                <div className="p-3 bg-gray-50 dark:bg-slate-700/50 rounded-lg">
-                  <p className="text-xs text-gray-500 mb-1">Montant total</p>
-                  <p className="font-medium text-emerald-600">{selectedBooking.total_price?.toLocaleString()} FCFA</p>
+                <div className="p-3 bg-gray-50 dark:bg-white/[0.03] rounded-lg">
+                  <p className="text-xs text-gray-500 dark:text-white/55 mb-1">Montant total</p>
+                  <p className="font-medium text-emerald-600 dark:text-emerald-400">{selectedBooking.total_price?.toLocaleString()} FCFA</p>
                 </div>
               </div>
             </div>
@@ -378,28 +376,28 @@ export default function AdminBookings() {
       {/* Action Modal */}
       {showActionModal && selectedBooking && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl max-w-md w-full p-6 animate-fadeIn">
+          <div className="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-white/[0.12] rounded-2xl shadow-xl max-w-md w-full p-6 animate-fadeIn">
             <div className="flex items-center gap-4 mb-4">
               <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
-                showActionModal === 'confirm' 
-                  ? 'bg-emerald-100 dark:bg-emerald-900/30' 
-                  : 'bg-red-100 dark:bg-red-900/30'
+                showActionModal === 'confirm'
+                  ? 'bg-emerald-100 dark:bg-emerald-500/10'
+                  : 'bg-red-100 dark:bg-red-500/10'
               }`}>
                 {showActionModal === 'confirm' ? (
-                  <Check className="w-6 h-6 text-emerald-600" />
+                  <Check className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
                 ) : (
-                  <AlertCircle className="w-6 h-6 text-red-600" />
+                  <AlertCircle className="w-6 h-6 text-red-600 dark:text-red-400" />
                 )}
               </div>
               <div>
-                <h3 className="text-lg font-bold text-gray-800 dark:text-white">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white">
                   {showActionModal === 'confirm' ? 'Confirmer la réservation' : 'Annuler la réservation'}
                 </h3>
-                <p className="text-sm text-gray-500">Réservation #{selectedBooking.id}</p>
+                <p className="text-sm text-gray-500 dark:text-white/55">Réservation #{selectedBooking.id}</p>
               </div>
             </div>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
-              {showActionModal === 'confirm' 
+            <p className="text-gray-500 dark:text-white/55 mb-6">
+              {showActionModal === 'confirm'
                 ? `Êtes-vous sûr de vouloir confirmer cette réservation pour ${selectedBooking.passenger?.name} ?`
                 : `Êtes-vous sûr de vouloir annuler cette réservation ? Le passager sera notifié.`
               }

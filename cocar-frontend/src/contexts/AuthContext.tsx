@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import { createContext, useContext, useState, useEffect, ReactNode, useCallback, useMemo } from 'react'
 import { User, LoginCredentials, RegisterData, AuthResponse } from '../types'
 import { authApi } from '../services/api'
 import toast from 'react-hot-toast'
@@ -32,6 +32,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const userData = (response.data as { data: User }).data || response.data
         setUser(userData as User)
       } catch (error) {
+        // Token invalide - on supprime uniquement le token, pas les données utilisateur
         localStorage.removeItem('token')
         localStorage.removeItem('refresh_token')
       }
@@ -39,11 +40,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(false)
   }
 
-  const login = async (credentials: LoginCredentials) => {
+  const login = useCallback(async (credentials: LoginCredentials) => {
     const response = await authApi.login(credentials)
     // Le backend retourne { success, message, data: { user, access_token, ... } }
     const authData = (response.data as { data: AuthResponse }).data
     
+    // SÉCURITÉ: On ne stocke que le token, pas l'objet user complet
     localStorage.setItem('token', authData.access_token)
     if (authData.refresh_token) {
       localStorage.setItem('refresh_token', authData.refresh_token)
@@ -51,13 +53,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     
     setUser(authData.user)
     toast.success(`Bienvenue ${authData.user.name} !`)
-  }
+  }, [])
 
-  const register = async (data: RegisterData) => {
+  const register = useCallback(async (data: RegisterData) => {
     const response = await authApi.register(data)
     // Le backend retourne { success, message, data: { user, access_token, ... } }
     const authData = (response.data as { data: AuthResponse }).data
     
+    // SÉCURITÉ: On ne stocke que le token, pas l'objet user complet
     localStorage.setItem('token', authData.access_token)
     if (authData.refresh_token) {
       localStorage.setItem('refresh_token', authData.refresh_token)
@@ -65,9 +68,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     
     setUser(authData.user)
     toast.success('Compte créé avec succès !')
-  }
+  }, [])
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     try {
       await authApi.logout()
     } catch (error) {
@@ -78,22 +81,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(null)
       toast.success('Déconnexion réussie')
     }
-  }
+  }, [])
 
-  const updateUser = (updatedUser: User) => {
+  const updateUser = useCallback((updatedUser: User) => {
     setUser(updatedUser)
-  }
+  }, [])
+
+  const contextValue = useMemo(() => ({
+    user,
+    isLoading,
+    isAuthenticated: !!user,
+    login,
+    register,
+    logout,
+    updateUser,
+  }), [user, isLoading, login, register, logout, updateUser])
 
   return (
-    <AuthContext.Provider value={{
-      user,
-      isLoading,
-      isAuthenticated: !!user,
-      login,
-      register,
-      logout,
-      updateUser,
-    }}>
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   )

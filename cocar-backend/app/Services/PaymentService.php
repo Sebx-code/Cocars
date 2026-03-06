@@ -293,10 +293,6 @@ class PaymentService
         string $provider,
         string $phoneNumber
     ): array {
-        if (!$wallet->hasSufficientBalance($amount)) {
-            throw new Exception('Solde insuffisant');
-        }
-
         // Minimum de retrait
         $minimumWithdraw = 500;
         if ($amount < $minimumWithdraw) {
@@ -304,8 +300,15 @@ class PaymentService
         }
 
         return DB::transaction(function () use ($wallet, $amount, $provider, $phoneNumber) {
-            // Débiter le wallet
-            $transaction = $wallet->debit(
+            // Verrouiller le wallet pour éviter les retraits concurrents (race condition)
+            $lockedWallet = Wallet::lockForUpdate()->findOrFail($wallet->id);
+
+            if (!$lockedWallet->hasSufficientBalance($amount)) {
+                throw new Exception('Solde insuffisant');
+            }
+
+            // Débiter le wallet verrouillé
+            $transaction = $lockedWallet->debit(
                 $amount,
                 'withdrawal',
                 "Retrait vers {$provider} ({$phoneNumber})",
@@ -320,7 +323,7 @@ class PaymentService
 
             // Notifier l'utilisateur
             Notification::create([
-                'user_id' => $wallet->user_id,
+                'user_id' => $lockedWallet->user_id,
                 'type' => 'withdrawal_completed',
                 'title' => 'Retrait effectué',
                 'message' => "Votre retrait de {$amount} FCFA vers {$phoneNumber} a été effectué.",

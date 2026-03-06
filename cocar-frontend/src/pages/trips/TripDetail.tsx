@@ -90,7 +90,7 @@ export default function TripDetail() {
       {/* Back button */}
       <button
         onClick={() => navigate(-1)}
-        className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-primary-600 mb-6"
+        className="flex items-center gap-2 text-gray-500 dark:text-white/55 hover:text-primary-600 mb-6"
       >
         <ArrowLeft className="w-5 h-5" />
         Retour
@@ -98,7 +98,7 @@ export default function TripDetail() {
 
       {/* Hero photo */}
       {selectedPhoto && (
-        <div className="mb-6 rounded-3xl overflow-hidden border border-gray-100 dark:border-slate-700 bg-gray-100 dark:bg-slate-800">
+        <div className="mb-6 rounded-3xl overflow-hidden border border-gray-100 bg-gray-100">
           <img src={selectedPhoto} alt="Véhicule" className="w-full h-[320px] object-cover" />
         </div>
       )}
@@ -111,7 +111,7 @@ export default function TripDetail() {
               type="button"
               key={p.id}
               onClick={() => setSelectedPhoto(p.url)}
-              className={`shrink-0 w-24 h-16 rounded-xl overflow-hidden border ${selectedPhoto === p.url ? 'border-emerald-400' : 'border-gray-200 dark:border-slate-700'} bg-gray-100 dark:bg-slate-800`}
+              className={`shrink-0 w-24 h-16 rounded-xl overflow-hidden border ${selectedPhoto === p.url ? 'border-emerald-400' : 'border-gray-200'} bg-gray-100`}
               title={p.is_primary ? 'Photo principale' : 'Photo'}
             >
               <img src={p.url} alt="Véhicule" className="w-full h-full object-cover" />
@@ -129,14 +129,14 @@ export default function TripDetail() {
               {/* Route line */}
               <div className="flex flex-col items-center pt-2">
                 <div className="w-4 h-4 rounded-full bg-primary-500" />
-                <div className="w-0.5 h-24 bg-gray-200 dark:bg-slate-700 my-3" />
+                <div className="w-0.5 h-24 bg-gray-200 my-3" />
                 <div className="w-4 h-4 rounded-full bg-secondary-500" />
               </div>
 
               {/* Cities */}
               <div className="flex-1 space-y-6">
                 <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2 mb-1">
+                  <p className="text-sm text-gray-500 dark:text-white/55 flex items-center gap-2 mb-1">
                     <Clock className="w-4 h-4" />
                     {trip.departure_time}
                   </p>
@@ -144,12 +144,12 @@ export default function TripDetail() {
                     {trip.departure_city}
                   </h2>
                   {trip.departure_address && (
-                    <p className="text-gray-600 dark:text-gray-400 mt-1">{trip.departure_address}</p>
+                    <p className="text-gray-500 dark:text-white/55 mt-1">{trip.departure_address}</p>
                   )}
                 </div>
                 <div>
                   {trip.arrival_time && (
-                    <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2 mb-1">
+                    <p className="text-sm text-gray-500 dark:text-white/55 flex items-center gap-2 mb-1">
                       <Clock className="w-4 h-4" />
                       {trip.arrival_time}
                     </p>
@@ -158,18 +158,18 @@ export default function TripDetail() {
                     {trip.arrival_city}
                   </h2>
                   {trip.arrival_address && (
-                    <p className="text-gray-600 dark:text-gray-400 mt-1">{trip.arrival_address}</p>
+                    <p className="text-gray-500 dark:text-white/55 mt-1">{trip.arrival_address}</p>
                   )}
                 </div>
               </div>
             </div>
 
-            <div className="flex items-center gap-6 mt-8 pt-6 border-t border-gray-200 dark:border-slate-700">
-              <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+            <div className="flex items-center gap-6 mt-8 pt-6 border-t border-gray-200">
+              <div className="flex items-center gap-2 text-gray-500 dark:text-white/55">
                 <Calendar className="w-5 h-5 text-primary-500" />
                 {formattedDate}
               </div>
-              <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+              <div className="flex items-center gap-2 text-gray-500 dark:text-white/55">
                 <Users className="w-5 h-5 text-primary-500" />
                 {trip.available_seats} places disponibles
               </div>
@@ -180,7 +180,7 @@ export default function TripDetail() {
           {trip.description && (
             <div className="card p-6">
               <h3 className="font-bold text-gray-900 dark:text-white mb-3">Description</h3>
-              <p className="text-gray-600 dark:text-gray-400">{trip.description}</p>
+              <p className="text-gray-500 dark:text-white/55">{trip.description}</p>
             </div>
           )}
 
@@ -190,25 +190,25 @@ export default function TripDetail() {
             <div className="grid grid-cols-2 gap-4">
               <div className="flex items-center gap-3">
                 <Cigarette className={`w-5 h-5 ${trip.preferences?.smoking ? 'text-green-500' : 'text-red-500'}`} />
-                <span className="text-gray-600 dark:text-gray-400">
+                <span className="text-gray-500 dark:text-white/55">
                   {trip.preferences?.smoking ? 'Fumeur accepté' : 'Non fumeur'}
                 </span>
               </div>
               <div className="flex items-center gap-3">
-                <Music className={`w-5 h-5 ${trip.preferences?.music ? 'text-green-500' : 'text-gray-400'}`} />
-                <span className="text-gray-600 dark:text-gray-400">
+                <Music className={`w-5 h-5 ${trip.preferences?.music ? 'text-green-500' : 'text-gray-400 dark:text-white/40'}`} />
+                <span className="text-gray-500 dark:text-white/55">
                   {trip.preferences?.music ? 'Musique OK' : 'Pas de musique'}
                 </span>
               </div>
               <div className="flex items-center gap-3">
                 <Dog className={`w-5 h-5 ${trip.preferences?.pets ? 'text-green-500' : 'text-red-500'}`} />
-                <span className="text-gray-600 dark:text-gray-400">
+                <span className="text-gray-500 dark:text-white/55">
                   {trip.preferences?.pets ? 'Animaux acceptés' : 'Pas d\'animaux'}
                 </span>
               </div>
               <div className="flex items-center gap-3">
                 <Luggage className="w-5 h-5 text-primary-500" />
-                <span className="text-gray-600 dark:text-gray-400">
+                <span className="text-gray-500 dark:text-white/55">
                   Bagages: {trip.preferences?.luggage || 'Moyen'}
                 </span>
               </div>
@@ -220,21 +220,21 @@ export default function TripDetail() {
             <div className="card p-6">
               <h3 className="font-bold text-gray-900 dark:text-white mb-4">Véhicule</h3>
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-2xl bg-gray-100 dark:bg-slate-700 flex items-center justify-center overflow-hidden">
+                <div className="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center overflow-hidden">
                   {primaryPhoto?.url ? (
                     <img src={primaryPhoto.url} alt="Véhicule" className="w-full h-full object-cover" />
                   ) : (
-                    <Car className="w-8 h-8 text-gray-400" />
+                    <Car className="w-8 h-8 text-gray-400 dark:text-white/40" />
                   )}
                 </div>
                 <div>
                   <p className="font-semibold text-gray-900 dark:text-white">
                     {trip.vehicle.brand} {trip.vehicle.model}
                   </p>
-                  <p className="text-gray-600 dark:text-gray-400">
+                  <p className="text-gray-500 dark:text-white/55">
                     {trip.vehicle.color} • {trip.vehicle.seats} places
                   </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                  <p className="text-sm text-gray-500 dark:text-white/55 mt-1">
                     Immatriculation: {trip.vehicle.registration_number}
                   </p>
                 </div>
@@ -251,13 +251,13 @@ export default function TripDetail() {
               <p className="text-4xl font-bold text-primary-600">
                 {trip.price_per_seat.toLocaleString()} FCFA
               </p>
-              <p className="text-gray-500 dark:text-gray-400">par passager</p>
+              <p className="text-gray-500 dark:text-white/55">par passager</p>
             </div>
 
             {canBook && (
               <>
                 <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-gray-600 dark:text-white/70 mb-2">
                     Nombre de places
                   </label>
                   <select
@@ -271,8 +271,8 @@ export default function TripDetail() {
                   </select>
                 </div>
 
-                <div className="py-4 border-t border-b border-gray-200 dark:border-slate-700 mb-4">
-                  <div className="flex justify-between text-gray-600 dark:text-gray-400 mb-2">
+                <div className="py-4 border-t border-b border-gray-200 mb-4">
+                  <div className="flex justify-between text-gray-500 dark:text-white/55 mb-2">
                     <span>{trip.price_per_seat.toLocaleString()} FCFA x {seats}</span>
                     <span>{(trip.price_per_seat * seats).toLocaleString()} FCFA</span>
                   </div>
@@ -300,7 +300,7 @@ export default function TripDetail() {
             )}
 
             {isOwner && (
-              <p className="text-center text-gray-500 dark:text-gray-400">
+              <p className="text-center text-gray-500 dark:text-white/55">
                 C'est votre trajet
               </p>
             )}
@@ -314,7 +314,7 @@ export default function TripDetail() {
                 <img
                   src={trip.driver.avatar}
                   alt={trip.driver?.name}
-                  className="w-16 h-16 rounded-full object-cover border border-gray-200 dark:border-slate-700"
+                  className="w-16 h-16 rounded-full object-cover border border-gray-200"
                 />
               ) : (
                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white text-2xl font-bold">
@@ -326,7 +326,7 @@ export default function TripDetail() {
                 <div className="flex items-center gap-1 text-yellow-500">
                   <Star className="w-4 h-4 fill-current" />
                   <span>{trip.driver?.rating ? Number(trip.driver.rating).toFixed(1) : '—'}</span>
-                  <span className="text-gray-400 ml-1">({trip.driver?.total_trips_as_driver || 0} trajets)</span>
+                  <span className="text-gray-400 dark:text-white/40 ml-1">({trip.driver?.total_trips_as_driver || 0} trajets)</span>
                 </div>
               </div>
             </div>
@@ -340,3 +340,6 @@ export default function TripDetail() {
     </div>
   )
 }
+
+
+

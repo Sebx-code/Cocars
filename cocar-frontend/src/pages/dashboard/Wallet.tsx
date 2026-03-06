@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+﻿import { useState, useEffect } from 'react'
 import { walletApi } from '../../services/api'
 import { Wallet as WalletType, WalletTransaction } from '../../types'
 import {
@@ -133,9 +133,9 @@ export default function WalletPage() {
 
   const getTransactionColor = (_type: string, amount: number) => {
     if (amount > 0) {
-      return 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400'
+      return 'bg-emerald-100 text-emerald-600'
     }
-    return 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400'
+    return 'bg-red-100 text-red-600'
   }
 
   const getTransactionLabel = (type: string) => {
@@ -172,7 +172,7 @@ export default function WalletPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Mon Portefeuille</h1>
-          <p className="text-gray-600 dark:text-gray-400">Gérez vos revenus et paiements</p>
+          <p className="text-gray-500 dark:text-white/55">Gérez vos revenus et paiements</p>
         </div>
         <button 
           onClick={() => setShowWithdrawModal(true)}
@@ -187,7 +187,7 @@ export default function WalletPage() {
       {/* Cartes de solde */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Solde disponible */}
-        <div className="card p-6 bg-gradient-to-br from-primary-500 to-primary-600 text-white">
+        <div className="card p-6 bg-gradient-to-br from-primary-500 to-primary-600 text-gray-900 dark:text-white">
           <div className="flex items-center justify-between mb-4">
             <WalletIcon className="w-8 h-8 opacity-80" />
             <span className="text-sm opacity-80">Disponible</span>
@@ -199,7 +199,7 @@ export default function WalletPage() {
         </div>
 
         {/* Solde en attente */}
-        <div className="card p-6 bg-gradient-to-br from-amber-500 to-amber-600 text-white">
+        <div className="card p-6 bg-gradient-to-br from-amber-500 to-amber-600 text-gray-900 dark:text-white">
           <div className="flex items-center justify-between mb-4">
             <Clock className="w-8 h-8 opacity-80" />
             <span className="text-sm opacity-80">En attente</span>
@@ -211,7 +211,7 @@ export default function WalletPage() {
         </div>
 
         {/* Total */}
-        <div className="card p-6 bg-gradient-to-br from-slate-700 to-slate-800 text-white">
+        <div className="card p-6 bg-gradient-to-br from-slate-700 to-slate-800 text-gray-900 dark:text-white">
           <div className="flex items-center justify-between mb-4">
             <TrendingUp className="w-8 h-8 opacity-80" />
             <span className="text-sm opacity-80">Total</span>
@@ -228,11 +228,11 @@ export default function WalletPage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="card p-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
-                <TrendingUp className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+              <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center">
+                <TrendingUp className="w-5 h-5 text-emerald-600" />
               </div>
               <div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Gagné</p>
+                <p className="text-sm text-gray-500 dark:text-white/55">Gagné</p>
                 <p className="font-bold text-gray-900 dark:text-white">{stats.earned.toLocaleString('fr-FR')} FCFA</p>
               </div>
             </div>
@@ -240,11 +240,11 @@ export default function WalletPage() {
 
           <div className="card p-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
-                <TrendingDown className="w-5 h-5 text-red-600 dark:text-red-400" />
+              <div className="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center">
+                <TrendingDown className="w-5 h-5 text-red-600" />
               </div>
               <div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Dépensé</p>
+                <p className="text-sm text-gray-500 dark:text-white/55">Dépensé</p>
                 <p className="font-bold text-gray-900 dark:text-white">{stats.spent.toLocaleString('fr-FR')} FCFA</p>
               </div>
             </div>
@@ -252,11 +252,11 @@ export default function WalletPage() {
 
           <div className="card p-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-                <RefreshCw className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+              <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
+                <RefreshCw className="w-5 h-5 text-blue-600" />
               </div>
               <div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Remboursé</p>
+                <p className="text-sm text-gray-500 dark:text-white/55">Remboursé</p>
                 <p className="font-bold text-gray-900 dark:text-white">{stats.refunded.toLocaleString('fr-FR')} FCFA</p>
               </div>
             </div>
@@ -264,11 +264,11 @@ export default function WalletPage() {
 
           <div className="card p-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-                <Lock className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+              <div className="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center">
+                <Lock className="w-5 h-5 text-amber-600" />
               </div>
               <div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">En escrow</p>
+                <p className="text-sm text-gray-500 dark:text-white/55">En escrow</p>
                 <p className="font-bold text-gray-900 dark:text-white">{stats.pending.toLocaleString('fr-FR')} FCFA</p>
               </div>
             </div>
@@ -281,12 +281,12 @@ export default function WalletPage() {
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-4">
           <div>
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Statistiques financières</h2>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Revenus (net) et montants en escrow</p>
+            <p className="text-sm text-gray-500 dark:text-white/55">Revenus (net) et montants en escrow</p>
           </div>
 
           <div className="flex flex-wrap gap-2 items-end">
             <div>
-              <label className="block text-xs text-gray-500 mb-1">Du</label>
+              <label className="block text-xs text-gray-500 dark:text-white/55 mb-1">Du</label>
               <input
                 type="date"
                 className="input h-10"
@@ -295,7 +295,7 @@ export default function WalletPage() {
               />
             </div>
             <div>
-              <label className="block text-xs text-gray-500 mb-1">Au</label>
+              <label className="block text-xs text-gray-500 dark:text-white/55 mb-1">Au</label>
               <input
                 type="date"
                 className="input h-10"
@@ -304,7 +304,7 @@ export default function WalletPage() {
               />
             </div>
             <div>
-              <label className="block text-xs text-gray-500 mb-1">Grouper</label>
+              <label className="block text-xs text-gray-500 dark:text-white/55 mb-1">Grouper</label>
               <select
                 className="input h-10"
                 value={group}
@@ -321,15 +321,15 @@ export default function WalletPage() {
         {financial ? (
           <div className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="rounded-2xl p-4 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800">
-                <p className="text-sm text-emerald-700 dark:text-emerald-300">Revenus (net)</p>
-                <p className="text-2xl font-bold text-emerald-800 dark:text-emerald-200">
+              <div className="rounded-2xl p-4 bg-emerald-50 border border-emerald-200">
+                <p className="text-sm text-emerald-700">Revenus (net)</p>
+                <p className="text-2xl font-bold text-emerald-800">
                   {financial.totals.earned.toLocaleString('fr-FR')} FCFA
                 </p>
               </div>
-              <div className="rounded-2xl p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
-                <p className="text-sm text-amber-700 dark:text-amber-300">En escrow</p>
-                <p className="text-2xl font-bold text-amber-800 dark:text-amber-200">
+              <div className="rounded-2xl p-4 bg-amber-50 border border-amber-200">
+                <p className="text-sm text-amber-700">En escrow</p>
+                <p className="text-2xl font-bold text-amber-800">
                   {financial.totals.pending.toLocaleString('fr-FR')} FCFA
                 </p>
               </div>
@@ -359,20 +359,20 @@ export default function WalletPage() {
             </div>
           </div>
         ) : (
-          <p className="text-sm text-gray-500 dark:text-gray-400">Aucune donnée disponible pour cette période.</p>
+          <p className="text-sm text-gray-500 dark:text-white/55">Aucune donnée disponible pour cette période.</p>
         )}
       </div>
 
       {/* Historique des transactions */}
       <div className="card">
-        <div className="p-4 border-b border-gray-200 dark:border-slate-700">
+        <div className="p-4 border-b border-gray-200 dark:border-white/[0.07]">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Historique des transactions</h2>
         </div>
 
         {transactions.length > 0 ? (
-          <div className="divide-y divide-gray-200 dark:divide-slate-700">
+          <div className="divide-y divide-gray-200">
             {transactions.map((transaction) => (
-              <div key={transaction.id} className="p-4 flex items-center gap-4 hover:bg-gray-50 dark:hover:bg-slate-800/50">
+              <div key={transaction.id} className="p-4 flex items-center gap-4 hover:bg-gray-50 dark:bg-neutral-900/50">
                 <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${getTransactionColor(transaction.type, transaction.amount)}`}>
                   {getTransactionIcon(transaction.type)}
                 </div>
@@ -380,7 +380,7 @@ export default function WalletPage() {
                   <p className="font-medium text-gray-900 dark:text-white">
                     {getTransactionLabel(transaction.type)}
                   </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
+                  <p className="text-sm text-gray-500 dark:text-white/55 truncate">
                     {transaction.description || transaction.reference}
                   </p>
                 </div>
@@ -388,7 +388,7 @@ export default function WalletPage() {
                   <p className={`font-bold ${transaction.amount >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
                     {formatAmount(transaction.amount)}
                   </p>
-                  <p className="text-xs text-gray-400">
+                  <p className="text-xs text-gray-400 dark:text-white/30">
                     {format(new Date(transaction.created_at), 'dd MMM yyyy, HH:mm', { locale: fr })}
                   </p>
                 </div>
@@ -397,9 +397,9 @@ export default function WalletPage() {
           </div>
         ) : (
           <div className="p-12 text-center">
-            <WalletIcon className="w-16 h-16 mx-auto text-gray-300 dark:text-slate-600 mb-4" />
+            <WalletIcon className="w-16 h-16 mx-auto text-white/30 mb-4" />
             <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Aucune transaction</h3>
-            <p className="text-gray-600 dark:text-gray-400">
+            <p className="text-gray-500 dark:text-white/55">
               Vos transactions apparaîtront ici
             </p>
           </div>
@@ -417,7 +417,7 @@ export default function WalletPage() {
             <form onSubmit={handleWithdraw} className="space-y-4">
               {/* Montant */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-gray-600 dark:text-white/70 mb-1">
                   Montant (FCFA)
                 </label>
                 <input
@@ -430,14 +430,14 @@ export default function WalletPage() {
                   placeholder="Minimum 500 FCFA"
                   required
                 />
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-gray-500 dark:text-white/55 mt-1">
                   Solde disponible: {wallet?.balance.toLocaleString('fr-FR')} FCFA
                 </p>
               </div>
 
               {/* Opérateur */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-gray-600 dark:text-white/70 mb-1">
                   Opérateur
                 </label>
                 <div className="grid grid-cols-2 gap-3">
@@ -446,8 +446,8 @@ export default function WalletPage() {
                     onClick={() => setWithdrawForm({ ...withdrawForm, provider: 'orange_money' })}
                     className={`p-3 rounded-xl border-2 transition-all ${
                       withdrawForm.provider === 'orange_money'
-                        ? 'border-orange-500 bg-orange-50 dark:bg-orange-900/20'
-                        : 'border-gray-200 dark:border-slate-700'
+                        ? 'border-orange-500 bg-orange-50'
+                        : 'border-gray-200 dark:border-white/[0.07]'
                     }`}
                   >
                     <p className="font-medium text-gray-900 dark:text-white">Orange Money</p>
@@ -457,8 +457,8 @@ export default function WalletPage() {
                     onClick={() => setWithdrawForm({ ...withdrawForm, provider: 'mtn_money' })}
                     className={`p-3 rounded-xl border-2 transition-all ${
                       withdrawForm.provider === 'mtn_money'
-                        ? 'border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20'
-                        : 'border-gray-200 dark:border-slate-700'
+                        ? 'border-yellow-500 bg-yellow-50'
+                        : 'border-gray-200 dark:border-white/[0.07]'
                     }`}
                   >
                     <p className="font-medium text-gray-900 dark:text-white">MTN MoMo</p>
@@ -468,11 +468,11 @@ export default function WalletPage() {
 
               {/* Numéro de téléphone */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-gray-600 dark:text-white/70 mb-1">
                   Numéro de téléphone
                 </label>
                 <div className="relative">
-                  <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-white/30" />
                   <input
                     type="tel"
                     value={withdrawForm.phone_number}
@@ -519,3 +519,8 @@ export default function WalletPage() {
     </div>
   )
 }
+
+
+
+
+

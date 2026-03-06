@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+﻿import { useState, useEffect } from 'react'
 import { vehiclesApi } from '../../services/api'
 import { Vehicle } from '../../types'
 import { Car, Plus, Trash2, Star, Loader2 } from 'lucide-react'
@@ -72,7 +72,7 @@ export default function Vehicles() {
 
       {showForm && (
         <div className="card p-6 mb-6">
-          <h3 className="font-bold text-gray-900 dark:text-white mb-4">Nouveau véhicule</h3>
+          <h3 className="font-bold text-white mb-4">Nouveau véhicule</h3>
           <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
             <input type="text" value={formData.brand} onChange={(e) => setFormData({ ...formData, brand: e.target.value })} placeholder="Marque" className="input" required />
             <input type="text" value={formData.model} onChange={(e) => setFormData({ ...formData, model: e.target.value })} placeholder="Modèle" className="input" required />
@@ -96,18 +96,18 @@ export default function Vehicles() {
             <div key={vehicle.id} className="card p-6">
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-2xl bg-gray-100 dark:bg-slate-700 flex items-center justify-center">
-                    <Car className="w-8 h-8 text-gray-400" />
+                  <div className="w-16 h-16 rounded-2xl bg-white dark:bg-white/[0.03] flex items-center justify-center">
+                    <Car className="w-8 h-8 text-gray-400 dark:text-white/30" />
                   </div>
                   <div>
                     <h3 className="font-bold text-gray-900 dark:text-white">{vehicle.brand} {vehicle.model}</h3>
-                    <p className="text-gray-600 dark:text-gray-400">{vehicle.color} • {vehicle.seats} places</p>
-                    <p className="text-sm text-gray-500">{vehicle.registration_number}</p>
+                    <p className="text-gray-500 dark:text-white/55">{vehicle.color} • {vehicle.seats} places</p>
+                    <p className="text-sm text-gray-500 dark:text-white/55">{vehicle.registration_number}</p>
                   </div>
                 </div>
                 {vehicle.is_default && <span className="badge badge-success"><Star className="w-3 h-3" /> Par défaut</span>}
               </div>
-              <div className="flex gap-2 mt-4 pt-4 border-t border-gray-100 dark:border-slate-700">
+              <div className="flex gap-2 mt-4 pt-4 border-t border-gray-100 dark:border-white/[0.07]">
                 {!vehicle.is_default && <button onClick={() => setDefault(vehicle.id)} className="btn-outline text-sm py-2">Définir par défaut</button>}
                 <button onClick={() => handleDelete(vehicle.id)} className="btn-outline text-sm py-2 text-red-600 border-red-200 hover:bg-red-50">
                   <Trash2 className="w-4 h-4" />
@@ -118,12 +118,17 @@ export default function Vehicles() {
         </div>
       ) : (
         <div className="card p-12 text-center">
-          <Car className="w-16 h-16 mx-auto text-gray-300 mb-4" />
+          <Car className="w-16 h-16 mx-auto text-white/30 mb-4" />
           <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Aucun véhicule</h3>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">Ajoutez votre premier véhicule</p>
+          <p className="text-gray-500 dark:text-white/55 mb-6">Ajoutez votre premier véhicule</p>
           <button onClick={() => setShowForm(true)} className="btn-primary">Ajouter un véhicule</button>
         </div>
       )}
     </div>
   )
 }
+
+
+
+
+

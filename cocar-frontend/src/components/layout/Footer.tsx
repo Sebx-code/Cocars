@@ -1,80 +1,108 @@
 import { Link } from 'react-router-dom'
-import { Car, Mail, Phone, MapPin, Facebook, Twitter, Instagram } from 'lucide-react'
 
 export default function Footer() {
   return (
-    <footer className="bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-slate-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+    <footer className="bg-gray-100 dark:bg-neutral-950 border-t border-gray-200 dark:border-white/[0.07] px-6 lg:px-10 py-16">
+      <div className="max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           {/* Brand */}
-          <div className="col-span-1 md:col-span-2">
-            <Link to="/" className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 gradient-header rounded-xl flex items-center justify-center">
-                <Car className="w-5 h-5 text-white" />
+          <div>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
+                <span className="font-sora font-black text-neutral-950 text-base leading-none">C</span>
               </div>
-              <span className="text-xl font-bold text-gray-900 dark:text-white">CoCar</span>
-            </Link>
-            <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-md">
-              CoCar est la plateforme de covoiturage qui vous permet de partager vos trajets, 
-              d'économiser de l'argent et de réduire votre empreinte carbone.
-            </p>
-            <div className="flex gap-4">
-              <a href="#" className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:bg-primary-100 hover:text-primary-600 transition-colors">
-                <Facebook className="w-5 h-5" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:bg-primary-100 hover:text-primary-600 transition-colors">
-                <Twitter className="w-5 h-5" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:bg-primary-100 hover:text-primary-600 transition-colors">
-                <Instagram className="w-5 h-5" />
-              </a>
+              <span className="font-sora font-bold text-lg tracking-tight text-gray-900 dark:text-white">CoCar</span>
             </div>
+            <p className="text-sm text-gray-400 dark:text-white/35 font-light leading-relaxed">
+              La plateforme de covoiturage de référence au Cameroun.
+            </p>
           </div>
 
-          {/* Links */}
+          {/* Produit */}
           <div>
-            <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Navigation</h3>
-            <ul className="space-y-3">
+            <p className="text-[10px] font-bold uppercase tracking-[.14em] text-gray-400 dark:text-white/25 mb-5">Produit</p>
+            <ul className="space-y-3 list-none p-0 m-0">
               <li>
-                <Link to="/search" className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
-                  Rechercher un trajet
+                <Link to="/search" className="text-sm text-gray-400 dark:text-white/40 hover:text-gray-700 dark:hover:text-white/80 transition-colors no-underline">
+                  Rechercher
                 </Link>
               </li>
               <li>
-                <Link to="/create-trip" className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                <Link to="/create-trip" className="text-sm text-gray-400 dark:text-white/40 hover:text-gray-700 dark:hover:text-white/80 transition-colors no-underline">
                   Proposer un trajet
                 </Link>
               </li>
               <li>
-                <Link to="/dashboard" className="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
-                  Mon espace
-                </Link>
+                <a href="#" className="text-sm text-gray-400 dark:text-white/40 hover:text-gray-700 dark:hover:text-white/80 transition-colors no-underline">
+                  Comment ça marche
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-sm text-gray-400 dark:text-white/40 hover:text-gray-700 dark:hover:text-white/80 transition-colors no-underline">
+                  Tarifs
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Légal */}
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-[.14em] text-gray-400 dark:text-white/25 mb-5">Légal</p>
+            <ul className="space-y-3 list-none p-0 m-0">
+              <li>
+                <a href="#" className="text-sm text-gray-400 dark:text-white/40 hover:text-gray-700 dark:hover:text-white/80 transition-colors no-underline">
+                  CGU
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-sm text-gray-400 dark:text-white/40 hover:text-gray-700 dark:hover:text-white/80 transition-colors no-underline">
+                  Confidentialité
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-sm text-gray-400 dark:text-white/40 hover:text-gray-700 dark:hover:text-white/80 transition-colors no-underline">
+                  Cookies
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-sm text-gray-400 dark:text-white/40 hover:text-gray-700 dark:hover:text-white/80 transition-colors no-underline">
+                  Mentions légales
+                </a>
               </li>
             </ul>
           </div>
 
           {/* Contact */}
           <div>
-            <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Contact</h3>
-            <ul className="space-y-3">
-              <li className="flex items-center gap-3 text-gray-600 dark:text-gray-400">
-                <Mail className="w-5 h-5 text-primary-500" />
-                contact@cocar.com
+            <p className="text-[10px] font-bold uppercase tracking-[.14em] text-gray-400 dark:text-white/25 mb-5">Contact</p>
+            <ul className="space-y-3 list-none p-0 m-0">
+              <li>
+                <a href="#" className="text-sm text-gray-400 dark:text-white/40 hover:text-gray-700 dark:hover:text-white/80 transition-colors no-underline">
+                  Support
+                </a>
               </li>
-              <li className="flex items-center gap-3 text-gray-600 dark:text-gray-400">
-                <Phone className="w-5 h-5 text-primary-500" />
-                +237 6XX XXX XXX
+              <li>
+                <a href="#" className="text-sm text-gray-400 dark:text-white/40 hover:text-gray-700 dark:hover:text-white/80 transition-colors no-underline">
+                  Presse
+                </a>
               </li>
-              <li className="flex items-center gap-3 text-gray-600 dark:text-gray-400">
-                <MapPin className="w-5 h-5 text-primary-500" />
-                Douala, Cameroun
+              <li>
+                <a href="#" className="text-sm text-gray-400 dark:text-white/40 hover:text-gray-700 dark:hover:text-white/80 transition-colors no-underline">
+                  Partenariats
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-sm text-gray-400 dark:text-white/40 hover:text-gray-700 dark:hover:text-white/80 transition-colors no-underline">
+                  Blog
+                </a>
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="border-t border-gray-200 dark:border-slate-800 mt-12 pt-8 text-center text-gray-600 dark:text-gray-400">
-          <p>© {new Date().getFullYear()} CoCar. Tous droits réservés.</p>
+        <div className="border-t border-gray-200 dark:border-white/[0.07] mt-12 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3">
+          <p className="text-xs text-gray-400 dark:text-white/25">© {new Date().getFullYear()} CoCar · Tous droits réservés</p>
+          <p className="text-xs text-gray-400 dark:text-white/25">Yaoundé, Cameroun 🇨🇲</p>
         </div>
       </div>
     </footer>

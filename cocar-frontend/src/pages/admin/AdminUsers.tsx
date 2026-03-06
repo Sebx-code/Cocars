@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { adminApi } from '../../services/api'
-import { 
-  Search, Filter, UserCheck, UserX, Trash2, 
+import {
+  Search, Filter, UserCheck, UserX, Trash2,
   Mail, Phone, Calendar, Star, ChevronLeft, ChevronRight,
   Shield, AlertCircle
 } from 'lucide-react'
@@ -50,7 +50,7 @@ export default function AdminUsers() {
       if (search) params.search = search
       if (roleFilter) params.role = roleFilter
       if (verifiedFilter) params.is_verified = verifiedFilter
-      
+
       const response = await adminApi.getUsers(params)
       const data = response.data as unknown as { data: UserWithCounts[], meta: PaginationMeta }
       setUsers(data.data)
@@ -97,22 +97,22 @@ export default function AdminUsers() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
             Gestion des utilisateurs
           </h1>
-          <p className="text-gray-500 dark:text-gray-400">
+          <p className="text-gray-500 dark:text-white/55">
             {meta?.total || 0} utilisateurs au total
           </p>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-argon p-4">
+      <div className="bg-white dark:bg-white/[0.03] border border-gray-200 dark:border-white/[0.07] rounded-2xl p-4">
         <div className="flex flex-col md:flex-row gap-4">
           {/* Search */}
           <form onSubmit={handleSearch} className="flex-1">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-white/40" />
               <input
                 type="text"
                 value={search}
@@ -125,7 +125,7 @@ export default function AdminUsers() {
 
           {/* Role Filter */}
           <div className="flex items-center gap-2">
-            <Filter className="w-5 h-5 text-gray-400" />
+            <Filter className="w-5 h-5 text-gray-400 dark:text-white/40" />
             <select
               value={roleFilter}
               onChange={(e) => { setRoleFilter(e.target.value); setCurrentPage(1); }}
@@ -151,52 +151,52 @@ export default function AdminUsers() {
       </div>
 
       {/* Users Table */}
-      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-argon overflow-hidden">
+      <div className="bg-white dark:bg-white/[0.03] border border-gray-200 dark:border-white/[0.07] rounded-2xl overflow-hidden">
         {isLoading ? (
           <div className="p-8 text-center">
             <div className="animate-spin w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full mx-auto"></div>
-            <p className="mt-4 text-gray-500">Chargement...</p>
+            <p className="mt-4 text-gray-500 dark:text-white/55">Chargement...</p>
           </div>
         ) : users.length > 0 ? (
           <>
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-gray-50 dark:bg-slate-700/50">
+                <thead className="bg-gray-50 dark:bg-white/[0.03]">
                   <tr>
-                    <th className="text-left py-4 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">Utilisateur</th>
-                    <th className="text-left py-4 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">Contact</th>
-                    <th className="text-left py-4 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">Statistiques</th>
-                    <th className="text-left py-4 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">Statut</th>
-                    <th className="text-left py-4 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">Inscrit le</th>
-                    <th className="text-right py-4 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</th>
+                    <th className="text-left py-4 px-6 text-xs font-semibold text-gray-500 dark:text-white/55 uppercase tracking-wider">Utilisateur</th>
+                    <th className="text-left py-4 px-6 text-xs font-semibold text-gray-500 dark:text-white/55 uppercase tracking-wider">Contact</th>
+                    <th className="text-left py-4 px-6 text-xs font-semibold text-gray-500 dark:text-white/55 uppercase tracking-wider">Statistiques</th>
+                    <th className="text-left py-4 px-6 text-xs font-semibold text-gray-500 dark:text-white/55 uppercase tracking-wider">Statut</th>
+                    <th className="text-left py-4 px-6 text-xs font-semibold text-gray-500 dark:text-white/55 uppercase tracking-wider">Inscrit le</th>
+                    <th className="text-right py-4 px-6 text-xs font-semibold text-gray-500 dark:text-white/55 uppercase tracking-wider">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100 dark:divide-slate-700">
+                <tbody className="divide-y divide-gray-100 dark:divide-white/[0.04]">
                   {users.map((user) => (
-                    <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-slate-700/30 transition-colors">
+                    <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-white/[0.03] transition-colors">
                       <td className="py-4 px-6">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white font-bold">
                             {user.name.charAt(0).toUpperCase()}
                           </div>
                           <div>
-                            <p className="font-semibold text-gray-800 dark:text-white flex items-center gap-2">
+                            <p className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
                               {user.name}
                               {user.role === 'admin' && (
                                 <Shield className="w-4 h-4 text-red-500" />
                               )}
                             </p>
-                            <p className="text-sm text-gray-500">{user.email}</p>
+                            <p className="text-sm text-gray-500 dark:text-white/55">{user.email}</p>
                           </div>
                         </div>
                       </td>
                       <td className="py-4 px-6">
                         <div className="space-y-1">
-                          <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-1">
+                          <p className="text-sm text-gray-500 dark:text-white/55 flex items-center gap-1">
                             <Mail className="w-3 h-3" /> {user.email}
                           </p>
                           {user.phone && (
-                            <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-1">
+                            <p className="text-sm text-gray-500 dark:text-white/55 flex items-center gap-1">
                               <Phone className="w-3 h-3" /> {user.phone}
                             </p>
                           )}
@@ -204,10 +204,10 @@ export default function AdminUsers() {
                       </td>
                       <td className="py-4 px-6">
                         <div className="flex items-center gap-4 text-sm">
-                          <span className="text-gray-600 dark:text-gray-400">
+                          <span className="text-gray-500 dark:text-white/55">
                             {user.trips_as_driver_count || 0} trajets
                           </span>
-                          <span className="text-gray-600 dark:text-gray-400">
+                          <span className="text-gray-500 dark:text-white/55">
                             {user.bookings_count || 0} résa.
                           </span>
                           {user.rating && (
@@ -226,7 +226,7 @@ export default function AdminUsers() {
                         )}
                       </td>
                       <td className="py-4 px-6">
-                        <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-1">
+                        <p className="text-sm text-gray-500 dark:text-white/55 flex items-center gap-1">
                           <Calendar className="w-3 h-3" />
                           {new Date(user.created_at).toLocaleDateString('fr-FR')}
                         </p>
@@ -236,7 +236,7 @@ export default function AdminUsers() {
                           {!user.is_verified && (
                             <button
                               onClick={() => handleVerifyUser(user)}
-                              className="p-2 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-lg transition-colors"
+                              className="p-2 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-500/10 rounded-lg transition-colors"
                               title="Vérifier"
                             >
                               <UserCheck className="w-5 h-5" />
@@ -245,7 +245,7 @@ export default function AdminUsers() {
                           {user.role !== 'admin' && (
                             <button
                               onClick={() => { setSelectedUser(user); setShowDeleteModal(true); }}
-                              className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                              className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors"
                               title="Supprimer"
                             >
                               <Trash2 className="w-5 h-5" />
@@ -261,22 +261,22 @@ export default function AdminUsers() {
 
             {/* Pagination */}
             {meta && meta.last_page > 1 && (
-              <div className="flex items-center justify-between px-6 py-4 border-t border-gray-100 dark:border-slate-700">
-                <p className="text-sm text-gray-500">
+              <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 dark:border-white/[0.07]">
+                <p className="text-sm text-gray-500 dark:text-white/55">
                   Page {meta.current_page} sur {meta.last_page} ({meta.total} résultats)
                 </p>
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                     disabled={meta.current_page === 1}
-                    className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/[0.06] disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <ChevronLeft className="w-5 h-5" />
                   </button>
                   <button
                     onClick={() => setCurrentPage(p => Math.min(meta.last_page, p + 1))}
                     disabled={meta.current_page === meta.last_page}
-                    className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/[0.06] disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <ChevronRight className="w-5 h-5" />
                   </button>
@@ -286,8 +286,8 @@ export default function AdminUsers() {
           </>
         ) : (
           <div className="p-12 text-center">
-            <UserX className="w-12 h-12 mx-auto text-gray-300 dark:text-slate-600 mb-3" />
-            <p className="text-gray-500 dark:text-gray-400">Aucun utilisateur trouvé</p>
+            <UserX className="w-12 h-12 mx-auto text-gray-300 dark:text-white/20 mb-3" />
+            <p className="text-gray-500 dark:text-white/55">Aucun utilisateur trouvé</p>
           </div>
         )}
       </div>
@@ -295,18 +295,18 @@ export default function AdminUsers() {
       {/* Delete Modal */}
       {showDeleteModal && selectedUser && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl max-w-md w-full p-6 animate-fadeIn">
+          <div className="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-white/[0.12] rounded-2xl shadow-xl max-w-md w-full p-6 animate-fadeIn">
             <div className="flex items-center gap-4 mb-4">
-              <div className="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
-                <AlertCircle className="w-6 h-6 text-red-600" />
+              <div className="w-12 h-12 rounded-full bg-red-100 dark:bg-red-500/10 flex items-center justify-center">
+                <AlertCircle className="w-6 h-6 text-red-600 dark:text-red-400" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-gray-800 dark:text-white">Supprimer l'utilisateur</h3>
-                <p className="text-sm text-gray-500">Cette action est irréversible</p>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white">Supprimer l'utilisateur</h3>
+                <p className="text-sm text-gray-500 dark:text-white/55">Cette action est irréversible</p>
               </div>
             </div>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
-              Êtes-vous sûr de vouloir supprimer <strong>{selectedUser.name}</strong> ? 
+            <p className="text-gray-500 dark:text-white/55 mb-6">
+              Êtes-vous sûr de vouloir supprimer <strong className="text-gray-900 dark:text-white">{selectedUser.name}</strong> ?
               Tous ses trajets et réservations seront annulés.
             </p>
             <div className="flex gap-3">

@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import { createContext, useContext, useState, useEffect, ReactNode, useCallback, useMemo } from 'react'
 
 interface ThemeContextType {
   isDark: boolean
@@ -23,10 +23,12 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     }
   }, [isDark])
 
-  const toggleTheme = () => setIsDark(!isDark)
+  const toggleTheme = useCallback(() => setIsDark(prev => !prev), [])
+
+  const contextValue = useMemo(() => ({ isDark, toggleTheme }), [isDark, toggleTheme])
 
   return (
-    <ThemeContext.Provider value={{ isDark, toggleTheme }}>
+    <ThemeContext.Provider value={contextValue}>
       {children}
     </ThemeContext.Provider>
   )
@@ -39,3 +41,4 @@ export function useTheme() {
   }
   return context
 }
+

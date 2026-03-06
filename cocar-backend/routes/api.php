@@ -24,8 +24,8 @@ use App\Http\Controllers\Api\AnalyticsController;
 
 // ============ ROUTES PUBLIQUES ============
 
-// Authentification
-Route::prefix('auth')->group(function () {
+// Authentification (rate limiting strict : 5 tentatives par minute)
+Route::prefix('auth')->middleware('throttle:5,1')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/refresh', [AuthController::class, 'refresh']); // Refresh token
@@ -53,7 +53,7 @@ Route::get('/ratings/trip/{trip}', [RatingController::class, 'tripRatings']);
 
 // ============ ROUTES PROTÉGÉES (authentification requise) ============
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
     
     // --- Authentification ---
     Route::prefix('auth')->group(function () {
@@ -112,18 +112,20 @@ Route::middleware('auth:sanctum')->group(function () {
     // Validation du départ par le chauffeur (avec codes passagers)
     Route::post('/trips/{trip}/validate-departure', [BookingController::class, 'validateDeparture']);
     
-    // --- Paiements ---
+    // --- Paiements (rate limiting strict : 3 tentatives par minute) ---
+    Route::middleware('throttle:3,1')->group(function () {
+        Route::post('/payments/process', [PaymentController::class, 'process']);
+        Route::post('/payments/{payment}/confirm-cash', [PaymentController::class, 'confirmCash']);
+        Route::post('/payments/{payment}/refund', [PaymentController::class, 'requestRefund']);
+        Route::post('/wallet/withdraw', [PaymentController::class, 'withdraw']);
+    });
     Route::get('/payments/methods', [PaymentController::class, 'methods']);
-    Route::post('/payments/process', [PaymentController::class, 'process']);
     Route::get('/payments/history', [PaymentController::class, 'history']);
     Route::get('/payments/status/{transactionId}', [PaymentController::class, 'status']);
-    Route::post('/payments/{payment}/confirm-cash', [PaymentController::class, 'confirmCash']);
-    Route::post('/payments/{payment}/refund', [PaymentController::class, 'requestRefund']);
-    
+
     // --- Portefeuille (Wallet) ---
     Route::get('/wallet', [PaymentController::class, 'wallet']);
     Route::get('/wallet/transactions', [PaymentController::class, 'walletTransactions']);
-    Route::post('/wallet/withdraw', [PaymentController::class, 'withdraw']);
 
     // --- Analytics ---
     Route::get('/analytics/driver/financial', [AnalyticsController::class, 'driverFinancial']);

@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Booking;
+use App\Models\Payment;
 use App\Models\Trip;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class TripController extends Controller
@@ -336,7 +339,28 @@ class TripController extends Controller
 
         // Si annulation
         if (isset($validated['status']) && $validated['status'] === 'cancelled') {
-            $trip->cancel($validated['cancellation_reason'] ?? null);
+            DB::transaction(function () use ($trip, $validated) {
+                // Rembourser les réservations avec paiement escrow
+                $activeBookings = $trip->bookings()
+                    ->whereIn('status', [Booking::STATUS_CONFIRMED, Booking::STATUS_PENDING])
+                    ->with('payment')
+                    ->get();
+
+                foreach ($activeBookings as $booking) {
+                    if ($booking->hasEscrowPayment()) {
+                        $booking->payment->refund(false);
+                    }
+                    $booking->update([
+                        'status' => Booking::STATUS_CANCELLED,
+                        'cancellation_reason' => $validated['cancellation_reason'] ?? 'Trajet annulé par le conducteur',
+                    ]);
+                }
+
+                $trip->update([
+                    'status' => 'cancelled',
+                    'cancellation_reason' => $validated['cancellation_reason'] ?? null,
+                ]);
+            });
             return $this->success($trip->fresh(), 'Trajet annulé');
         }
 
@@ -354,12 +378,34 @@ class TripController extends Controller
             return $this->error('Vous n\'êtes pas autorisé à supprimer ce trajet', 403);
         }
 
-        // Annuler d'abord si nécessaire
-        if (in_array($trip->status, ['pending', 'confirmed'])) {
-            $trip->cancel('Trajet supprimé par le conducteur');
-        }
+        DB::transaction(function () use ($trip) {
+            // Annuler d'abord si nécessaire et rembourser les réservations confirmées
+            if (in_array($trip->status, ['pending', 'confirmed'])) {
+                // Rembourser les réservations confirmées avec paiement escrow
+                $confirmedBookings = $trip->bookings()
+                    ->whereIn('status', [Booking::STATUS_CONFIRMED, Booking::STATUS_PENDING])
+                    ->with('payment')
+                    ->get();
 
-        $trip->delete();
+                foreach ($confirmedBookings as $booking) {
+                    if ($booking->hasEscrowPayment()) {
+                        // Remboursement complet (conducteur responsable de l'annulation)
+                        $booking->payment->refund(false);
+                    }
+                    $booking->update([
+                        'status' => Booking::STATUS_CANCELLED,
+                        'cancellation_reason' => 'Trajet supprimé par le conducteur',
+                    ]);
+                }
+
+                $trip->update([
+                    'status' => 'cancelled',
+                    'cancellation_reason' => 'Trajet supprimé par le conducteur',
+                ]);
+            }
+
+            $trip->delete();
+        });
 
         return $this->success(null, 'Trajet supprimé');
     }

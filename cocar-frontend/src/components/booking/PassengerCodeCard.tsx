@@ -6,13 +6,18 @@ interface PassengerCodeCardProps {
 }
 
 export const PassengerCodeCard: React.FC<PassengerCodeCardProps> = ({ booking }) => {
-  // N'afficher que si le passager a un code et que la réservation est confirmée
-  if (!booking.passenger_code || booking.status !== 'confirmed') {
+  // N'afficher que si le passager a un code
+  if (!booking.passenger_code) {
     return null
   }
 
-  // Ne pas afficher si le voyage est déjà terminé
-  if (booking.status === 'completed' || booking.status === 'cancelled') {
+  // Ne pas afficher si le voyage est annulé ou terminé
+  if (booking.status === 'cancelled' || booking.status === 'completed') {
+    return null
+  }
+
+  // N'afficher que si confirmé
+  if (booking.status !== 'confirmed') {
     return null
   }
 

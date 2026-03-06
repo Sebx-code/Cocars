@@ -283,10 +283,12 @@ class MessageController extends Controller
     {
         try {
             $user = $request->user();
-            
-            $count = $user->conversations->sum(function ($conversation) use ($user) {
-                return $conversation->unreadCountForUser($user->id);
-            });
+
+            // Eager load conversations with participants pivot to avoid N+1
+            $count = $user->conversations()->with('participants')->get()
+                ->sum(function ($conversation) use ($user) {
+                    return $conversation->unreadCountForUser($user->id);
+                });
             
             return $this->success(['count' => $count]);
         } catch (\Exception $e) {

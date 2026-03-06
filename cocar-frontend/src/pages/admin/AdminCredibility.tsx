@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { 
   TrendingUp, 
   Users, 
@@ -23,9 +23,8 @@ export default function AdminCredibility() {
   }, [])
 
   const loadStats = async () => {
+    setLoading(true)
     try {
-      setLoading(true)
-      
       // Appel API réel
       const response = await analyticsApi.credibilityStats()
       setStats(response.data.data)
@@ -85,6 +84,7 @@ export default function AdminCredibility() {
         ]
       }
       setStats(mockStats)
+      */
     } catch (error: any) {
       console.error('Erreur chargement stats', error)
       toast.error(error.response?.data?.message || 'Erreur lors du chargement des statistiques')
@@ -104,7 +104,7 @@ export default function AdminCredibility() {
   if (!stats) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-600">Aucune donnée disponible</p>
+        <p className="text-gray-500 dark:text-gray-500 dark:text-white/55">Aucune donnée disponible</p>
       </div>
     )
   }
@@ -117,8 +117,8 @@ export default function AdminCredibility() {
       {/* En-tête */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Statistiques de Crédibilité</h1>
-          <p className="text-gray-600 mt-1">Analyse des niveaux et performance des utilisateurs</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Statistiques de Crédibilité</h1>
+          <p className="text-gray-500 dark:text-gray-500 dark:text-white/55 mt-1">Analyse des niveaux et performance des utilisateurs</p>
         </div>
         <button
           onClick={loadStats}
@@ -169,8 +169,8 @@ export default function AdminCredibility() {
       </div>
 
       {/* Distribution des étoiles */}
-      <div className="bg-white rounded-xl shadow-md p-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+      <div className="bg-white dark:bg-white/[0.03] border border-gray-200 dark:border-gray-200 dark:border-gray-200 dark:border-white/[0.07] rounded-xl p-6">
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
           <Award className="w-6 h-6 text-blue-600" />
           Distribution des Niveaux
         </h2>
@@ -187,12 +187,12 @@ export default function AdminCredibility() {
                     <CredibilityStars stars={stars} size="sm" showLabel />
                   </div>
                   <div className="flex items-center gap-4">
-                    <span className="text-sm font-semibold text-gray-600">
+                    <span className="text-sm font-semibold text-gray-500 dark:text-gray-500 dark:text-white/55">
                       {count} utilisateurs ({percentage}%)
                     </span>
                   </div>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                <div className="w-full bg-gray-100 dark:bg-gray-100 dark:bg-white/[0.08] rounded-full h-3 overflow-hidden">
                   <div
                     className={`h-3 rounded-full transition-all duration-500 ${
                       stars === 5 ? 'bg-gradient-to-r from-purple-500 to-pink-500' :
@@ -210,7 +210,7 @@ export default function AdminCredibility() {
         </div>
 
         {/* Résumé visuel */}
-        <div className="mt-6 pt-6 border-t border-gray-200">
+        <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-200 dark:border-white/[0.07]">
           <div className="grid grid-cols-5 gap-2">
             {[5, 4, 3, 2, 1].map((stars) => {
               const count = stats.distribution[`stars_${stars}` as keyof typeof stats.distribution]
@@ -224,13 +224,13 @@ export default function AdminCredibility() {
                       stars === 4 ? 'bg-blue-100' :
                       stars === 3 ? 'bg-green-100' :
                       stars === 2 ? 'bg-orange-100' :
-                      'bg-gray-100'
+                      'bg-gray-100 dark:bg-gray-100 dark:bg-white/[0.05]'
                     }`}
                     style={{ height: `${Math.max(50, percentage * 2)}px` }}
                   >
                     <p className="text-2xl font-bold">{count}</p>
                   </div>
-                  <p className="text-xs text-gray-600 mt-2">
+                  <p className="text-xs text-gray-500 dark:text-gray-500 dark:text-white/55 mt-2">
                     {stars} ⭐
                   </p>
                 </div>
@@ -241,8 +241,8 @@ export default function AdminCredibility() {
       </div>
 
       {/* Top utilisateurs */}
-      <div className="bg-white rounded-xl shadow-md p-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+      <div className="bg-white dark:bg-white/[0.03] border border-gray-200 dark:border-gray-200 dark:border-gray-200 dark:border-white/[0.07] rounded-xl p-6">
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
           <Crown className="w-6 h-6 text-yellow-500" />
           Top 5 des Utilisateurs
         </h2>
@@ -253,17 +253,17 @@ export default function AdminCredibility() {
               key={user.id}
               className={`flex items-center gap-4 p-4 rounded-lg border-2 transition-all hover:shadow-md ${
                 index === 0 ? 'bg-gradient-to-r from-yellow-50 to-amber-50 border-yellow-300' :
-                index === 1 ? 'bg-gradient-to-r from-gray-50 to-slate-50 border-gray-300' :
+                index === 1 ? 'bg-gradient-to-r from-white/[0.05] to-white/[0.08] border-gray-300 dark:border-gray-300 dark:border-white/[0.12]' :
                 index === 2 ? 'bg-gradient-to-r from-orange-50 to-amber-50 border-orange-300' :
-                'bg-gray-50 border-gray-200'
+                'bg-gray-50 border-gray-200 dark:border-gray-200 dark:border-white/[0.07]'
               }`}
             >
               {/* Position */}
               <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg ${
-                index === 0 ? 'bg-yellow-500 text-white' :
-                index === 1 ? 'bg-gray-400 text-white' :
-                index === 2 ? 'bg-orange-500 text-white' :
-                'bg-gray-300 text-gray-700'
+                index === 0 ? 'bg-yellow-500 text-gray-900 dark:text-white' :
+                index === 1 ? 'bg-gray-200 dark:bg-white/20 text-gray-900 dark:text-white' :
+                index === 2 ? 'bg-orange-500 text-gray-900 dark:text-white' :
+                'bg-gray-100 dark:bg-white/10 text-gray-500 dark:text-white/60'
               }`}>
                 {index === 0 ? '🏆' : index + 1}
               </div>
@@ -275,8 +275,8 @@ export default function AdminCredibility() {
 
               {/* Info */}
               <div className="flex-1">
-                <p className="font-bold text-gray-900">{user.name}</p>
-                <p className="text-sm text-gray-600">{user.total_trips_as_driver} trajets complétés</p>
+                <p className="font-bold text-gray-900 dark:text-white">{user.name}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-500 dark:text-white/55">{user.total_trips_as_driver} trajets complétés</p>
               </div>
 
               {/* Badge */}
@@ -287,8 +287,8 @@ export default function AdminCredibility() {
                   size="md"
                 />
                 <div className="text-right">
-                  <p className="text-2xl font-bold text-gray-900">{user.credibility_points}</p>
-                  <p className="text-xs text-gray-500">points</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{user.credibility_points}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-500 dark:text-white/55">points</p>
                 </div>
               </div>
             </div>
@@ -308,12 +308,12 @@ export default function AdminCredibility() {
             { stars: 4, name: 'Expert', range: '200-399 points', color: 'text-blue-700' },
             { stars: 3, name: 'Confirmé', range: '100-199 points', color: 'text-green-700' },
             { stars: 2, name: 'Apprenti', range: '50-99 points', color: 'text-orange-700' },
-            { stars: 1, name: 'Débutant', range: '0-49 points', color: 'text-gray-700' }
+            { stars: 1, name: 'Débutant', range: '0-49 points', color: 'text-gray-600 dark:text-gray-600 dark:text-white/70' }
           ].map((level) => (
             <div key={level.stars} className="text-center">
               <CredibilityBadge stars={level.stars} size="sm" />
               <p className={`font-semibold mt-2 ${level.color}`}>{level.name}</p>
-              <p className="text-xs text-gray-600 mt-1">{level.range}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-500 dark:text-white/55 mt-1">{level.range}</p>
             </div>
           ))}
         </div>
@@ -321,3 +321,7 @@ export default function AdminCredibility() {
     </div>
   )
 }
+
+
+
+

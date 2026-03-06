@@ -109,7 +109,9 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['Open Sans', 'Inter', 'system-ui', 'sans-serif'],
+        sans: ['DM Sans', 'Open Sans', 'Inter', 'system-ui', 'sans-serif'],
+        sora: ['Sora', 'sans-serif'],
+        dm: ['DM Sans', 'sans-serif'],
       },
       boxShadow: {
         'card': '0 0 2rem 0 rgba(136, 152, 170, 0.15)',
