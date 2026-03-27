@@ -1,0 +1,176 @@
+---
+title: Diagramme de Déploiement - Architecture CoCars
+config:
+  theme: base
+  themeVariables:
+    fontSize: 18px
+    fontFamily: 'Arial, sans-serif'
+    primaryColor: '#2196F3'
+    primaryTextColor: '#ffffff'
+    primaryBorderColor: '#1565C0'
+    lineColor: '#333333'
+    sectionBkgColor: '#ffffff'
+    altSectionBkgColor: '#f8f9fa'
+    gridColor: '#e9ecef'
+    tertiaryColor: '#f8f9fa'
+  flowchart:
+    nodeSpacing: 80
+    rankSpacing: 100
+    curve: 'basis'
+    padding: 20
+    htmlLabels: true
+    useMaxWidth: true
+---
+
+graph TB
+    %% Client Side
+    subgraph Browser["Client (Navigateur Web)"]
+        UI["React UI / TypeScript<br/>Port: 5173"]
+    end
+
+    %% Server Side
+    subgraph WebServers["Serveurs Web"]
+        subgraph Node["Node.js Server<br/>(Vite Dev Server)"]
+            Vite["Vite Server<br/>localhost:5173"]
+        end
+
+        subgraph PHP["PHP/Laravel Server"]
+            Laravel["Laravel API Server<br/>localhost:8000"]
+            Queue["Queue Worker"]
+            Scheduler["Task Scheduler"]
+        end
+    end
+
+    %% Application Layer
+    subgraph AppLayer["Couche Application"]
+        subgraph FrontendApp["Frontend - React App"]
+            Components["Components"]
+            Pages["Pages"]
+            Services["API Services"]
+            Contexts["Contexts"]
+        end
+
+        subgraph BackendApp["Backend - Laravel App"]
+            Controllers["Controllers"]
+            Models["Models"]
+            Services["Services"]
+            EventHandlers["Event Handlers"]
+            Middleware["Middleware"]
+        end
+    end
+
+    %% Business Logic Layer
+    subgraph BusinessLogic["Couche Logique Métier"]
+        Auth["Authentication Service"]
+        Payment["Payment Service"]
+        Notification["Notification Service"]
+        Analytics["Analytics Service"]
+    end
+
+    %% Data Layer
+    subgraph DataLayer["Couche Données"]
+        subgraph Database["Base de Données"]
+            MySQL["MySQL Database<br/>rideshare_db"]
+        end
+
+        subgraph Storage["Stockage Fichiers"]
+            AvatarStorage["Avatar Storage"]
+            DocumentStorage["Document Storage"]
+            VehiclePhotoStorage["Vehicle Photo Storage"]
+        end
+    end
+
+    %% External Services
+    subgraph External["Services Externes"]
+        PaymentGateway["Passerelle de Paiement<br/>(Stripe/PayPal)"]
+        EmailService["Service Email<br/>(SMTP)"]
+        SMSService["Service SMS<br/>(Twillio)"]
+        MapService["Service Cartographique<br/>(Google Maps)"]
+        FileStorage["Stockage Cloud<br/>(S3/Local)"]
+    end
+
+    %% WebSocket/Real-time
+    subgraph RealTime["Communication Real-time"]
+        Websocket["WebSocket Server<br/>(Laravel Reverb)"]
+    end
+
+    %% Artifacts/Artifacts
+    subgraph Artifacts["Artefacts Déployés"]
+        FrontendArtifact["Frontend Bundle<br/>(dist/)"]
+        BackendArtifact["Backend Code<br/>(app/, config/)"]
+        Database_Artifact["Database Schema<br/>(migrations/)"]
+    end
+
+    %% Connections - Frontend
+    Browser -->|HTTP/HTTPS| Vite
+    Vite -->|Serve| UI
+
+    %% Connections - API Communication
+    UI -->|HTTP/REST| Laravel
+    UI -->|WebSocket| Websocket
+
+    %% Connections - Frontend Internal
+    UI --> Components
+    UI --> Pages
+    Pages --> Services
+    Services --> Contexts
+    Components --> Contexts
+
+    %% Connections - Backend Internal
+    Laravel --> Controllers
+    Controllers --> Models
+    Controllers --> Services
+    Models --> EventHandlers
+    Laravel --> Middleware
+    Middleware --> Controllers
+
+    %% Connections - Business Logic
+    Controllers --> Auth
+    Controllers --> Payment
+    Controllers --> Notification
+    Controllers --> Analytics
+
+    %% Queue & Scheduler
+    EventHandlers --> Queue
+    Services --> Queue
+    Laravel --> Scheduler
+    Queue -->|Process Jobs| Services
+
+    %% Database Connections
+    Models -->|Query| MySQL
+    Services -->|Read/Write| MySQL
+
+    %% Storage Connections
+    Services -->|Upload/Read| AvatarStorage
+    Services -->|Upload/Read| DocumentStorage
+    Services -->|Upload/Read| VehiclePhotoStorage
+
+    %% External Service Connections
+    Payment -->|API Call| PaymentGateway
+    Notification -->|API Call| EmailService
+    Notification -->|API Call| SMSService
+    Services -->|API Call| MapService
+    AvatarStorage -->|Upload| FileStorage
+    DocumentStorage -->|Upload| FileStorage
+    VehiclePhotoStorage -->|Upload| FileStorage
+
+    %% WebSocket Connections
+    Websocket -->|Real-time| UI
+    EventHandlers -->|Emit Events| Websocket
+
+    %% Deployment Artifacts
+    Vite -->|Deploy| FrontendArtifact
+    Laravel -->|Deploy| BackendArtifact
+    MySQL -->|Schema| Database_Artifact
+
+    classDef client fill:#4A90E2,stroke:#2E5C8A,color:#fff,stroke-width:6px
+    classDef server fill:#50E3C2,stroke:#2E8B7A,color:#000,stroke-width:4px
+    classDef external fill:#F5A623,stroke:#C1710A,color:#fff,stroke-width:4px
+    classDef database fill:#BD10E0,stroke:#7D0A7D,color:#fff,stroke-width:4px
+    classDef artifact fill:#7ED321,stroke:#4A8F0A,color:#000,stroke-width:4px
+
+    class Browser client
+    class Laravel,Vite,Websocket,Queue,Scheduler server
+    class PaymentGateway,EmailService,SMSService,MapService,FileStorage external
+    class MySQL,AvatarStorage,DocumentStorage,VehiclePhotoStorage database
+    class FrontendArtifact,BackendArtifact,Database_Artifact artifact

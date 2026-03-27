@@ -10,7 +10,7 @@ interface TripCardProps {
   trip: Trip
 }
 
-export default function TripCard({ trip }: TripCardProps) {
+export default function TripCard({ trip }: Readonly<TripCardProps>) {
   const formattedDate = format(new Date(trip.departure_date), 'EEEE d MMMM', { locale: fr })
 
   return (

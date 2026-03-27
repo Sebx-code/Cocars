@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Events\NewNotification;
 use App\Events\BookingStatusChanged;
 use App\Events\TripReminder;
+use App\Jobs\SendSmsNotification;
+use App\Jobs\SendBatchSmsNotification;
 use App\Models\Booking;
 use App\Models\Notification;
 use App\Models\Trip;
@@ -12,6 +14,12 @@ use App\Models\User;
 
 class NotificationService
 {
+    protected SmsNotificationService $smsService;
+
+    public function __construct(SmsNotificationService $smsService)
+    {
+        $this->smsService = $smsService;
+    }
     /**
      * Types de notifications
      */
@@ -39,7 +47,8 @@ class NotificationService
         string $title,
         string $message,
         array $data = [],
-        bool $broadcast = true
+        bool $broadcast = true,
+        bool $sendSms = true
     ): Notification {
         $notification = Notification::create([
             'user_id' => $userId,
@@ -54,7 +63,24 @@ class NotificationService
             event(new NewNotification($notification));
         }
 
+        // Envoyer SMS si activé pour ce type de notification
+        if ($sendSms && $this->shouldSendSms($type)) {
+            SendSmsNotification::dispatch($userId, $title . ': ' . $message, [
+                'notification_id' => $notification->id,
+                'notification_type' => $type,
+            ]);
+        }
+
         return $notification;
+    }
+
+    /**
+     * Helper pour vérifier si SMS doit être envoyé pour ce type
+     */
+    protected function shouldSendSms(string $type): bool
+    {
+        $enabledTypes = config('twilio.notification_types', []);
+        return $enabledTypes[$type] ?? false;
     }
 
     /**
@@ -83,6 +109,13 @@ class NotificationService
                 'total_price' => $booking->total_price,
             ]
         );
+
+        // SMS en arrière-plan aussi
+        $smsMessage = "Nouvelle réservation! {$passenger->name} demande {$booking->seats_booked} place(s) pour {$trip->departure_city} → {$trip->arrival_city} le {$trip->departure_date->format('d/m')} à {$trip->departure_time}";
+        SendSmsNotification::dispatch($driver->id, $smsMessage, [
+            'booking_id' => $booking->id,
+            'type' => 'booking_new',
+        ]);
     }
 
     /**
@@ -111,6 +144,13 @@ class NotificationService
                 'departure_time' => $trip->departure_time,
             ]
         );
+
+        // SMS au passager
+        $smsMessage = "Réservation confirmée! {$driver->name} a accepté votre réservation pour {$trip->departure_city} → {$trip->arrival_city} le {$trip->departure_date->format('d/m')} à {$trip->departure_time}";
+        SendSmsNotification::dispatch($booking->passenger_id, $smsMessage, [
+            'booking_id' => $booking->id,
+            'type' => 'booking_confirmed',
+        ]);
 
         // Broadcast le changement de statut
         event(new BookingStatusChanged($booking, 'pending', 'confirmed'));
@@ -141,6 +181,13 @@ class NotificationService
                     'seats_freed' => $booking->seats_booked,
                 ]
             );
+
+            // SMS au conducteur
+            $smsMessage = "Annulation: {$passenger->name} a annulé sa réservation pour {$trip->departure_city} → {$trip->arrival_city}";
+            SendSmsNotification::dispatch($driver->id, $smsMessage, [
+                'booking_id' => $booking->id,
+                'type' => 'booking_cancelled',
+            ]);
         } else {
             // Notifier le passager
             $this->send(
@@ -154,6 +201,13 @@ class NotificationService
                     'refund_amount' => $booking->total_price,
                 ]
             );
+
+            // SMS au passager
+            $smsMessage = "Annulation: Le conducteur a annulé votre réservation pour {$trip->departure_city} → {$trip->arrival_city}. Montant remboursé: {$booking->total_price}€";
+            SendSmsNotification::dispatch($passenger->id, $smsMessage, [
+                'booking_id' => $booking->id,
+                'type' => 'booking_cancelled',
+            ]);
         }
 
         // Broadcast le changement de statut
@@ -181,6 +235,13 @@ class NotificationService
                         'refund_amount' => $booking->total_price,
                     ]
                 );
+
+                // SMS au passager
+                $smsMessage = "Trajet annulé: {$trip->departure_city} → {$trip->arrival_city} du {$trip->departure_date->format('d/m')}. Remboursement: {$booking->total_price}€";
+                SendSmsNotification::dispatch($booking->passenger_id, $smsMessage, [
+                    'trip_id' => $trip->id,
+                    'type' => 'trip_cancelled',
+                ]);
             }
         }
     }
@@ -213,6 +274,19 @@ class NotificationService
             ]
         );
 
+        // SMS au conducteur
+        $driverSmsMessage = match($reminderType) {
+            'h24' => "Rappel: Votre trajet {$trip->departure_city} → {$trip->arrival_city} part demain à {$trip->departure_time}",
+            'h2' => "Départ dans 2h! Trajet {$trip->departure_city} → {$trip->arrival_city} à {$trip->departure_time}",
+            'departure' => "Départ maintenant! Trajet {$trip->departure_city} → {$trip->arrival_city}",
+            default => "Rappel: Votre trajet part bientôt",
+        };
+        SendSmsNotification::dispatch($trip->driver_id, $driverSmsMessage, [
+            'trip_id' => $trip->id,
+            'type' => 'trip_reminder',
+            'reminder_type' => $reminderType,
+        ]);
+
         event(new TripReminder($trip, $trip->driver_id, $reminderType));
 
         // Rappel aux passagers confirmés
@@ -229,6 +303,19 @@ class NotificationService
                     'driver_phone' => $trip->driver->phone,
                 ]
             );
+
+            // SMS aux passagers
+            $passengerSmsMessage = match($reminderType) {
+                'h24' => "Rappel: Votre trajet {$trip->departure_city} → {$trip->arrival_city} part demain à {$trip->departure_time}",
+                'h2' => "Départ dans 2h! Trajet {$trip->departure_city} → {$trip->arrival_city} avec {$trip->driver->name}",
+                'departure' => "Départ maintenant! Rendez-vous au point de départ",
+                default => "Rappel: Votre trajet part bientôt",
+            };
+            SendSmsNotification::dispatch($booking->passenger_id, $passengerSmsMessage, [
+                'trip_id' => $trip->id,
+                'type' => 'trip_reminder',
+                'reminder_type' => $reminderType,
+            ]);
 
             event(new TripReminder($trip, $booking->user_id, $reminderType));
         }
@@ -252,6 +339,13 @@ class NotificationService
                 'passenger_name' => $booking->passenger->name,
             ]
         );
+
+        // SMS au conducteur
+        $smsMessage = "Paiement de {$amount}€ reçu de {$booking->passenger->name}";
+        SendSmsNotification::dispatch($booking->trip->driver_id, $smsMessage, [
+            'booking_id' => $booking->id,
+            'type' => 'payment_received',
+        ]);
     }
 
     /**
@@ -271,6 +365,13 @@ class NotificationService
                 'amount' => $amount,
             ]
         );
+
+        // SMS au passager
+        $smsMessage = "Remboursement de {$amount}€ traité. Vous recevrez l'argent dans 3-5 jours ouvrables";
+        SendSmsNotification::dispatch($booking->passenger_id, $smsMessage, [
+            'booking_id' => $booking->id,
+            'type' => 'payment_refund',
+        ]);
     }
 
     /**
@@ -305,6 +406,12 @@ class NotificationService
             "Félicitations ! Votre profil a été vérifié. Vous pouvez maintenant profiter de toutes les fonctionnalités de CoCar.",
             ['verified_at' => now()->toISOString()]
         );
+
+        // SMS à l'utilisateur
+        $smsMessage = "Félicitations! Votre profil CoCar a été vérifié ✓";
+        SendSmsNotification::dispatch($user->id, $smsMessage, [
+            'type' => 'verification_approved',
+        ]);
     }
 
     /**
@@ -319,6 +426,12 @@ class NotificationService
             "Votre demande de vérification a été refusée. Raison: {$reason}",
             ['reason' => $reason]
         );
+
+        // SMS à l'utilisateur
+        $smsMessage = "Votre vérification CoCar n'a pas été approuvée. Contactez notre support pour plus d'info";
+        SendSmsNotification::dispatch($user->id, $smsMessage, [
+            'type' => 'verification_rejected',
+        ]);
     }
 
     /**
@@ -337,5 +450,22 @@ class NotificationService
         foreach ($userIds as $userId) {
             $this->send($userId, $type, $title, $message, $data);
         }
+    }
+
+    /**
+     * Envoyer un SMS en masse à plusieurs utilisateurs
+     */
+    public function sendBulkSms(array $userIds, string $message): array
+    {
+        $users = User::whereIn('id', $userIds)->get();
+        return $this->smsService->sendBatch($users, $message);
+    }
+
+    /**
+     * Obtenir le service SMS
+     */
+    public function getSmsService(): SmsNotificationService
+    {
+        return $this->smsService;
     }
 }

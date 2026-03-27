@@ -15,6 +15,8 @@ use App\Http\Controllers\Api\MessageController;
 use App\Http\Controllers\Api\VerificationController;
 use App\Http\Controllers\Api\FeedController;
 use App\Http\Controllers\Api\AnalyticsController;
+use App\Http\Controllers\Api\SmsController;
+use App\Http\Controllers\Api\SmsAdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -155,6 +157,13 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
         Route::post('/phone/verify', [VerificationController::class, 'verifyPhone']);
         Route::get('/status', [VerificationController::class, 'status']);
     });
+
+    // --- SMS Notifications ---
+    Route::prefix('sms')->group(function () {
+        Route::get('/status', [SmsController::class, 'status']);
+        Route::post('/test', [SmsController::class, 'sendTest']);
+        Route::post('/preferences', [SmsController::class, 'preferences']);
+    });
     
     // --- Messagerie ---
     Route::get('/conversations', [MessageController::class, 'conversations']);
@@ -199,5 +208,17 @@ Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
         
         // Rapport financier PDF
         Route::get('/reports/financial', [AdminController::class, 'generateFinancialReport']);
+
+        // SMS Management (Admin)
+        Route::prefix('sms')->group(function () {
+            Route::post('/send', [SmsController::class, 'send']);
+            Route::post('/send-batch', [SmsController::class, 'sendBatch']);
+            Route::get('/logs', [SmsAdminController::class, 'logs']);
+            Route::get('/summary', [SmsAdminController::class, 'summary']);
+            Route::get('/users/{user}/logs', [SmsAdminController::class, 'userLogs']);
+            Route::get('/logs/{smsLog}', [SmsAdminController::class, 'show']);
+            Route::post('/logs/cleanup', [SmsAdminController::class, 'cleanup']);
+            Route::post('/logs/{smsLog}/report-issue', [SmsAdminController::class, 'reportIssue']);
+        });
     });
 });

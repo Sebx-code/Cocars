@@ -1,0 +1,111 @@
+---
+title: Diagramme d'Activité - Réservation et Paiement de Trajet
+config:
+  theme: base
+  themeVariables:
+    fontSize: 16px
+    fontFamily: 'Arial, sans-serif'
+    primaryColor: '#2196F3'
+    primaryTextColor: '#ffffff'
+    primaryBorderColor: '#1565C0'
+    lineColor: '#333333'
+    sectionBkgColor: '#ffffff'
+    altSectionBkgColor: '#f8f9fa'
+    gridColor: '#e9ecef'
+    tertiaryColor: '#f8f9fa'
+  flowchart:
+    nodeSpacing: 80
+    rankSpacing: 100
+    curve: 'basis'
+    padding: 20
+    htmlLabels: true
+    useMaxWidth: true
+---
+
+graph TD
+    %% Main Activity: Complete Trip Booking & Payment Flow
+
+    %% Passenger initiates booking
+    A["Passager recherche un trajet"] --> B{"Trajet<br/>trouvé ?"}
+    B -->|Non| A
+    B -->|Oui| C["Consulter les détails du trajet"]
+
+    C --> D["Confirmer la réservation"]
+    D --> E{"Places<br/>disponibles ?"}
+    E -->|Non| F["Trajet complet"]
+    F --> G["Retourner à la recherche"]
+    G --> A
+    E -->|Oui| H["Créer la réservation"]
+
+    H --> I["En attente - Statut: PENDING"]
+    I --> J{"Chauffeur<br/>confirme ?"}
+    J -->|Rejette| K["Réservation rejetée"]
+    K --> L["Consulter le message du chauffeur"]
+    L --> G
+
+    J -->|Confirme| M["Réservation confirmée - Statut: CONFIRMED"]
+    M --> N["Procéder au paiement"]
+
+    N --> O["Sélectionner le mode de paiement"]
+    O --> P{"Mode de<br/>paiement ?"}
+    P -->|Carte bancaire| Q["Paiement en ligne"]
+    P -->|Portefeuille| R["Débiter le portefeuille"]
+    P -->|Espèces| S["Paiement en espèces (à confirmer)"]
+
+    Q --> T["Traiter la transaction"]
+    R --> T
+    S --> T
+
+    T --> U{"Paiement<br/>réussi ?"}
+    U -->|Échoué| V["Paiement échoué"]
+    V --> W{"Réessayer ?"}
+    W -->|Oui| N
+    W -->|Non| X["Réservation en attente de paiement"]
+    X --> A
+
+    U -->|Réussi| Y["Paiement confirmé"]
+    Y --> Z["Envoyer confirmation au passager"]
+    Z --> AA["Status: IN_PROGRESS"]
+
+    AA --> AB["Attendre la date/heure du départ"]
+    AB --> AC["Passager confirme la présence"]
+
+    AC --> AD{"Passager<br/>confirmé ?"}
+    AD -->|Non| AE["Absence passager (No-Show)"]
+    AD -->|Oui| AF["Présence confirmée - Prêt pour le départ"]
+
+    AE --> AG["Débiter les frais de No-Show"]
+    AG --> AH["Notification d'absence"]
+
+    AF --> AI["Chauffeur confirme la présence"]
+    AI --> AJ{"Chauffeur<br/>confirmé ?"}
+    AJ -->|Non| AK["Absence chauffeur (Driver No-Show)"]
+    AJ -->|Oui| AL["Départ confirmé - Status: COMPLETED"]
+
+    AK --> AM["Remboursement complet au passager"]
+    AM --> AN["Notification de remboursement"]
+
+    AL --> AO["Fin du trajet"]
+    AO --> AP["Passager note le chauffeur"]
+    AP --> AQ["Chauffeur note le passager"]
+    AQ --> AR["Trajet terminé avec succès"]
+
+    AN --> AR
+    AH --> AR
+
+    AR --> AS["Libérer les fonds (Escrow)"]
+    AS --> AT["Créditer le portefeuille du chauffeur"]
+    AT --> AU["Transaction finalisée"]
+
+    classDef startStyle fill:#4CAF50,stroke:#2E7D32,color:#fff,stroke-width:3px
+    classDef processStyle fill:#2196F3,stroke:#1565C0,color:#fff,stroke-width:2px
+    classDef decisionStyle fill:#FF9800,stroke:#E65100,color:#fff,stroke-width:3px
+    classDef successStyle fill:#4CAF50,stroke:#2E7D32,color:#fff,stroke-width:2px
+    classDef errorStyle fill:#F44336,stroke:#C62828,color:#fff,stroke-width:2px
+    classDef endStyle fill:#9C27B0,stroke:#6A1B9A,color:#fff,stroke-width:3px
+
+    class A startStyle
+    class C,D,H,M,N,O,T,Y,Z,AA,AB,AC,AF,AI,AL,AO,AP,AQ,AR,AS,AT,AU processStyle
+    class B,E,J,P,U,W,AD,AJ decisionStyle
+    class K,V,X,AK,AE errorStyle
+    class AU endStyle

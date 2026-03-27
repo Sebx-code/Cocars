@@ -1,0 +1,235 @@
+graph LR
+    subgraph Actors["👥 ACTEURS DU SYSTÈME"]
+        Admin["👑 Administrateur"]
+        Driver["🚗 Chauffeur"]
+        Passenger["👨 Passager"]
+        Guest["👁️ Visiteur"]
+    end
+    
+    subgraph Auth["🔐 AUTHENTIFICATION & PROFIL"]
+        Register["Créer un compte"]
+        Login["Se connecter"]
+        Logout["Se déconnecter"]
+        ResetPassword["Réinitialiser le mot de passe"]
+        UpdateProfile["Mettre à jour le profil"]
+        UploadAvatar["Charger une photo de profil"]
+        DeleteAvatar["Supprimer la photo de profil"]
+        ChangePassword["Changer le mot de passe"]
+    end
+    
+    subgraph TripManagement["📍 GESTION DES TRAJETS"]
+        CreateTrip["Créer un trajet"]
+        SearchTrip["Rechercher des trajets"]
+        SearchAdvanced["Recherche avancée/filtrée"]
+        ViewTrip["Consulter les détails du trajet"]
+        UpdateTrip["Modifier un trajet"]
+        CancelTrip["Annuler un trajet"]
+        ListMyTrips["Consulter mes trajets"]
+        FilterByPreferences["Filtrer par préférences"]
+        ViewTripMap["Voir sur la carte"]
+    end
+    
+    subgraph BookingManagement["📋 GESTION DES RÉSERVATIONS"]
+        BookTrip["Réserver une place"]
+        ViewBooking["Consulter les réservations"]
+        ConfirmBooking["Confirmer une réservation"]
+        RejectBooking["Rejeter une réservation"]
+        CancelBooking["Annuler une réservation"]
+        ConfirmDeparture["Confirmer le départ"]
+        MarkNoShow["Signaler une absence"]
+        DriverNoShow["Absence du chauffeur"]
+        ValidateDeparture["Valider le départ"]
+        RequestCancellation["Demander l'annulation"]
+    end
+    
+    subgraph PaymentManagement["💳 GESTION DES PAIEMENTS"]
+        ProcessPayment["Effectuer un paiement"]
+        ChoosePaymentMethod["Choisir le mode de paiement"]
+        CardPayment["Paiement par carte"]
+        WalletPayment["Paiement portefeuille"]
+        CashPayment["Paiement en espèces"]
+        ViewPaymentHistory["Consulter l'historique"]
+        RequestRefund["Demander un remboursement"]
+        ProcessRefund["Traiter le remboursement"]
+        ManageWallet["Gérer le portefeuille"]
+        AddFunds["Ajouter des fonds"]
+        WithdrawFunds["Retirer des fonds"]
+        ViewBalance["Consulter le solde"]
+        ViewTransactionDetails["Voir détails transaction"]
+    end
+    
+    subgraph VehicleManagement["🚙 GESTION DES VÉHICULES"]
+        AddVehicle["Ajouter un véhicule"]
+        ListVehicles["Consulter mes véhicules"]
+        EditVehicle["Modifier un véhicule"]
+        DeleteVehicle["Supprimer un véhicule"]
+        UploadPhoto["Charger photos du véhicule"]
+        SetPrimaryPhoto["Définir photo principale"]
+        DeletePhoto["Supprimer une photo"]
+        SetDefaultVehicle["Définir le véhicule par défaut"]
+        ViewVehicleDetails["Voir détails du véhicule"]
+        SpecifyFeatures["Spécifier les caractéristiques"]
+    end
+    
+    subgraph RatingReview["⭐ NOTATION & AVIS"]
+        RateTrip["Noter un trajet"]
+        RateDriver["Noter le chauffeur"]
+        RatePassenger["Noter le passager"]
+        ViewRatings["Consulter les évaluations"]
+        ViewDriverRatings["Voir les notes du chauffeur"]
+        ViewCredibility["Consulter le score de crédibilité"]
+        ViewUserProfile["Consulter le profil utilisateur"]
+        ViewUserStats["Voir les statistiques utilisateur"]
+        UpdateCredibility["Mettre à jour la crédibilité"]
+        ReportBadBehavior["Signaler un mauvais comportement"]
+    end
+    
+    subgraph Notification["🔔 NOTIFICATIONS"]
+        ViewNotifications["Consulter les notifications"]
+        MarkAsRead["Marquer comme lu"]
+        MarkAllAsRead["Marquer tout comme lu"]
+        DeleteNotification["Supprimer une notification"]
+        ClearNotifications["Effacer toutes les notifications"]
+        ReceiveBookingNotif["Recevoir notification réservation"]
+        ReceivePaymentNotif["Recevoir notification paiement"]
+        ReceiveMessageNotif["Recevoir notification message"]
+    end
+    
+    subgraph Verification["✅ VÉRIFICATION & SÉCURITÉ"]
+        VerifyPhone["Vérifier le numéro de téléphone"]
+        SendSMS["Envoyer code SMS"]
+        ConfirmPhone["Confirmer le code SMS"]
+        UploadDocuments["Charger documents d'identité"]
+        UploadIDCard["Charger carte d'identité"]
+        UploadLicense["Charger permis de conduire"]
+        UploadSelfie["Charger selfie"]
+        VerifyIdentity["Vérifier l'identité"]
+        CheckVerificationStatus["Consulter l'état de vérification"]
+        ResubmitDocuments["Resoumetre les documents"]
+    end
+    
+    subgraph Communication["💬 COMMUNICATION"]
+        SendMessage["Envoyer un message"]
+        ViewMessages["Consulter les messages"]
+        StartConversation["Démarrer une conversation"]
+        ViewConversations["Consulter les conversations"]
+        DeleteMessage["Supprimer un message"]
+        UserTyping["Voir qui tape"]
+        ViewMessageHistory["Voir l'historique des messages"]
+    end
+    
+    subgraph AdminFunctions["⚙️ FONCTIONS ADMINISTRATEUR"]
+        ManageUsers["Gérer les utilisateurs"]
+        ViewAllUsers["Afficher tous les utilisateurs"]
+        SuspendUser["Suspendre un utilisateur"]
+        BanUser["Bannir un utilisateur"]
+        ViewAnalytics["Consulter les statistiques"]
+        ViewBookingStats["Voir les stats de réservation"]
+        ViewPaymentStats["Voir les stats de paiement"]
+        GenerateReports["Générer des rapports"]
+        HandleDisputes["Gérer les litiges"]
+        ReviewDispute["Examiner un litige"]
+        ResolveDispute["Résoudre un litige"]
+        ViewAuditLog["Consulter les logs d'audit"]
+        ManagePlatform["Gérer la plateforme"]
+    end
+    
+    %% ===== Relationships=====
+    
+    %% Guest relationships
+    Guest --> SearchTrip
+    Guest --> ViewTrip
+    Guest --> ViewRatings
+    Guest --> ViewUserProfile
+    Guest --> Login
+    Guest --> Register
+    
+    %% Driver relationships
+    Driver --> Auth
+    Driver --> TripManagement
+    Driver --> BookingManagement
+    Driver --> PaymentManagement
+    Driver --> VehicleManagement
+    Driver --> RatingReview
+    Driver --> Notification
+    Driver --> Verification
+    Driver --> Communication
+    
+    Driver --> CreateTrip
+    Driver --> ListMyTrips
+    Driver --> ConfirmBooking
+    Driver --> RejectBooking
+    Driver --> ConfirmDeparture
+    Driver --> AddVehicle
+    Driver --> RatePassenger
+    Driver --> ProcessPayment
+    Driver --> ManageWallet
+    Driver --> WithdrawFunds
+    Driver --> ViewBalance
+    
+    %% Passenger relationships
+    Passenger --> Auth
+    Passenger --> TripManagement
+    Passenger --> BookingManagement
+    Passenger --> PaymentManagement
+    Passenger --> RatingReview
+    Passenger --> Notification
+    Passenger --> Verification
+    Passenger --> Communication
+    
+    Passenger --> SearchTrip
+    Passenger --> BookTrip
+    Passenger --> ViewBooking
+    Passenger --> CancelBooking
+    Passenger --> ConfirmDeparture
+    Passenger --> RateDriver
+    Passenger --> ProcessPayment
+    Passenger --> RequestRefund
+    Passenger --> ManageWallet
+    Passenger --> AddFunds
+    
+    %% Admin relationships
+    Admin --> AdminFunctions
+    Admin --> Auth
+    Admin --> ViewAnalytics
+    Admin --> Verification
+    
+    %% Include relationships
+    BookTrip -.->|include| ProcessPayment
+    ProcessPayment -.->|include| ChoosePaymentMethod
+    ChoosePaymentMethod -.->|include| CardPayment
+    ChoosePaymentMethod -.->|include| WalletPayment
+    ChoosePaymentMethod -.->|include| CashPayment
+    CreateTrip -.->|include| VehicleManagement
+    ConfirmDeparture -.->|include| ValidateDeparture
+    UpdateTrip -.->|include| ViewTrip
+    SearchAdvanced -.->|include| FilterByPreferences
+    SearchTrip -.->|extend| SearchAdvanced
+    RateTrip -.->|include| RateDriver
+    RateTrip -.->|include| RatePassenger
+    UploadDocuments -.->|include| UploadIDCard
+    UploadDocuments -.->|include| UploadLicense
+    UploadDocuments -.->|include| UploadSelfie
+    VerifyIdentity -.->|extend| UploadDocuments
+    VerifyPhone -.->|include| SendSMS
+    VerifyPhone -.->|include| ConfirmPhone
+    RequestRefund -.->|extend| ProcessRefund
+    ManageWallet -.->|include| AddFunds
+    ManageWallet -.->|include| WithdrawFunds
+    ManageWallet -.->|include| ViewBalance
+    ViewNotifications -.->|include| MarkAsRead
+    DeleteMessage -.->|extend| ViewMessages
+    HandleDisputes -.->|include| ReviewDispute
+    HandleDisputes -.->|include| ResolveDispute
+    ManageUsers -.->|include| SuspendUser
+    ManageUsers -.->|include| BanUser
+    ViewAnalytics -.->|include| ViewBookingStats
+    ViewAnalytics -.->|include| ViewPaymentStats
+    
+    classDef actor fill:#FF6B6B,stroke:#C92A2A,color:#fff,stroke-width:3px
+    classDef usecase fill:#4ECDC4,stroke:#0B7285,color:#000,stroke-width:2px
+    classDef category fill:#E8F5E9,stroke:#2E7D32,color:#1B5E20,stroke-width:2px
+    classDef extend fill:#FFF9E6,stroke:#F57F17,color:#000
+    
+    class Admin,Driver,Passenger,Guest actor
+    class Auth,TripManagement,BookingManagement,PaymentManagement,VehicleManagement,RatingReview,Notification,Verification,Communication,AdminFunctions category

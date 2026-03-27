@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Notification as UserNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -97,6 +98,14 @@ class User extends Authenticatable
     public function sentMessages()
     {
         return $this->hasMany(Message::class, 'sender_id');
+    }
+
+    /**
+     * Logs SMS de l'utilisateur
+     */
+    public function smsLogs()
+    {
+        return $this->hasMany(SmsLog::class);
     }
 
     /**
@@ -253,7 +262,7 @@ class User extends Authenticatable
 
         // Notification optionnelle
         if ($points >= 10) {
-            Notification::create([
+            UserNotification::create([
                 'user_id' => $this->id,
                 'type' => 'credibility_increased',
                 'title' => 'Points de crédibilité gagnés !',
@@ -291,7 +300,7 @@ class User extends Authenticatable
         ]);
 
         // Notification de perte de crédibilité
-        Notification::create([
+        UserNotification::create([
             'user_id' => $this->id,
             'type' => 'credibility_decreased',
             'title' => 'Perte de crédibilité',
@@ -306,7 +315,7 @@ class User extends Authenticatable
 
         // Notification spéciale si perte d'étoile(s)
         if ($newStars < $oldStars) {
-            Notification::create([
+            UserNotification::create([
                 'user_id' => $this->id,
                 'type' => 'star_lost',
                 'title' => '⭐ Étoile perdue',
