@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use App\Models\Vehicle;
+use App\Models\UserVehicle;
 use App\Models\Trip;
 use App\Models\Booking;
 use App\Models\Rating;
@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             'phone' => '699000000',
             'role' => 'admin',
             'is_verified' => true,
+            'phone_verified' => true,
         ]);
 
         // Créer des utilisateurs de test
@@ -63,20 +64,21 @@ class DatabaseSeeder extends Seeder
                 'password' => Hash::make('password'),
                 'role' => 'user',
                 'is_verified' => true,
+                'phone_verified' => true,
                 'total_rides' => rand(10, 200),
             ]);
         }
 
         // Créer des véhicules
         $vehicles = [
-            ['user_id' => $createdUsers[0]->id, 'brand' => 'Toyota', 'model' => 'Corolla', 'color' => 'Blanc', 'plate_number' => 'CE 123 AB', 'seats' => 4, 'year' => 2020],
-            ['user_id' => $createdUsers[1]->id, 'brand' => 'Honda', 'model' => 'Civic', 'color' => 'Gris', 'plate_number' => 'LT 456 CD', 'seats' => 4, 'year' => 2019],
-            ['user_id' => $createdUsers[2]->id, 'brand' => 'Hyundai', 'model' => 'Tucson', 'color' => 'Noir', 'plate_number' => 'OU 789 EF', 'seats' => 5, 'year' => 2021],
+            ['user_id' => $createdUsers[0]->id, 'brand' => 'Toyota', 'model' => 'Corolla', 'color' => 'Blanc', 'registration_number' => 'CE 123 AB', 'seats' => 4, 'year' => 2020, 'is_default' => true],
+            ['user_id' => $createdUsers[1]->id, 'brand' => 'Honda', 'model' => 'Civic', 'color' => 'Gris', 'registration_number' => 'LT 456 CD', 'seats' => 4, 'year' => 2019, 'is_default' => true],
+            ['user_id' => $createdUsers[2]->id, 'brand' => 'Hyundai', 'model' => 'Tucson', 'color' => 'Noir', 'registration_number' => 'OU 789 EF', 'seats' => 5, 'year' => 2021, 'is_default' => true],
         ];
 
         $createdVehicles = [];
         foreach ($vehicles as $vehicleData) {
-            $createdVehicles[] = Vehicle::create([...$vehicleData, 'is_verified' => true]);
+            $createdVehicles[] = UserVehicle::create($vehicleData);
         }
 
         // Créer des trajets

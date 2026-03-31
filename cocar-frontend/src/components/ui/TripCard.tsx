@@ -102,7 +102,7 @@ export default function TripCard({ trip }: Readonly<TripCardProps>) {
                 // Ancienne note si crédibilité non disponible
                 <div className="flex items-center gap-1 justify-end text-yellow-400">
                   <Star className="w-4 h-4 fill-current" />
-                  <span className="text-sm">{trip.driver?.rating?.toFixed(1) || '4.8'}</span>
+                  <span className="text-sm">{Number(trip.driver?.rating || 0).toFixed(1)}</span>
                 </div>
               )}
             </div>

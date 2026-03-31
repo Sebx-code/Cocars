@@ -1,3 +1,50 @@
-cocar-backend/storage/logs/laravel.log
-cocar-frontend\.env
-cocar-frontend\node_modules
+# Root-level ignores
+acli.exe
+rideshare1.PNG
+.DS_Store
+.vscode/
+.idea/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.phpunit.result.cache
+
+# Backend (Laravel)
+cocar-backend/.env
+cocar-backend/.env.backup
+cocar-backend/.env.production
+cocar-backend/vendor/
+cocar-backend/node_modules/
+cocar-backend/public/storage
+cocar-backend/public/build
+cocar-backend/public/hot
+cocar-backend/storage/*.key
+cocar-backend/storage/framework/cache/data/*
+cocar-backend/storage/framework/sessions/*
+cocar-backend/storage/framework/testing/*
+cocar-backend/storage/framework/views/*
+cocar-backend/storage/logs/*
+cocar-backend/auth.json
+cocar-backend/Homestead.json
+cocar-backend/Homestead.yaml
+
+# Frontend (React/Vite)
+cocar-frontend/.env
+cocar-frontend/.env.local
+cocar-frontend/.env.development.local
+cocar-frontend/.env.test.local
+cocar-frontend/.env.production.local
+cocar-frontend/node_modules/
+cocar-frontend/dist/
+cocar-frontend/dist-ssr/
+cocar-frontend/*.local
+
+# OS related
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
