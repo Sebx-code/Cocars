@@ -6,3 +6,8 @@ node_modules
 ../docs/questionnaire.md
 
 /cocar-backend/storage/logs/
+
+/storage/
+/.env
+/node_modules
+/vendor
