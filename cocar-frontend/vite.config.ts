@@ -14,7 +14,7 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': {
-        target: 'http://localhost:8000',
+        target: 'http://localhost:8000','https://yards-cindy-judgment-take.trycloudflare.com',
         changeOrigin: true,
       },
     },

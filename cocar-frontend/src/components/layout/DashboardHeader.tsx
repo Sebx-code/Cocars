@@ -1,9 +1,9 @@
 import { useLocation } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
-import { useTheme } from '../../contexts/ThemeContext'
-import { Menu, Search, Settings, Home, Sun, Moon } from 'lucide-react'
+import { Menu, Search, Settings, Home } from 'lucide-react'
 import NotificationDropdown from '../notifications/NotificationDropdown'
+import ThemeSelector from '../ui/ThemeSelector'
 
 interface DashboardHeaderProps {
   onMenuClick: () => void
@@ -11,7 +11,7 @@ interface DashboardHeaderProps {
 
 export default function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
   const { user } = useAuth()
-  const { isDark, toggleTheme } = useTheme()
+  // const { isDark, toggleTheme } = useTheme()
   const location = useLocation()
 
   // Get breadcrumb from path
@@ -71,14 +71,7 @@ export default function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
           </div>
 
           {/* Theme Toggle */}
-          <button
-            onClick={toggleTheme}
-            className="p-2 hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg transition-colors"
-            title={isDark ? 'Mode clair' : 'Mode sombre'}
-            aria-label={isDark ? 'Activer le mode clair' : 'Activer le mode sombre'}
-          >
-            {isDark ? <Sun className="w-5 h-5 text-white/60 hover:text-white" /> : <Moon className="w-5 h-5 text-gray-500 hover:text-gray-800" />}
-          </button>
+          <ThemeSelector variant="compact" />
 
           {/* Settings */}
           <Link

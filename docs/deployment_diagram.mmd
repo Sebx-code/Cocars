@@ -3,16 +3,16 @@ title: Diagramme de Déploiement - Architecture CoCars
 config:
   theme: base
   themeVariables:
-    fontSize: 18px
+    fontSize: 36px
     fontFamily: 'Arial, sans-serif'
     primaryColor: '#2196F3'
-    primaryTextColor: '#ffffff'
+    primaryTextColor: '#000000'
     primaryBorderColor: '#1565C0'
-    lineColor: '#333333'
+    lineColor: '#000000'
     sectionBkgColor: '#ffffff'
     altSectionBkgColor: '#f8f9fa'
     gridColor: '#e9ecef'
-    tertiaryColor: '#f8f9fa'
+    tertiaryColor: '#ffffff'
   flowchart:
     nodeSpacing: 80
     rankSpacing: 100
@@ -82,10 +82,9 @@ graph TB
 
     %% External Services
     subgraph External["Services Externes"]
-        PaymentGateway["Passerelle de Paiement<br/>(Stripe/PayPal)"]
+        PaymentGateway["Passerelle de Paiement<br/>(Mobile money)"]
         EmailService["Service Email<br/>(SMTP)"]
         SMSService["Service SMS<br/>(Twillio)"]
-        MapService["Service Cartographique<br/>(Google Maps)"]
         FileStorage["Stockage Cloud<br/>(S3/Local)"]
     end
 
@@ -149,7 +148,7 @@ graph TB
     Payment -->|API Call| PaymentGateway
     Notification -->|API Call| EmailService
     Notification -->|API Call| SMSService
-    Services -->|API Call| MapService
+    Services -->|API Call| FileStorage
     AvatarStorage -->|Upload| FileStorage
     DocumentStorage -->|Upload| FileStorage
     VehiclePhotoStorage -->|Upload| FileStorage
@@ -165,12 +164,12 @@ graph TB
 
     classDef client fill:#4A90E2,stroke:#2E5C8A,color:#fff,stroke-width:6px
     classDef server fill:#50E3C2,stroke:#2E8B7A,color:#000,stroke-width:4px
-    classDef external fill:#F5A623,stroke:#C1710A,color:#fff,stroke-width:4px
+    classDef external fill:#F5A623,stroke:#C1710A,color:#000,stroke-width:4px
     classDef database fill:#BD10E0,stroke:#7D0A7D,color:#fff,stroke-width:4px
     classDef artifact fill:#7ED321,stroke:#4A8F0A,color:#000,stroke-width:4px
 
     class Browser client
     class Laravel,Vite,Websocket,Queue,Scheduler server
-    class PaymentGateway,EmailService,SMSService,MapService,FileStorage external
+    class PaymentGateway,EmailService,SMSService,FileStorage external
     class MySQL,AvatarStorage,DocumentStorage,VehiclePhotoStorage database
     class FrontendArtifact,BackendArtifact,Database_Artifact artifact

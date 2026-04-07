@@ -8,8 +8,8 @@ import {
 import { useState } from 'react'
 
 interface SidebarProps {
-  isOpen: boolean
-  onClose: () => void
+  readonly isOpen: boolean
+  readonly onClose: () => void
 }
 
 const menuItems = [
@@ -42,9 +42,10 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     <>
       {/* Overlay */}
       {isOpen && (
-        <div 
+        <button 
           className="fixed inset-0 bg-black/50 z-40 lg:hidden"
           onClick={onClose}
+          aria-label="Close sidebar"
         />
       )}
 
@@ -66,7 +67,11 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
               </div>
               <span className="font-sora font-bold text-lg tracking-tight text-gray-900 dark:text-white">CoCar</span>
             </Link>
-            <button onClick={onClose} className="lg:hidden p-2 hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg transition-colors">
+            <button
+              onClick={onClose}
+              aria-label="Close sidebar"
+              className="lg:hidden p-2 hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg transition-colors"
+            >
               <X className="w-5 h-5 text-gray-700 dark:text-white" />
             </button>
           </div>

@@ -498,3 +498,176 @@ body {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+
+/* ============================================================
+   COCAR MULTI-THEME SYSTEM
+   Add this block at the END of your src/index.css file
+   ============================================================ */
+
+/* ── Default CSS variable values (emerald theme, light mode) ── */
+:root {
+  --theme-from: #10b981;
+  --theme-to: #14b8a6;
+  --theme-mid: #059669;
+  --theme-sidebar-from: #10b981;
+  --theme-sidebar-mid: #059669;
+  --theme-sidebar-to: #0f766e;
+  --theme-accent: #10b981;
+  --theme-accent-dark: #059669;
+  --theme-ring: rgba(16, 185, 129, 0.35);
+  --theme-text: #059669;
+  --theme-badge: #d1fae5;
+  --theme-badge-text: #065f46;
+}
+
+/* ── Override gradient classes to use CSS vars ── */
+.gradient-header,
+.gradient-sidebar-bg {
+  background-image: linear-gradient(
+    to right,
+    var(--theme-from),
+    var(--theme-to)
+  ) !important;
+}
+
+/* Sidebar green background */
+aside .absolute.inset-0 {
+  background-image: linear-gradient(
+    to bottom,
+    var(--theme-sidebar-from),
+    var(--theme-sidebar-mid),
+    var(--theme-sidebar-to)
+  ) !important;
+}
+
+/* btn-primary override */
+.btn-primary {
+  background: linear-gradient(
+    to right,
+    var(--theme-from),
+    var(--theme-to)
+  ) !important;
+  box-shadow: 0 4px 15px var(--theme-ring) !important;
+}
+.btn-primary:hover {
+  box-shadow: 0 8px 25px var(--theme-ring) !important;
+  filter: brightness(1.08);
+}
+
+/* Notification badge */
+.notification-badge,
+.bg-primary-500 {
+  background-color: var(--theme-accent) !important;
+}
+
+/* Active sidebar item icon */
+.sidebar-active-icon {
+  background: linear-gradient(
+    to bottom right,
+    var(--theme-from),
+    var(--theme-to)
+  ) !important;
+}
+
+/* Focus rings / borders */
+.input:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--theme-accent) !important;
+  box-shadow: 0 0 0 3px var(--theme-ring) !important;
+}
+
+/* text-primary-* overrides */
+.text-primary-600,
+.text-primary-500 {
+  color: var(--theme-text) !important;
+}
+
+/* badge-primary override */
+.badge-primary {
+  background-color: var(--theme-badge) !important;
+  color: var(--theme-badge-text) !important;
+}
+
+/* Notification header gradient */
+.notification-header-gradient {
+  background: linear-gradient(
+    to right,
+    var(--theme-from),
+    var(--theme-to)
+  ) !important;
+}
+
+/* Progress/step bars */
+.step-active {
+  background-color: var(--theme-accent) !important;
+}
+
+/* filter buttons active state */
+.filter-active {
+  background-color: var(--theme-accent) !important;
+}
+
+/* Animated gradient text */
+.text-gradient {
+  background-image: linear-gradient(
+    to right,
+    var(--theme-from),
+    var(--theme-to)
+  ) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+/* Stat icons */
+.stat-icon-green {
+  background: linear-gradient(
+    to bottom right,
+    var(--theme-from),
+    var(--theme-to)
+  ) !important;
+}
+
+/* Toggle switch */
+.theme-toggle-active {
+  background-color: var(--theme-accent) !important;
+}
+
+/* ── Theme Selector specific styles ── */
+.theme-swatch {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: inline-block;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+.theme-swatch:hover {
+  transform: scale(1.15);
+}
+.theme-swatch.active {
+  border-color: white;
+  box-shadow: 0 0 0 2px currentColor;
+}
+
+/* ── Smooth theme transitions ── */
+*,
+*::before,
+*::after {
+  transition-property: background-color, border-color, box-shadow;
+  transition-duration: 250ms;
+  transition-timing-function: ease;
+}
+
+/* Exclude transforms from the global transition so animations still work */
+.animate-spin,
+.animate-bounce,
+.animate-pulse,
+.animate-ping,
+[class*="animate-"] {
+  transition: none !important;
+}
