@@ -154,7 +154,7 @@ export default function Landing() {
 
           {/* Background glow */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] rounded-full bg-black/[0.035] blur-3xl" />
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[400px] h-[300px] md:w-[600px] md:h-[400px] lg:w-[800px] lg:h-[500px] rounded-full bg-black/[0.035] blur-3xl" />
           </div>
 
           <div className="relative max-w-7xl mx-auto w-full">
@@ -222,7 +222,7 @@ export default function Landing() {
                 </div>
 
                 {/* Seats */}
-                <div className="px-5 py-3 border-b border-neutral-200 md:border-b-0 md:border-r min-w-[140px]">
+                <div className="px-5 py-3 border-b border-neutral-200 md:border-b-0 md:border-r md:min-w-[140px]">
                   <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-[.15em] mb-1">Passagers</label>
                   <div className="flex items-center gap-2">
                     <Users size={13} className="text-neutral-400 flex-shrink-0" />

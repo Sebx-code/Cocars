@@ -153,7 +153,7 @@ export default function AdminTrips() {
           </div>
         ) : trips.length > 0 ? (
           <>
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0">
               <table className="w-full">
                 <thead className="bg-gray-50 dark:bg-white/[0.03]">
                   <tr>

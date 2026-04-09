@@ -222,7 +222,7 @@ export default function CreateTrip() {
               </div>
             </div>
             <div className="p-6 space-y-5">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-gray-600 dark:text-white/55 text-sm font-medium mb-2">Ville de départ *</label>
                   <div className="relative">
@@ -252,7 +252,7 @@ export default function CreateTrip() {
                   </div>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-gray-600 dark:text-white/55 text-sm font-medium mb-2">Adresse de départ</label>
                   <input
@@ -294,7 +294,7 @@ export default function CreateTrip() {
             </div>
             <div className="p-6 space-y-5">
               {/* Date & time */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-gray-600 dark:text-white/55 text-sm font-medium mb-2">Date *</label>
                   <div className="relative">
@@ -327,7 +327,7 @@ export default function CreateTrip() {
               <div className="border-b border-gray-100 dark:border-white/[0.07]" />
 
               {/* Seats & price */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-gray-600 dark:text-white/55 text-sm font-medium mb-2">Places disponibles</label>
                   <div className="relative">
@@ -455,7 +455,7 @@ export default function CreateTrip() {
               </div>
             </div>
             <div className="p-6 space-y-5">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-gray-600 dark:text-white/55 text-sm font-medium mb-2">Immatriculation *</label>
                   <input

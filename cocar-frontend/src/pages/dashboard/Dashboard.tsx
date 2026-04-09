@@ -307,7 +307,7 @@ export default function Dashboard() {
           </div>
 
           {recentBookings.length > 0 ? (
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0">
               <table className="table-argon">
                 <thead>
                   <tr>

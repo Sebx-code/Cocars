@@ -151,7 +151,7 @@ export default function AdminPayments() {
         </div>
 
         {/* Table */}
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0">
           <table className="w-full">
             <thead>
               <tr className="border-b border-gray-200 dark:border-white/[0.07]">

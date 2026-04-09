@@ -211,7 +211,7 @@ export default function AdminCredibility() {
 
         {/* Résumé visuel */}
         <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-200 dark:border-white/[0.07]">
-          <div className="grid grid-cols-5 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
             {[5, 4, 3, 2, 1].map((stars) => {
               const count = stats.distribution[`stars_${stars}` as keyof typeof stats.distribution]
               const percentage = parseFloat(getPercentage(count))

@@ -99,7 +99,7 @@ export default function TripDetail() {
       {/* Hero photo */}
       {selectedPhoto && (
         <div className="mb-6 rounded-3xl overflow-hidden border border-gray-100 bg-gray-100">
-          <img src={selectedPhoto} alt="Véhicule" className="w-full h-[320px] object-cover" />
+          <img src={selectedPhoto} alt="Véhicule" className="w-full h-[200px] md:h-[320px] object-cover" />
         </div>
       )}
 
@@ -111,7 +111,7 @@ export default function TripDetail() {
               type="button"
               key={p.id}
               onClick={() => setSelectedPhoto(p.url)}
-              className={`shrink-0 w-24 h-16 rounded-xl overflow-hidden border ${selectedPhoto === p.url ? 'border-emerald-400' : 'border-gray-200'} bg-gray-100`}
+              className={`shrink-0 w-16 h-12 md:w-24 md:h-16 rounded-xl overflow-hidden border ${selectedPhoto === p.url ? 'border-emerald-400' : 'border-gray-200'} bg-gray-100`}
               title={p.is_primary ? 'Photo principale' : 'Photo'}
             >
               <img src={p.url} alt="Véhicule" className="w-full h-full object-cover" />

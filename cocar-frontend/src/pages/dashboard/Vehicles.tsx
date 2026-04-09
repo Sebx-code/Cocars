@@ -73,7 +73,7 @@ export default function Vehicles() {
       {showForm && (
         <div className="card p-6 mb-6">
           <h3 className="font-bold text-white mb-4">Nouveau véhicule</h3>
-          <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
+          <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <input type="text" value={formData.brand} onChange={(e) => setFormData({ ...formData, brand: e.target.value })} placeholder="Marque" className="input" required />
             <input type="text" value={formData.model} onChange={(e) => setFormData({ ...formData, model: e.target.value })} placeholder="Modèle" className="input" required />
             <input type="text" value={formData.color} onChange={(e) => setFormData({ ...formData, color: e.target.value })} placeholder="Couleur" className="input" required />
@@ -82,7 +82,7 @@ export default function Vehicles() {
               {[2, 3, 4, 5, 6, 7].map(n => <option key={n} value={n}>{n} places</option>)}
             </select>
             <input type="number" value={formData.year} onChange={(e) => setFormData({ ...formData, year: e.target.value })} placeholder="Année" className="input" />
-            <div className="col-span-2 flex gap-2">
+            <div className="col-span-1 md:col-span-2 flex gap-2">
               <button type="submit" className="btn-primary">Ajouter</button>
               <button type="button" onClick={() => setShowForm(false)} className="btn-outline">Annuler</button>
             </div>

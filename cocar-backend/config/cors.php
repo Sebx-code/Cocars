@@ -2,20 +2,18 @@
 
 return [
     'paths' => ['api/*', 'sanctum/csrf-cookie', 'broadcasting/auth'],
-    
+
     'allowed_methods' => ['*'],
-    
-    'allowed_origins' => explode(',', env('ALLOWED_ORIGINS',
-    'http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173,http://192.168.100.197:5173'
-)),
-    
+
+    'allowed_origins' => explode(',', env('ALLOWED_ORIGINS', 'http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173,http://192.168.100.197:5173,https://yards-cindy-judgment-take.trycloudflare.com,https://bizarre-romantic-cancel-contribution.trycloudflare.com')),
+
     'allowed_origins_patterns' => [],
-    
+
     'allowed_headers' => ['*'],
-    
+
     'exposed_headers' => [],
-    
+
     'max_age' => 0,
-    
+
     'supports_credentials' => true,
 ];
