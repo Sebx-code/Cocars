@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\FeedController;
 use App\Http\Controllers\Api\AnalyticsController;
 use App\Http\Controllers\Api\SmsController;
 use App\Http\Controllers\Api\SmsAdminController;
+use App\Http\Controllers\Api\VoiceSearchController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,6 +41,10 @@ Route::get('/feed', [FeedController::class, 'index']);
 Route::get('/trips', [TripController::class, 'index']);
 Route::get('/trips/search', [TripController::class, 'search']);
 Route::get('/trips/{trip}', [TripController::class, 'show']);
+
+// Recherche vocale de trajets
+Route::post('/voice-search', [VoiceSearchController::class, 'search']);
+Route::get('/voice-search/cities', [VoiceSearchController::class, 'getSupportedCities']);
 
 // Profil utilisateur public
 Route::get('/users/{user}/profile', [UserController::class, 'profile']);
