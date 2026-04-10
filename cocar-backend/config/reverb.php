@@ -32,7 +32,7 @@ return [
             'host' => env('REVERB_SERVER_HOST', '0.0.0.0'),
             'port' => env('REVERB_SERVER_PORT', 9000),
             'path' => env('REVERB_SERVER_PATH', ''),
-            'hostname' => env('REVERB_HOST'),
+            'hostname' => env('REVERB_HOST', 'volleyball-poultry-clarity-chargers.trycloudflare.com'),
             'options' => [
                 'tls' => [],
             ],
